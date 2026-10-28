@@ -33,6 +33,7 @@ export default defineConfig({
           name: "jsdom",
           environment: "jsdom",
           include: ["tests/unit/**/*.test.tsx"],
+          setupFiles: ["tests/unit/setup-dom.ts"],
           env,
         },
       },

@@ -16,16 +16,26 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "e2e:visual": "docker compose run --rm playwright"
+    "e2e:visual": "docker compose run --rm playwright",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@brazilian-utils/brazilian-utils": "2.5.0",
     "@date-fns/tz": "1.5.0",
+    "@headlessui/react": "2.2.10",
     "@t3-oss/env-nextjs": "0.13.11",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
     "date-fns": "4.4.0",
+    "lucide-react": "1.57.0",
     "next": "16.4.3",
+    "qrcode.react": "4.2.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "react-imask": "7.6.1",
+    "sonner": "2.0.8",
+    "tailwind-merge": "3.7.0",
     "zod": "4.6.7"
   },
   "devDependencies": {
@@ -35,7 +45,11 @@
     "@commitlint/lint": "21.2.3",
     "@commitlint/load": "21.2.3",
     "@playwright/test": "1.64.1",
+    "@storybook/addon-a11y": "10.6.2",
+    "@storybook/addon-docs": "10.6.2",
+    "@storybook/nextjs-vite": "10.6.2",
     "@tailwindcss/turbopack": "4.3.3",
+    "@tailwindcss/vite": "4.3.3",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.3",
     "@testing-library/user-event": "14.6.8",
@@ -53,9 +67,11 @@
     "lint-staged": "17.6.0",
     "prettier": "3.9.10",
     "prettier-plugin-tailwindcss": "0.8.1",
+    "storybook": "10.6.2",
     "tailwindcss": "4.3.3",
     "typescript": "5.9.3",
     "typescript-eslint": "8.71.2",
+    "vite": "8.3.4",
     "vitest": "5.0.4"
   },
   "lint-staged": {
