@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Loja</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+</style>
+</helmet>
+<div style="background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; min-height: 100%">
+
+<header style="border-bottom: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5; text-decoration: none; color: #EDE9FF">PIXEL PERFECT<br><span style="font-size: 9px; color: #A9A3C9">ARTESANATO</span></a>
+<nav aria-label="Principal" style="display: flex; flex-wrap: wrap; gap: 24px; font-family: 'Press Start 2P', monospace; font-size: 10px">
+<a href="Loja.dc.html" style="text-decoration: none; color: {{accent}}">LOJA</a>
+<a href="Encomendas.dc.html" style="text-decoration: none; color: #EDE9FF">ENCOMENDAS</a>
+<a href="Entrar.dc.html" style="text-decoration: none; color: #EDE9FF">ENTRAR</a>
+</nav>
+<a href="Carrinho.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: #FFD23F; padding: 14px 16px; box-shadow: 4px 4px 0 {{accent}}">CARRINHO [2]</a>
+</div>
+</header>
+
+<div style="max-width: 1200px; margin: 0 auto; padding: 40px 24px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<nav aria-label="Você está em" style="font-size: 13px; color: #A9A3C9; display: flex; gap: 8px"><a href="Main.dc.html">Início</a><span aria-hidden="true">›</span><span style="color: #EDE9FF">Loja</span></nav>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 28px; line-height: 1.4">SELECIONE SEU <span style="color: {{accent}}">ITEM</span></h1>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; flex: 0 1 380px; min-width: 240px">
+<label for="busca-loja" style="font-size: 13px; color: #C9C4E3">Buscar na loja</label>
+<input id="busca-loja" type="search" value="{{q}}" onChange="{{mudaBusca}}" placeholder="estrela, gatinho, coração..." style="font-family: 'Space Mono', monospace; font-size: 15px; background: #1E1B2E; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 12px; min-height: 52px; box-sizing: border-box; width: 100%">
+</div>
+</div>
+
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 24px 24px">
+<div role="group" aria-label="Categorias" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{categorias}}" as="c" hint-placeholder-count="6">
+<button type="button" aria-pressed="{{c.ativo}}" onClick="{{c.pick}}" style="font-family: 'Press Start 2P', monospace; font-size: 9px; min-height: 44px; padding: 12px 14px; border: 3px solid {{c.borda}}; background: {{c.bg}}; color: {{c.fg}}; cursor: pointer">{{c.nome}}</button>
+</sc-for>
+</div>
+</div>
+
+<main style="max-width: 1200px; margin: 0 auto; padding: 8px 24px 96px; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+<aside aria-label="Filtros" style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 20px">
+<div style="border: 3px solid #4A4566; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">COR</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<sc-for list="{{cores}}" as="k" hint-placeholder-count="6">
+<button type="button" onClick="{{k.pick}}" aria-pressed="{{k.ativo}}" aria-label="{{k.nome}}" style="width: 44px; height: 44px; background: {{k.hex}}; border: 3px solid #14121F; box-shadow: 0 0 0 {{k.anel}} #EDE9FF; cursor: pointer"></button>
+</sc-for>
+</div>
+</div>
+<div style="border: 3px solid #4A4566; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">PREÇO</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 12px">Mín.<input type="text" inputmode="numeric" placeholder="R$ 0" style="font-family: 'Space Mono', monospace; font-size: 14px; background: #14121F; color: #EDE9FF; border: 3px solid #4A4566; padding: 10px; min-height: 44px; box-sizing: border-box; width: 100%"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 12px">Máx.<input type="text" inputmode="numeric" placeholder="R$ 0" style="font-family: 'Space Mono', monospace; font-size: 14px; background: #14121F; color: #EDE9FF; border: 3px solid #4A4566; padding: 10px; min-height: 44px; box-sizing: border-box; width: 100%"></label>
+</div>
+</div>
+<div style="border: 3px solid #4A4566; padding: 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<span style="font-size: 14px">Só disponíveis</span>
+<button type="button" role="switch" aria-checked="{{dispAria}}" aria-label="Mostrar só produtos disponíveis" onClick="{{alternaDisp}}" style="width: 64px; height: 36px; flex: none; border: 3px solid #EDE9FF; background: {{dispFundo}}; padding: 3px; display: flex; justify-content: {{dispLado}}; cursor: pointer"><span style="width: 24px; height: 24px; background: #EDE9FF; display: block"></span></button>
+</div>
+<button type="button" onClick="{{limpar}}" style="font-family: 'Press Start 2P', monospace; font-size: 9px; background: transparent; color: #EDE9FF; border: 3px dashed #4A4566; padding: 14px; min-height: 48px; cursor: pointer">LIMPAR FILTROS</button>
+<a href="Encomendas.dc.html" style="text-decoration: none; color: #EDE9FF; background: #2C2840; border: 3px solid #EDE9FF; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: {{accent}}">NÃO ACHOU?</span>
+<span style="font-size: 14px; line-height: 1.5">A gente monta o seu sob encomenda pelo Instagram.</span>
+</a>
+</aside>
+
+<section style="flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<p style="margin: 0; font-size: 14px; color: #C9C4E3" aria-live="polite">{{total}} itens encontrados</p>
+<label style="display: flex; align-items: center; gap: 10px; font-size: 14px">Ordenar
+<select onChange="{{mudaOrdem}}" value="{{ordem}}" style="font-family: 'Space Mono', monospace; font-size: 14px; background: #1E1B2E; color: #EDE9FF; border: 3px solid #4A4566; padding: 8px 10px; min-height: 44px">
+<option value="destaque">Destaques</option>
+<option value="novo">Novidades</option>
+<option value="menor">Menor preço</option>
+<option value="maior">Maior preço</option>
+</select>
+</label>
+</div>
+
+<sc-if value="{{vazio}}" hint-placeholder-val="{{ false }}">
+<div style="border: 3px dashed #4A4566; padding: 56px 24px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 14px">NENHUM ITEM ENCONTRADO</p>
+<p style="margin: 0; font-size: 15px; color: #C9C4E3">Tente outra palavra, tire alguns filtros ou peça sob encomenda.</p>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px">
+<button type="button" onClick="{{limpar}}" style="font-family: 'Press Start 2P', monospace; font-size: 10px; background: {{accent}}; color: #14121F; border: 0; padding: 16px 18px; min-height: 48px; cursor: pointer">LIMPAR FILTROS</button>
+<a href="Encomendas.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 13px 16px">ENCOMENDAR</a>
+</div>
+</div>
+</sc-if>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 22px">
+<sc-for list="{{produtos}}" as="p" hint-placeholder-count="9">
+<article style="background: #1E1B2E; border: 3px solid #4A4566; display: flex; flex-direction: column; opacity: {{p.opac}}">
+<div style="position: relative; aspect-ratio: 1 / 1; background: #191626; display: flex; align-items: center; justify-content: center; overflow: hidden">
+<sc-if value="{{p.temFoto}}" hint-placeholder-val="{{ true }}">
+<img src="{{p.img}}" alt="{{p.alt}}" style="width: 100%; height: 100%; object-fit: cover; display: block">
+</sc-if>
+<sc-if value="{{p.semFoto}}" hint-placeholder-val="{{ false }}">
+<div style="position: relative" role="img" aria-label="{{p.alt}}">
+<div style="display: grid; grid-template-columns: repeat(9, 16px); grid-template-rows: repeat(9, 16px); gap: 2px">
+<sc-for list="{{p.cells}}" as="c" hint-placeholder-count="81"><div style="border-radius: 50%; box-shadow: {{c}}"></div></sc-for>
+</div>
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding-bottom: 30px; font-family: 'Press Start 2P', monospace; font-size: 28px; color: #FFFFFF; text-shadow: 2px 2px 0 #14121F">{{p.letra}}</div>
+</div>
+</sc-if>
+<div style="position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start">
+<sc-for list="{{p.selos}}" as="s" hint-placeholder-count="1">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 7px; background: {{s.bg}}; color: #14121F; padding: 6px 8px">{{s.t}}</span>
+</sc-for>
+</div>
+<button type="button" onClick="{{p.alternaFav}}" aria-pressed="{{p.favAria}}" aria-label="Favoritar {{p.nome}}" style="position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; background: #14121F; border: 2px solid #4A4566; color: {{p.favCor}}; font-family: 'Press Start 2P', monospace; font-size: 14px; cursor: pointer">♥</button>
+</div>
+<div style="padding: 16px; display: flex; flex-direction: column; gap: 10px; flex: 1">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.6">{{p.nome}}</h3>
+<span style="font-size: 12px; color: #A9A3C9">{{p.cat}}</span>
+<div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 10px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 11px; color: #FFD23F">R$ [PREÇO]</span>
+<sc-if value="{{p.disponivel}}" hint-placeholder-val="{{ true }}">
+<a href="Produto.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 8px; text-decoration: none; background: {{accent}}; color: #14121F; padding: 14px 12px">VER ITEM</a>
+</sc-if>
+<sc-if value="{{p.esgotado}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{p.alternaAviso}}" style="font-family: 'Press Start 2P', monospace; font-size: 8px; background: transparent; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 11px 10px; min-height: 44px; cursor: pointer">{{p.avisoRotulo}}</button>
+</sc-if>
+</div>
+<sc-if value="{{p.avisoAtivo}}" hint-placeholder-val="{{ false }}">
+<p style="margin: 0; font-size: 11px; color: #A9A3C9; line-height: 1.5">Vamos te avisar por e-mail quando voltar. Dá para cancelar no seu perfil.</p>
+</sc-if>
+</div>
+</article>
+</sc-for>
+</div>
+
+<nav aria-label="Páginas" style="display: flex; justify-content: center; gap: 8px; padding-top: 16px">
+<a href="#" aria-label="Página anterior" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #A9A3C9; border: 3px solid #4A4566; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">‹</a>
+<a href="#" aria-current="page" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: #EDE9FF; border: 3px solid #EDE9FF; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">1</a>
+<a href="#" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #EDE9FF; border: 3px solid #4A4566; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">2</a>
+<a href="#" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #EDE9FF; border: 3px solid #4A4566; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">3</a>
+<a href="#" aria-label="Próxima página" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #EDE9FF; border: 3px solid #4A4566; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">›</a>
+</nav>
+</section>
+</main>
+
+<footer style="border-top: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 28px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 12px; color: #A9A3C9">
+<span>© Pixel Perfect Artesanato</span>
+<div style="display: flex; flex-wrap: wrap; gap: 20px"><a href="Privacidade.dc.html">Política de Privacidade</a><a href="Trocas.dc.html">Trocas e devoluções</a><a href="Termos.dc.html">Termos de Uso</a></div>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":1280,"height":2000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { cat: 'todos', q: '', cores: [], disp: false, ordem: 'destaque', fav: { garota: true }, aviso: {} };
+  }
+  renderVals() {
+    const s = this.state;
+    const accent = this.props.accent ?? '#FF5FAE';
+    const M = {
+      coracao: ['.##...##.', '####.####', '#########', '#########', '.#######.', '..#####..', '...###...', '....#....', '.........'],
+      gato: ['#.......#', '##.....##', '#########', '##k###k##', '#########', '####k####', '#########', '.#######.', '..#...#..'],
+      sorvete: ['...###...', '..#####..', '.#######.', '.#######.', '.yyyyyyy.', '..yyyyy..', '..yyyyy..', '...yyy...', '....y....'],
+      planeta: ['.........', '...###...', '..#####..', '.#######.', 'yyyyyyyyy', '.#######.', '..#####..', '...###...', '.........'],
+      cacto: ['....#....', '....#....', '#...#....', '#...#..#.', '#####..#.', '....#####', '....#....', '...yyy...', '...yyy...']
+    };
+    const cel = (mask, pal) => {
+      const out = [];
+      mask.forEach((r) => { for (let i = 0; i < r.length; i++) { const c = pal[r[i]]; out.push(c ? 'inset 0 0 0 5px ' + c : 'none'); } });
+      return out;
+    };
+    const base = [
+      { id: 'garota', nome: 'GAROTA PIXEL', cats: ['personagens'], cat: 'Personagens', cores: ['rosa', 'preto'], img: '/_blob/ff963464d565c9b110e7df46e932d367', alt: 'Chaveiro de personagem em pixel art com cabelo rosa', selos: [{ t: '★★★ ÉPICO', bg: '#FFD23F' }], novo: 0, preco: 9 },
+      { id: 'e13', nome: 'ESTRELA Nº', cats: ['estrelas', 'iniciais'], cat: 'Estrelas · Números', cores: ['vermelho'], img: '/_blob/67ddb026040a2247409a721a4508d547', alt: 'Chaveiro de estrela vermelha com o número 13', selos: [], novo: 0, preco: 5 },
+      { id: 'er', nome: 'ESTRELA INICIAL', cats: ['estrelas', 'iniciais'], cat: 'Estrelas · Iniciais', cores: ['vermelho', 'rosa'], img: '/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45', alt: 'Chaveiro de estrela vermelha e rosa com a letra R', selos: [], novo: 0, preco: 5 },
+      { id: 'sorvete', nome: 'SORVETE PIXEL', cats: ['icones'], cat: 'Mini ícones', cores: ['rosa'], mask: 'sorvete', pal: { '#': '#FF8CC4', 'y': '#F2B661' }, alt: 'Ilustração de chaveiro de sorvete em pixel', selos: [{ t: 'NOVO', bg: '#7CFF6B' }], novo: 1, preco: 3 },
+      { id: 'gato', nome: 'GATINHO PIXEL', cats: ['bichinhos'], cat: 'Bichinhos', cores: ['laranja'], mask: 'gato', pal: { '#': '#FF9A3D', 'k': '#14121F' }, alt: 'Ilustração de chaveiro de gatinho em pixel', selos: [{ t: 'NOVO', bg: '#7CFF6B' }], novo: 1, preco: 6 },
+      { id: 'coracao', nome: 'CORAÇÃO PIXEL', cats: ['icones'], cat: 'Mini ícones', cores: ['rosa'], mask: 'coracao', pal: { '#': '#FF5FAE' }, alt: 'Ilustração de chaveiro de coração em pixel', selos: [], novo: 0, preco: 2 },
+      { id: 'planeta', nome: 'PLANETA PIXEL', cats: ['icones'], cat: 'Mini ícones', cores: ['roxo'], mask: 'planeta', pal: { '#': '#9B5CFF', 'y': '#FFD23F' }, alt: 'Ilustração de chaveiro de planeta em pixel', selos: [{ t: 'ESGOTADO', bg: '#A9A3C9' }], esgotado: true, novo: 0, preco: 4 },
+      { id: 'cacto', nome: 'CACTO PIXEL', cats: ['icones'], cat: 'Mini ícones', cores: ['verde'], mask: 'cacto', pal: { '#': '#2FBF71', 'y': '#C8693C' }, alt: 'Ilustração de chaveiro de cacto em pixel', selos: [], novo: 0, preco: 3 },
+      { id: 'coracaoA', nome: 'CORAÇÃO INICIAL', cats: ['iniciais', 'icones'], cat: 'Iniciais · Mini ícones', cores: ['vermelho'], mask: 'coracao', pal: { '#': '#E8302A' }, letra: 'A', alt: 'Ilustração de chaveiro de coração vermelho com a letra A', selos: [], novo: 0, preco: 4 }
+    ];
+    const q = (s.q || '').trim().toLowerCase();
+    let lista = base.filter((p) =>
+      (s.cat === 'todos' || p.cats.indexOf(s.cat) >= 0) &&
+      (!q || p.nome.toLowerCase().indexOf(q) >= 0 || p.cat.toLowerCase().indexOf(q) >= 0) &&
+      (s.cores.length === 0 || p.cores.some((c) => s.cores.indexOf(c) >= 0)) &&
+      (!s.disp || !p.esgotado)
+    );
+    if (s.ordem === 'novo') lista = lista.slice().sort((a, b) => b.novo - a.novo);
+    if (s.ordem === 'menor') lista = lista.slice().sort((a, b) => a.preco - b.preco);
+    if (s.ordem === 'maior') lista = lista.slice().sort((a, b) => b.preco - a.preco);
+    const produtos = lista.map((p) => {
+      const fav = !!s.fav[p.id];
+      const av = !!s.aviso[p.id];
+      return {
+        ...p,
+        temFoto: !!p.img,
+        semFoto: !p.img,
+        cells: p.mask ? cel(M[p.mask], p.pal) : [],
+        letra: p.letra || '',
+        disponivel: !p.esgotado,
+        esgotado: !!p.esgotado,
+        opac: p.esgotado ? 0.75 : 1,
+        favAria: fav ? 'true' : 'false',
+        favCor: fav ? accent : '#4A4566',
+        alternaFav: () => this.setState({ fav: { ...s.fav, [p.id]: !fav } }),
+        avisoAtivo: av,
+        avisoRotulo: av ? 'AVISAREMOS ✓' : 'AVISE-ME',
+        alternaAviso: () => this.setState({ aviso: { ...s.aviso, [p.id]: !av } })
+      };
+    });
+    const categorias = [
+      { id: 'todos', nome: 'TODOS' }, { id: 'personagens', nome: 'PERSONAGENS' }, { id: 'estrelas', nome: 'ESTRELAS' },
+      { id: 'iniciais', nome: 'INICIAIS E NÚMEROS' }, { id: 'bichinhos', nome: 'BICHINHOS' }, { id: 'icones', nome: 'MINI ÍCONES' }
+    ].map((c) => {
+      const ativo = c.id === s.cat;
+      return { ...c, ativo: ativo ? 'true' : 'false', bg: ativo ? '#EDE9FF' : 'transparent', fg: ativo ? '#14121F' : '#EDE9FF', borda: ativo ? '#EDE9FF' : '#4A4566', pick: () => this.setState({ cat: c.id }) };
+    });
+    const cores = [
+      { id: 'rosa', nome: 'Rosa', hex: '#FF5FAE' }, { id: 'vermelho', nome: 'Vermelho', hex: '#E8302A' }, { id: 'roxo', nome: 'Roxo', hex: '#9B5CFF' },
+      { id: 'laranja', nome: 'Laranja', hex: '#FF9A3D' }, { id: 'verde', nome: 'Verde', hex: '#2FBF71' }, { id: 'preto', nome: 'Preto', hex: '#3A3650' }
+    ].map((k) => {
+      const ativo = s.cores.indexOf(k.id) >= 0;
+      return { ...k, ativo: ativo ? 'true' : 'false', anel: ativo ? '3px' : '0px', pick: () => this.setState({ cores: ativo ? s.cores.filter((x) => x !== k.id) : s.cores.concat([k.id]) }) };
+    });
+    return {
+      accent,
+      q: s.q,
+      ordem: s.ordem,
+      categorias,
+      cores,
+      produtos,
+      total: produtos.length,
+      vazio: produtos.length === 0,
+      dispAria: s.disp ? 'true' : 'false',
+      dispFundo: s.disp ? accent : '#14121F',
+      dispLado: s.disp ? 'flex-end' : 'flex-start',
+      alternaDisp: () => this.setState({ disp: !s.disp }),
+      mudaBusca: (e) => this.setState({ q: e.target.value }),
+      mudaOrdem: (e) => this.setState({ ordem: e.target.value }),
+      limpar: () => this.setState({ cat: 'todos', q: '', cores: [], disp: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

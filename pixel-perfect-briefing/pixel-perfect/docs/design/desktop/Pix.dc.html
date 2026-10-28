@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Pagar com Pix</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+</style>
+</helmet>
+<div style="background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; min-height: 100%">
+
+<header style="border-bottom: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5; text-decoration: none; color: #EDE9FF">PIXEL PERFECT<br><span style="font-size: 9px; color: #A9A3C9">ARTESANATO</span></a>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #A9A3C9">COMPRA SEGURA</span>
+</div>
+</header>
+
+<main style="max-width: 1200px; margin: 0 auto; padding: 48px 24px 96px; display: flex; flex-direction: column; gap: 36px">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; font-family: 'Press Start 2P', monospace; font-size: 9px">
+<li style="background: #FFD23F; color: #14121F; padding: 12px 14px">✓ 1 · DADOS</li>
+<li style="background: #FFD23F; color: #14121F; padding: 12px 14px">✓ 2 · ENTREGA</li>
+<li style="background: {{accent}}; color: #14121F; padding: 12px 14px">3 · PAGAMENTO</li>
+</ol>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 28px; line-height: 1.4">PAGUE COM <span style="color: {{accent}}">PIX</span></h1>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+<section style="flex: 999 1 600px; min-width: 0; background: #2C2840; border: 4px solid #EDE9FF; box-shadow: 12px 12px 0 {{accent}}; padding: 32px; display: flex; flex-wrap: wrap; gap: 36px; align-items: flex-start">
+<div style="flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 0 auto">
+<div style="background: #FFFFFF; padding: 16px" role="img" aria-label="QR code do Pix">
+<div style="display: grid; grid-template-columns: repeat(25, 8px); grid-template-rows: repeat(25, 8px)">
+<sc-for list="{{qr}}" as="q" hint-placeholder-count="625"><div style="background: {{q}}"></div></sc-for>
+</div>
+</div>
+<span style="font-size: 11px; color: #A9A3C9">[QR gerado pelo intermediador]</span>
+</div>
+
+<div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">TEMPO RESTANTE</span>
+<div style="display: flex; align-items: center; gap: 16px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 28px; color: {{corTempo}}" aria-live="off">{{tempo}}</span>
+</div>
+<div style="height: 14px; background: #14121F; border: 2px solid #4A4566"><div style="height: 100%; width: {{barra}}; background: {{corTempo}}"></div></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<label for="pix-codigo" style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">PIX COPIA E COLA</label>
+<div style="display: flex">
+<input id="pix-codigo" type="text" readonly value="00020126580014BR.GOV.BCB.PIX0136[chave-do-recebedor]5204000053039865802BR5925PIXEL PERFECT ARTESANATO6009[CIDADE]62070503***6304[CRC]" style="flex: 1; min-width: 0; font-family: 'Space Mono', monospace; font-size: 13px; background: #14121F; color: #C9C4E3; border: 3px solid #4A4566; border-right: 0; padding: 12px; min-height: 52px; box-sizing: border-box">
+<button type="button" onClick="{{copiar}}" style="font-family: 'Press Start 2P', monospace; font-size: 9px; background: {{corCopiar}}; color: #14121F; border: 0; padding: 0 16px; min-height: 52px; min-width: 120px; cursor: pointer">{{rotuloCopiar}}</button>
+</div>
+</div>
+
+<ol style="margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.5; color: #D6D2EC">
+<li>Abra o app do seu banco e entre na área Pix.</li>
+<li>Escaneie o QR code ou use o Pix copia e cola.</li>
+<li>Confira o valor e o recebedor: Pixel Perfect Artesanato.</li>
+</ol>
+
+<div style="border-top: 3px dashed #4A4566; padding-top: 18px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 12px; font-size: 14px">
+<span style="width: 12px; height: 12px; background: #FFD23F; flex: none" aria-hidden="true"></span>
+<span>Aguardando pagamento. A confirmação é automática e esta página atualiza sozinha.</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="Sucesso.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 16px 18px; box-shadow: 5px 5px 0 #FFD23F">JÁ PAGUEI</a>
+<a href="Checkout.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 13px 16px">TROCAR FORMA DE PAGAMENTO</a>
+</div>
+</div>
+</div>
+</section>
+
+<aside style="flex: 1 1 300px; min-width: 0; border: 3px solid #4A4566; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 11px">PEDIDO #[0000]</h2>
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="/_blob/ff963464d565c9b110e7df46e932d367" alt="Chaveiro Garota Pixel" style="width: 56px; height: 56px; object-fit: cover; border: 2px solid #EDE9FF">
+<span style="flex: 1; font-size: 14px">Garota Pixel ×1</span>
+</div>
+<div style="display: flex; align-items: center; gap: 12px">
+<img src="/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45" alt="Chaveiro Estrela inicial R" style="width: 56px; height: 56px; object-fit: cover; border: 2px solid #EDE9FF">
+<span style="flex: 1; font-size: 14px">Estrela inicial R ×1</span>
+</div>
+<div style="border-top: 3px dashed #4A4566; padding-top: 14px; display: flex; justify-content: space-between; align-items: center">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 11px">TOTAL</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #FFD23F">R$ [VALOR]</span>
+</div>
+<p style="margin: 0; font-size: 12px; color: #A9A3C9; line-height: 1.6">Se o tempo acabar, o código expira e você pode gerar outro sem perder o carrinho.</p>
+</aside>
+</div>
+</main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":1280,"height":1200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.total = 30 * 60;
+    this.state = { restante: this.total, copiado: false };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      this.setState((st) => ({ restante: Math.max(0, st.restante - 1) }));
+    }, 1000);
+  }
+  componentWillUnmount() {
+    if (this.timer) clearInterval(this.timer);
+    if (this.volta) clearTimeout(this.volta);
+  }
+  renderVals() {
+    const s = this.state;
+    const accent = this.props.accent ?? '#FF5FAE';
+    let seed = 42;
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    const N = 25;
+    const finder = (r, c) => {
+      const zonas = [[0, 0], [0, N - 7], [N - 7, 0]];
+      for (const [zr, zc] of zonas) {
+        const rr = r - zr, cc = c - zc;
+        if (rr >= -1 && rr <= 7 && cc >= -1 && cc <= 7) {
+          if (rr < 0 || cc < 0 || rr > 6 || cc > 6) return 0;
+          if (rr === 0 || rr === 6 || cc === 0 || cc === 6) return 1;
+          if (rr >= 2 && rr <= 4 && cc >= 2 && cc <= 4) return 1;
+          return 0;
+        }
+      }
+      return -1;
+    };
+    const qr = [];
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+      const f = finder(r, c);
+      const on = f === -1 ? rnd() > 0.52 : f === 1;
+      qr.push(on ? '#14121F' : '#FFFFFF');
+    }
+    const m = Math.floor(s.restante / 60), sec = s.restante % 60;
+    const pouco = s.restante < 5 * 60;
+    return {
+      accent,
+      qr,
+      tempo: (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec,
+      barra: (s.restante / this.total * 100).toFixed(1) + '%',
+      corTempo: pouco ? '#FF6B6B' : '#7CFF6B',
+      rotuloCopiar: s.copiado ? 'COPIADO ✓' : 'COPIAR',
+      corCopiar: s.copiado ? '#7CFF6B' : '#EDE9FF',
+      copiar: () => {
+        try {
+          const el = document.getElementById('pix-codigo');
+          if (navigator.clipboard && el) navigator.clipboard.writeText(el.value).catch(() => {});
+        } catch (e) {}
+        this.setState({ copiado: true });
+        if (this.volta) clearTimeout(this.volta);
+        this.volta = setTimeout(() => this.setState({ copiado: false }), 2500);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Loja (celular)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+.chips::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 2300px; background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; position: relative; display: flex; flex-direction: column">
+
+<header style="position: sticky; top: 0; z-index: 10; background: #14121F; border-bottom: 3px solid #2C2840; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<a href="CelMenu.dc.html" aria-label="Abrir menu" style="width: 48px; height: 48px; box-sizing: border-box; border: 3px solid #4A4566; color: #EDE9FF; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+</a>
+<a href="CelHome.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1.5; text-decoration: none; color: #EDE9FF; text-align: center">PIXEL PERFECT<br><span style="font-size: 7px; color: #A9A3C9">ARTESANATO</span></a>
+<a href="CelCarrinho.dc.html" aria-label="Carrinho, 2 itens" style="position: relative; width: 48px; height: 48px; background: #FFD23F; color: #14121F; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 0 {{accent}}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" aria-hidden="true"><path d="M5 8h14l-1 13H6L5 8z"></path><path d="M9 8V5h6v3"></path></svg>
+<span style="position: absolute; top: -8px; right: -8px; min-width: 22px; height: 22px; background: {{accent}}; color: #14121F; font-family: 'Press Start 2P', monospace; font-size: 9px; display: flex; align-items: center; justify-content: center">2</span>
+</a>
+</header>
+
+<div style="padding: 20px 16px 12px; display: flex; flex-direction: column; gap: 14px">
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 16px; line-height: 1.5">SELECIONE SEU <span style="color: {{accent}}">ITEM</span></h1>
+<div style="position: relative">
+<label for="busca-cel" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar na loja</label>
+<input id="busca-cel" type="search" value="{{q}}" onChange="{{mudaBusca}}" placeholder="Buscar: estrela, gatinho..." style="font-family: 'Space Mono', monospace; font-size: 16px; background: #1E1B2E; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 12px 12px 12px 44px; min-height: 52px; box-sizing: border-box; width: 100%">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9A3C9" stroke-width="2.5" stroke-linecap="square" aria-hidden="true" style="position: absolute; left: 14px; top: 16px"><path d="M4 10a6 6 0 1 0 12 0 6 6 0 1 0-12 0M15 15l5 5"></path></svg>
+</div>
+</div>
+
+<div class="chips" role="group" aria-label="Categorias" style="display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 14px; scrollbar-width: none">
+<sc-for list="{{categorias}}" as="c" hint-placeholder-count="6">
+<button type="button" aria-pressed="{{c.ativo}}" onClick="{{c.pick}}" style="flex: none; font-family: 'Press Start 2P', monospace; font-size: 8px; min-height: 44px; padding: 10px 12px; border: 3px solid {{c.borda}}; background: {{c.bg}}; color: {{c.fg}}; cursor: pointer; white-space: nowrap">{{c.nome}}</button>
+</sc-for>
+</div>
+
+<div style="padding: 0 16px 16px; display: flex; gap: 10px; align-items: center">
+<button type="button" onClick="{{abrirFiltros}}" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Press Start 2P', monospace; font-size: 9px; min-height: 48px; background: transparent; color: #EDE9FF; border: 3px solid #EDE9FF; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square" aria-hidden="true"><path d="M3 6h18M7 12h10M10 18h4"></path></svg>FILTRAR</button>
+<button type="button" onClick="{{abrirOrdem}}" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Press Start 2P', monospace; font-size: 9px; min-height: 48px; background: transparent; color: #EDE9FF; border: 3px solid #EDE9FF; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square" aria-hidden="true"><path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"></path></svg>ORDENAR</button>
+</div>
+<p style="margin: 0; padding: 0 16px 12px; font-size: 13px; color: #C9C4E3" aria-live="polite">{{total}} itens</p>
+
+<div style="padding: 0 16px 32px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{produtos}}" as="p" hint-placeholder-count="8">
+<article style="background: #1E1B2E; border: 3px solid #4A4566; display: flex; flex-direction: column; opacity: {{p.opac}}">
+<a href="CelProduto.dc.html" style="position: relative; aspect-ratio: 1 / 1; background: #191626; display: flex; align-items: center; justify-content: center; overflow: hidden; text-decoration: none">
+<sc-if value="{{p.temFoto}}" hint-placeholder-val="{{ true }}">
+<img src="{{p.img}}" alt="{{p.alt}}" style="width: 100%; height: 100%; object-fit: cover; display: block">
+</sc-if>
+<sc-if value="{{p.semFoto}}" hint-placeholder-val="{{ false }}">
+<div style="display: grid; grid-template-columns: repeat(9, 11px); grid-template-rows: repeat(9, 11px); gap: 1px" role="img" aria-label="{{p.alt}}">
+<sc-for list="{{p.cells}}" as="c" hint-placeholder-count="81"><div style="border-radius: 50%; box-shadow: {{c}}"></div></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{p.temSelo}}" hint-placeholder-val="{{ false }}">
+<span style="position: absolute; top: 8px; left: 8px; font-family: 'Press Start 2P', monospace; font-size: 6px; background: {{p.seloBg}}; color: #14121F; padding: 5px 6px">{{p.selo}}</span>
+</sc-if>
+</a>
+<div style="padding: 10px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 8px; line-height: 1.6">{{p.nome}}</h2>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">R$ [PREÇO]</span>
+</div>
+</article>
+</sc-for>
+</div>
+
+<a href="Encomendas.dc.html" style="margin: 0 16px 32px; text-decoration: none; color: #EDE9FF; background: #2C2840; border: 3px solid #EDE9FF; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: {{accent}}">NÃO ACHOU?</span>
+<span style="font-size: 14px; line-height: 1.5">A gente monta o seu sob encomenda pelo Instagram ›</span>
+</a>
+
+<div style="flex: 1"></div>
+<nav aria-label="Atalhos" style="position: sticky; bottom: 0; z-index: 10; background: #1E1B2E; border-top: 3px solid #EDE9FF; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+<a href="CelHome.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: #EDE9FF; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M3 11l9-7 9 7v10H3z"></path><path d="M10 21v-6h4v6"></path></svg>INÍCIO</a>
+<a href="CelLoja.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: {{accent}}; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>LOJA</a>
+<a href="Encomendas.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: #EDE9FF; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg>ENCOMENDA</a>
+<a href="CelPerfil.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: #EDE9FF; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M8 8a4 4 0 1 0 8 0 4 4 0 1 0-8 0"></path><path d="M4 21v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2"></path></svg>CONTA</a>
+</nav>
+
+<sc-if value="{{folhaAberta}}" hint-placeholder-val="{{ false }}">
+<div style="position: fixed; top: 0; left: 0; width: 390px; height: 100vh; z-index: 30; display: flex; flex-direction: column; justify-content: flex-end">
+<button type="button" onClick="{{fechar}}" aria-label="Fechar" style="position: absolute; inset: 0; background: rgba(11, 10, 18, 0.72); border: 0; cursor: pointer"></button>
+<div role="dialog" aria-modal="true" aria-label="{{tituloFolha}}" style="position: relative; background: #1E1B2E; border-top: 4px solid #EDE9FF; box-shadow: 0 -8px 0 {{accent}}; padding: 12px 16px 20px; display: flex; flex-direction: column; gap: 18px; max-height: 80vh; overflow-y: auto">
+<div style="width: 48px; height: 6px; background: #4A4566; align-self: center" aria-hidden="true"></div>
+<div style="display: flex; justify-content: space-between; align-items: center">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 13px">{{tituloFolha}}</h2>
+<button type="button" onClick="{{fechar}}" aria-label="Fechar" style="width: 44px; height: 44px; font-family: 'Press Start 2P', monospace; font-size: 11px; background: transparent; color: #EDE9FF; border: 3px solid #4A4566; cursor: pointer">X</button>
+</div>
+
+<sc-if value="{{verFiltros}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #FFD23F">COR</span>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<sc-for list="{{cores}}" as="k" hint-placeholder-count="6">
+<button type="button" onClick="{{k.pick}}" aria-pressed="{{k.ativo}}" aria-label="{{k.nome}}" style="width: 44px; height: 44px; background: {{k.hex}}; border: 3px solid #1E1B2E; box-shadow: 0 0 0 {{k.anel}} #EDE9FF; cursor: pointer"></button>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #FFD23F">PREÇO</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 12px">Mín.<input type="text" inputmode="numeric" placeholder="R$ 0" style="font-family: 'Space Mono', monospace; font-size: 16px; background: #14121F; color: #EDE9FF; border: 3px solid #4A4566; padding: 10px; min-height: 48px; box-sizing: border-box; width: 100%"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 12px">Máx.<input type="text" inputmode="numeric" placeholder="R$ 0" style="font-family: 'Space Mono', monospace; font-size: 16px; background: #14121F; color: #EDE9FF; border: 3px solid #4A4566; padding: 10px; min-height: 48px; box-sizing: border-box; width: 100%"></label>
+</div>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 2px solid #2C2840; padding-top: 16px">
+<span style="font-size: 15px">Só disponíveis</span>
+<button type="button" role="switch" aria-checked="{{dispAria}}" aria-label="Mostrar só produtos disponíveis" onClick="{{alternaDisp}}" style="width: 64px; height: 36px; flex: none; border: 3px solid #EDE9FF; background: {{dispFundo}}; padding: 3px; display: flex; justify-content: {{dispLado}}; cursor: pointer"><span style="width: 24px; height: 24px; background: #EDE9FF; display: block"></span></button>
+</div>
+<div style="display: flex; gap: 10px">
+<button type="button" onClick="{{limpar}}" style="flex: 1; font-family: 'Press Start 2P', monospace; font-size: 9px; background: transparent; color: #EDE9FF; border: 3px solid #EDE9FF; min-height: 52px; cursor: pointer">LIMPAR</button>
+<button type="button" onClick="{{fechar}}" style="flex: 2; font-family: 'Press Start 2P', monospace; font-size: 9px; background: {{accent}}; color: #14121F; border: 0; min-height: 52px; box-shadow: 4px 4px 0 #FFD23F; cursor: pointer">VER {{total}} ITENS</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{verOrdem}}" hint-placeholder-val="{{ false }}">
+<div role="radiogroup" aria-label="Ordenar por" style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{ordens}}" as="o" hint-placeholder-count="4">
+<button type="button" role="radio" aria-checked="{{o.ativo}}" onClick="{{o.pick}}" style="text-align: left; font-family: 'Space Mono', monospace; font-size: 15px; min-height: 52px; padding: 12px 14px; border: 3px solid {{o.borda}}; background: {{o.bg}}; color: {{o.fg}}; cursor: pointer">{{o.nome}}</button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"mostrarFiltros":{"editor":"boolean","default":false},"$preview":{"width":390,"height":2300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { cat: 'todos', q: '', cores: [], disp: false, ordem: 'destaque', folha: undefined };
+  }
+  renderVals() {
+    const s = this.state;
+    const accent = this.props.accent ?? '#FF5FAE';
+    const folha = s.folha === undefined ? (this.props.mostrarFiltros ? 'filtros' : null) : s.folha;
+    const M = {
+      coracao: ['.##...##.', '####.####', '#########', '#########', '.#######.', '..#####..', '...###...', '....#....', '.........'],
+      gato: ['#.......#', '##.....##', '#########', '##k###k##', '#########', '####k####', '#########', '.#######.', '..#...#..'],
+      sorvete: ['...###...', '..#####..', '.#######.', '.#######.', '.yyyyyyy.', '..yyyyy..', '..yyyyy..', '...yyy...', '....y....'],
+      planeta: ['.........', '...###...', '..#####..', '.#######.', 'yyyyyyyyy', '.#######.', '..#####..', '...###...', '.........'],
+      cacto: ['....#....', '....#....', '#...#....', '#...#..#.', '#####..#.', '....#####', '....#....', '...yyy...', '...yyy...']
+    };
+    const cel = (mask, pal) => { const out = []; mask.forEach((r) => { for (let i = 0; i < r.length; i++) { const c = pal[r[i]]; out.push(c ? 'inset 0 0 0 4px ' + c : 'none'); } }); return out; };
+    const base = [
+      { id: 'garota', nome: 'GAROTA PIXEL', cats: ['personagens'], cores: ['rosa', 'preto'], img: '/_blob/ff963464d565c9b110e7df46e932d367', alt: 'Chaveiro Garota Pixel', selo: '★★★ ÉPICO', seloBg: '#FFD23F', novo: 0, preco: 9 },
+      { id: 'e13', nome: 'ESTRELA Nº', cats: ['estrelas', 'iniciais'], cores: ['vermelho'], img: '/_blob/67ddb026040a2247409a721a4508d547', alt: 'Chaveiro estrela número 13', novo: 0, preco: 5 },
+      { id: 'er', nome: 'ESTRELA INICIAL', cats: ['estrelas', 'iniciais'], cores: ['vermelho', 'rosa'], img: '/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45', alt: 'Chaveiro estrela letra R', novo: 0, preco: 5 },
+      { id: 'sorvete', nome: 'SORVETE PIXEL', cats: ['icones'], cores: ['rosa'], mask: 'sorvete', pal: { '#': '#FF8CC4', 'y': '#F2B661' }, alt: 'Chaveiro de sorvete em pixel', selo: 'NOVO', seloBg: '#7CFF6B', novo: 1, preco: 3 },
+      { id: 'gato', nome: 'GATINHO PIXEL', cats: ['bichinhos'], cores: ['laranja'], mask: 'gato', pal: { '#': '#FF9A3D', 'k': '#14121F' }, alt: 'Chaveiro de gatinho em pixel', selo: 'NOVO', seloBg: '#7CFF6B', novo: 1, preco: 6 },
+      { id: 'coracao', nome: 'CORAÇÃO PIXEL', cats: ['icones'], cores: ['rosa'], mask: 'coracao', pal: { '#': '#FF5FAE' }, alt: 'Chaveiro de coração em pixel', novo: 0, preco: 2 },
+      { id: 'planeta', nome: 'PLANETA PIXEL', cats: ['icones'], cores: ['roxo'], mask: 'planeta', pal: { '#': '#9B5CFF', 'y': '#FFD23F' }, alt: 'Chaveiro de planeta em pixel', selo: 'ESGOTADO', seloBg: '#A9A3C9', esgotado: true, novo: 0, preco: 4 },
+      { id: 'cacto', nome: 'CACTO PIXEL', cats: ['icones'], cores: ['verde'], mask: 'cacto', pal: { '#': '#2FBF71', 'y': '#C8693C' }, alt: 'Chaveiro de cacto em pixel', novo: 0, preco: 3 }
+    ];
+    const q = (s.q || '').trim().toLowerCase();
+    let lista = base.filter((p) =>
+      (s.cat === 'todos' || p.cats.indexOf(s.cat) >= 0) &&
+      (!q || p.nome.toLowerCase().indexOf(q) >= 0) &&
+      (s.cores.length === 0 || p.cores.some((c) => s.cores.indexOf(c) >= 0)) &&
+      (!s.disp || !p.esgotado));
+    if (s.ordem === 'novo') lista = lista.slice().sort((a, b) => b.novo - a.novo);
+    if (s.ordem === 'menor') lista = lista.slice().sort((a, b) => a.preco - b.preco);
+    if (s.ordem === 'maior') lista = lista.slice().sort((a, b) => b.preco - a.preco);
+    const produtos = lista.map((p) => ({ ...p, temFoto: !!p.img, semFoto: !p.img, cells: p.mask ? cel(M[p.mask], p.pal) : [], temSelo: !!p.selo, opac: p.esgotado ? 0.7 : 1 }));
+    const pill = (lista2, chave) => lista2.map((o) => {
+      const ativo = o.id === s[chave];
+      return { ...o, ativo: ativo ? 'true' : 'false', bg: ativo ? '#EDE9FF' : 'transparent', fg: ativo ? '#14121F' : '#EDE9FF', borda: ativo ? '#EDE9FF' : '#4A4566', pick: () => this.setState({ [chave]: o.id }) };
+    });
+    const cores = [
+      { id: 'rosa', nome: 'Rosa', hex: '#FF5FAE' }, { id: 'vermelho', nome: 'Vermelho', hex: '#E8302A' }, { id: 'roxo', nome: 'Roxo', hex: '#9B5CFF' },
+      { id: 'laranja', nome: 'Laranja', hex: '#FF9A3D' }, { id: 'verde', nome: 'Verde', hex: '#2FBF71' }, { id: 'preto', nome: 'Preto', hex: '#3A3650' }
+    ].map((k) => {
+      const ativo = s.cores.indexOf(k.id) >= 0;
+      return { ...k, ativo: ativo ? 'true' : 'false', anel: ativo ? '3px' : '0px', pick: () => this.setState({ cores: ativo ? s.cores.filter((x) => x !== k.id) : s.cores.concat([k.id]) }) };
+    });
+    return {
+      accent,
+      q: s.q,
+      produtos,
+      total: produtos.length,
+      categorias: pill([{ id: 'todos', nome: 'TODOS' }, { id: 'personagens', nome: 'PERSONAGENS' }, { id: 'estrelas', nome: 'ESTRELAS' }, { id: 'iniciais', nome: 'INICIAIS' }, { id: 'bichinhos', nome: 'BICHINHOS' }, { id: 'icones', nome: 'MINI ÍCONES' }], 'cat'),
+      ordens: pill([{ id: 'destaque', nome: 'Destaques' }, { id: 'novo', nome: 'Novidades' }, { id: 'menor', nome: 'Menor preço' }, { id: 'maior', nome: 'Maior preço' }], 'ordem'),
+      cores,
+      folhaAberta: !!folha,
+      verFiltros: folha === 'filtros',
+      verOrdem: folha === 'ordem',
+      tituloFolha: folha === 'ordem' ? 'ORDENAR' : 'FILTRAR',
+      dispAria: s.disp ? 'true' : 'false',
+      dispFundo: s.disp ? accent : '#14121F',
+      dispLado: s.disp ? 'flex-end' : 'flex-start',
+      alternaDisp: () => this.setState({ disp: !s.disp }),
+      abrirFiltros: () => this.setState({ folha: 'filtros' }),
+      abrirOrdem: () => this.setState({ folha: 'ordem' }),
+      fechar: () => this.setState({ folha: null }),
+      limpar: () => this.setState({ cat: 'todos', q: '', cores: [], disp: false }),
+      mudaBusca: (e) => this.setState({ q: e.target.value })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Pagamento recusado</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+</style>
+</helmet>
+<div style="background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; min-height: 100%">
+
+<header style="border-bottom: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5; text-decoration: none; color: #EDE9FF">PIXEL PERFECT<br><span style="font-size: 9px; color: #A9A3C9">ARTESANATO</span></a>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #A9A3C9">COMPRA SEGURA</span>
+</div>
+</header>
+
+<main style="max-width: 900px; margin: 0 auto; padding: 72px 24px 96px; display: flex; flex-direction: column; align-items: center; gap: 32px; text-align: center">
+<div style="display: flex; flex-direction: column; gap: 18px; align-items: center">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FF8A8A">PAGAMENTO NÃO APROVADO</p>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 40px; line-height: 1.35">CONTINUE?</h1>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 72px; line-height: 1; color: {{accent}}" aria-hidden="true">{{contador}}</span>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #C9C4E3; max-width: 560px">Calma, ainda não é game over. O banco não aprovou o pagamento, mas seu carrinho continua salvo e dá para tentar de novo agora.</p>
+</div>
+
+<div style="width: 100%; background: #2C2840; border: 4px solid #EDE9FF; box-shadow: 12px 12px 0 #FF6B6B; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; text-align: left">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 11px; color: #FFD23F">O QUE PODE TER ACONTECIDO</h2>
+<ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 15px; line-height: 1.5; color: #D6D2EC">
+<li>Algum dado do cartão foi digitado errado (número, validade ou código de segurança).</li>
+<li>Limite insuficiente ou cartão bloqueado para compras online.</li>
+<li>O banco pediu uma confirmação no app e ela não foi feita.</li>
+</ul>
+<p style="margin: 0; font-size: 13px; color: #A9A3C9">Código do retorno: [código do intermediador]</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 14px">
+<a href="Checkout.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 11px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 18px 22px; box-shadow: 6px 6px 0 #FFD23F">TENTAR DE NOVO</a>
+<a href="Pix.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 11px; text-decoration: none; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 15px 20px">PAGAR COM PIX</a>
+</div>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3">Continua dando erro? <a href="https://ig.me/m/[usuario]">Fale com a gente no Direct do Instagram</a>.</p>
+</main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":1280,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { n: 9 };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      this.setState((st) => (st.n > 0 ? { n: st.n - 1 } : st));
+    }, 1000);
+  }
+  componentWillUnmount() { if (this.timer) clearInterval(this.timer); }
+  renderVals() {
+    return { accent: this.props.accent ?? '#FF5FAE', contador: String(this.state.n) };
+  }
+}
+</script>
+</body>
+</html>

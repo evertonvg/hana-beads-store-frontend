@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Produto (celular)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+.rolagem::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 2300px; background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; position: relative; display: flex; flex-direction: column">
+
+<header style="position: sticky; top: 0; z-index: 10; background: #14121F; border-bottom: 3px solid #2C2840; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<a href="CelLoja.dc.html" aria-label="Voltar para a loja" style="width: 48px; height: 48px; box-sizing: border-box; border: 3px solid #4A4566; color: #EDE9FF; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</a>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #A9A3C9">PERSONAGEM #01</span>
+<button type="button" onClick="{{abrir}}" aria-label="Carrinho, {{noCarrinho}} itens" style="position: relative; width: 48px; height: 48px; background: #FFD23F; color: #14121F; border: 0; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 0 {{accent}}; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" aria-hidden="true"><path d="M5 8h14l-1 13H6L5 8z"></path><path d="M9 8V5h6v3"></path></svg>
+<span style="position: absolute; top: -8px; right: -8px; min-width: 22px; height: 22px; background: {{accent}}; color: #14121F; font-family: 'Press Start 2P', monospace; font-size: 9px; display: flex; align-items: center; justify-content: center">{{noCarrinho}}</span>
+</button>
+</header>
+
+<div class="rolagem" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none">
+<div style="flex: 0 0 390px; scroll-snap-align: start; position: relative">
+<img src="/_blob/ff963464d565c9b110e7df46e932d367" alt="Chaveiro Garota Pixel na palma da mão" style="width: 390px; height: 390px; object-fit: cover; display: block">
+<span style="position: absolute; top: 14px; left: 14px; font-family: 'Press Start 2P', monospace; font-size: 8px; background: #14121F; color: #FFD23F; padding: 8px 10px">★★★ ÉPICO</span>
+</div>
+<div style="flex: 0 0 390px; height: 390px; scroll-snap-align: start; background: #1E1B2E; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #A9A3C9">[FOTO 2]</div>
+<div style="flex: 0 0 390px; height: 390px; scroll-snap-align: start; background: #1E1B2E; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #A9A3C9">[FOTO 3]</div>
+</div>
+<div style="display: flex; gap: 6px; justify-content: center; padding: 12px 0 0" aria-hidden="true">
+<span style="width: 18px; height: 6px; background: {{accent}}"></span><span style="width: 6px; height: 6px; background: #4A4566"></span><span style="width: 6px; height: 6px; background: #4A4566"></span>
+</div>
+
+<section style="padding: 20px 16px; display: flex; flex-direction: column; gap: 14px">
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 20px; line-height: 1.4">GAROTA PIXEL</h1>
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 16px; color: #FFD23F">R$ [PREÇO]</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9C4E3">[Descrição do produto: cabelo rosa, laço, gatinhos nas mãos. Feito conta por conta.]</p>
+</section>
+
+<section style="margin: 0 16px; border: 3px solid #4A4566; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">ATRIBUTOS</h2>
+<sc-for list="{{atributos}}" as="a" hint-placeholder-count="3">
+<div style="display: grid; grid-template-columns: 76px 1fr 54px; align-items: center; gap: 10px; font-size: 12px">
+<span>{{a.nome}}</span>
+<div style="height: 10px; background: #2C2840"><div style="height: 10px; width: {{a.barra}}; background: {{a.cor}}"></div></div>
+<span style="color: #C9C4E3; text-align: right">{{a.valor}}</span>
+</div>
+</sc-for>
+</section>
+
+<section style="padding: 22px 16px 0; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px">ARGOLA</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{argolas}}" as="g" hint-placeholder-count="2">
+<button type="button" onClick="{{g.pick}}" aria-pressed="{{g.ativo}}" style="font-family: 'Press Start 2P', monospace; font-size: 9px; min-height: 52px; border: 3px solid {{g.borda}}; background: {{g.bg}}; color: {{g.fg}}; cursor: pointer">{{g.nome}}</button>
+</sc-for>
+</div>
+</section>
+
+<section style="padding: 22px 16px 0; display: flex; align-items: center; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px">QUANTIDADE</h2>
+<div style="display: flex; align-items: center; border: 3px solid #EDE9FF">
+<button type="button" onClick="{{menos}}" aria-label="Diminuir quantidade" style="font-family: 'Press Start 2P', monospace; font-size: 14px; width: 52px; height: 52px; background: transparent; color: #EDE9FF; border: 0; cursor: pointer">-</button>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 14px; width: 44px; text-align: center">{{qtd}}</span>
+<button type="button" onClick="{{mais}}" aria-label="Aumentar quantidade" style="font-family: 'Press Start 2P', monospace; font-size: 14px; width: 52px; height: 52px; background: transparent; color: #EDE9FF; border: 0; cursor: pointer">+</button>
+</div>
+</section>
+
+<section style="padding: 24px 16px 0; display: flex; flex-direction: column">
+<details style="border-top: 3px solid #2C2840; padding: 18px 0">
+<summary style="font-family: 'Press Start 2P', monospace; font-size: 10px; cursor: pointer">DETALHES</summary>
+<p style="margin: 12px 0 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">[Tamanho, material das contas, tipo de argola.]</p>
+</details>
+<details style="border-top: 3px solid #2C2840; padding: 18px 0">
+<summary style="font-family: 'Press Start 2P', monospace; font-size: 10px; cursor: pointer">CUIDADOS</summary>
+<p style="margin: 12px 0 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">[Como limpar e conservar a peça.]</p>
+</details>
+<details style="border-top: 3px solid #2C2840; border-bottom: 3px solid #2C2840; padding: 18px 0">
+<summary style="font-family: 'Press Start 2P', monospace; font-size: 10px; cursor: pointer">ENVIO E TROCAS</summary>
+<p style="margin: 12px 0 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">[Prazo de produção e envio.] <a href="Trocas.dc.html">Ver política de trocas</a></p>
+</details>
+</section>
+
+<section style="padding: 32px 0 32px 16px; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1.6">VOCÊ TAMBÉM PODE <span style="color: {{accent}}">DESBLOQUEAR</span></h2>
+<div class="rolagem" style="display: flex; gap: 12px; overflow-x: auto; padding-right: 16px; scrollbar-width: none">
+<a href="CelProduto.dc.html" style="flex: 0 0 170px; text-decoration: none; color: #EDE9FF; background: #1E1B2E; border: 3px solid #4A4566">
+<img src="/_blob/67ddb026040a2247409a721a4508d547" alt="Chaveiro estrela número 13" style="width: 100%; height: 160px; object-fit: cover; display: block">
+<span style="display: flex; flex-direction: column; gap: 8px; padding: 10px; font-family: 'Press Start 2P', monospace; font-size: 8px; line-height: 1.5"><span>ESTRELA Nº</span><span style="color: #FFD23F">R$ [PREÇO]</span></span>
+</a>
+<a href="CelProduto.dc.html" style="flex: 0 0 170px; text-decoration: none; color: #EDE9FF; background: #1E1B2E; border: 3px solid #4A4566">
+<img src="/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45" alt="Chaveiro estrela letra R" style="width: 100%; height: 160px; object-fit: cover; display: block">
+<span style="display: flex; flex-direction: column; gap: 8px; padding: 10px; font-family: 'Press Start 2P', monospace; font-size: 8px; line-height: 1.5"><span>ESTRELA INICIAL</span><span style="color: #FFD23F">R$ [PREÇO]</span></span>
+</a>
+<a href="Encomendas.dc.html" style="flex: 0 0 170px; text-decoration: none; color: #EDE9FF; background: #1E1B2E; border: 3px dashed {{accent}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 12px; text-align: center; min-height: 220px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 28px; color: {{accent}}">+</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 8px; line-height: 1.6">QUER OUTRO?<br>ENCOMENDE</span>
+</a>
+</div>
+</section>
+
+<div style="flex: 1"></div>
+<div style="position: sticky; bottom: 0; z-index: 10; background: #1E1B2E; border-top: 3px solid #EDE9FF; padding: 12px 16px 16px; display: flex; align-items: center; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 11px; color: #A9A3C9">{{qtd}} un.</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 11px; color: #FFD23F">R$ [PREÇO]</span>
+</div>
+<button type="button" onClick="{{adicionar}}" style="flex: 1; font-family: 'Press Start 2P', monospace; font-size: 11px; color: #14121F; background: {{accent}}; border: 0; min-height: 56px; box-shadow: 4px 4px 0 #FFD23F; cursor: pointer">+ PEGAR ITEM</button>
+</div>
+
+<sc-if value="{{gavetaAberta}}" hint-placeholder-val="{{ false }}">
+<div style="position: fixed; top: 0; left: 0; width: 390px; height: 100vh; z-index: 30; display: flex; flex-direction: column; justify-content: flex-end">
+<button type="button" onClick="{{fechar}}" aria-label="Fechar" style="position: absolute; inset: 0; background: rgba(11, 10, 18, 0.72); border: 0; cursor: pointer"></button>
+<div role="dialog" aria-modal="true" aria-label="Item adicionado" style="position: relative; background: #1E1B2E; border-top: 4px solid #EDE9FF; box-shadow: 0 -8px 0 {{accent}}; padding: 12px 16px 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="width: 48px; height: 6px; background: #4A4566; align-self: center" aria-hidden="true"></div>
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #FFD23F">+{{ultimoQtd}} NO INVENTÁRIO</span>
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5">ITEM <span style="color: {{accent}}">COLETADO!</span></h2>
+</div>
+<button type="button" onClick="{{fechar}}" aria-label="Fechar" style="width: 44px; height: 44px; font-family: 'Press Start 2P', monospace; font-size: 11px; background: transparent; color: #EDE9FF; border: 3px solid #4A4566; cursor: pointer">X</button>
+</div>
+<div style="display: flex; gap: 12px; align-items: center; background: #2C2840; border: 3px solid {{accent}}; padding: 10px">
+<img src="/_blob/ff963464d565c9b110e7df46e932d367" alt="Chaveiro Garota Pixel" style="width: 64px; height: 64px; object-fit: cover; border: 2px solid #EDE9FF">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px">GAROTA PIXEL</span>
+<span style="font-size: 12px; color: #C9C4E3">Argola: {{argolaNome}} · Qtd: {{ultimoQtd}}</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 12px">[Faltam R$ X para frete grátis]</span>
+<div style="height: 10px; background: #14121F"><div style="height: 100%; width: 70%; background: #7CFF6B"></div></div>
+</div>
+<a href="CelCheckout.dc.html" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 11px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 18px; box-shadow: 4px 4px 0 #FFD23F">FINALIZAR COMPRA ›</a>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<a href="CelCarrinho.dc.html" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 9px; text-decoration: none; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 14px 6px">VER CARRINHO</a>
+<button type="button" onClick="{{fechar}}" style="font-family: 'Press Start 2P', monospace; font-size: 9px; background: transparent; color: #EDE9FF; border: 3px solid #4A4566; min-height: 48px; cursor: pointer">CONTINUAR</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"mostrarCarrinho":{"editor":"boolean","default":false},"$preview":{"width":390,"height":2300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { qtd: 1, argola: 'mosquetao', aberta: null, noCarrinho: 1, ultimo: 1 };
+  }
+  renderVals() {
+    const s = this.state;
+    const accent = this.props.accent ?? '#FF5FAE';
+    const aberta = s.aberta === null ? !!this.props.mostrarCarrinho : s.aberta;
+    const argolas = [{ id: 'mosquetao', nome: 'MOSQUETÃO' }, { id: 'estrela', nome: 'ESTRELA' }].map((g) => {
+      const ativo = g.id === s.argola;
+      return { ...g, ativo: ativo ? 'true' : 'false', bg: ativo ? '#EDE9FF' : 'transparent', fg: ativo ? '#14121F' : '#EDE9FF', borda: ativo ? '#EDE9FF' : '#4A4566', pick: () => this.setState({ argola: g.id }) };
+    });
+    return {
+      accent,
+      qtd: s.qtd,
+      argolas,
+      gavetaAberta: aberta,
+      noCarrinho: s.noCarrinho,
+      ultimoQtd: s.ultimo,
+      argolaNome: s.argola === 'estrela' ? 'estrela' : 'mosquetão',
+      menos: () => this.setState({ qtd: Math.max(1, s.qtd - 1) }),
+      mais: () => this.setState({ qtd: s.qtd + 1 }),
+      adicionar: () => this.setState({ aberta: true, noCarrinho: s.noCarrinho + s.qtd, ultimo: s.qtd }),
+      abrir: () => this.setState({ aberta: true }),
+      fechar: () => this.setState({ aberta: false }),
+      atributos: [
+        { nome: 'TAMANHO', barra: '55%', valor: '[X] cm', cor: '#FFD23F' },
+        { nome: 'CONTAS', barra: '85%', valor: '[000]', cor: accent },
+        { nome: 'FOFURA', barra: '100%', valor: 'MAX', cor: '#4FD1FF' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

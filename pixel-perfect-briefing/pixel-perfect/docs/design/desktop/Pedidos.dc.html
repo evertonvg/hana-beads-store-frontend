@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Meus pedidos</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+</style>
+</helmet>
+<div style="background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; min-height: 100%">
+
+<header style="border-bottom: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5; text-decoration: none; color: #EDE9FF">PIXEL PERFECT<br><span style="font-size: 9px; color: #A9A3C9">ARTESANATO</span></a>
+<nav aria-label="Principal" style="display: flex; flex-wrap: wrap; gap: 24px; font-family: 'Press Start 2P', monospace; font-size: 10px">
+<a href="Main.dc.html" style="text-decoration: none; color: #EDE9FF">LOJA</a>
+<a href="Encomendas.dc.html" style="text-decoration: none; color: #EDE9FF">ENCOMENDAS</a>
+<a href="Perfil.dc.html" style="text-decoration: none; color: {{accent}}">MINHA CONTA</a>
+</nav>
+<a href="Carrinho.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: #FFD23F; padding: 14px 16px; box-shadow: 4px 4px 0 {{accent}}">CARRINHO [2]</a>
+</div>
+</header>
+
+<main style="max-width: 1200px; margin: 0 auto; padding: 48px 24px 96px; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+<nav aria-label="Minha conta" style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 8px">
+<a href="Perfil.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.5; padding: 16px; text-decoration: none; color: #EDE9FF; border: 3px solid #4A4566">MEUS DADOS</a>
+<a href="Perfil.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.5; padding: 16px; text-decoration: none; color: #EDE9FF; border: 3px solid #4A4566">ENDEREÇOS</a>
+<a href="Pedidos.dc.html" aria-current="page" style="font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.5; padding: 16px; text-decoration: none; color: #14121F; background: #EDE9FF; border: 3px solid #EDE9FF">PEDIDOS</a>
+<a href="Perfil.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.5; padding: 16px; text-decoration: none; color: #EDE9FF; border: 3px solid #4A4566">PRIVACIDADE E DADOS</a>
+<a href="Entrar.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; padding: 16px; text-decoration: none; color: #C9C4E3">SAIR ›</a>
+</nav>
+
+<section style="flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">HISTÓRICO DE PARTIDAS</p>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 26px; line-height: 1.4">MEUS <span style="color: {{accent}}">PEDIDOS</span></h1>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 240px">
+<label for="busca-pedido" style="font-size: 13px; color: #C9C4E3">Buscar por número ou produto</label>
+<input id="busca-pedido" type="search" placeholder="#0000 ou estrela" style="font-family: 'Space Mono', monospace; font-size: 15px; background: #14121F; color: #EDE9FF; border: 3px solid #4A4566; padding: 10px 12px; min-height: 48px; box-sizing: border-box">
+</div>
+</div>
+
+<div role="tablist" aria-label="Filtrar pedidos" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{filtros}}" as="f" hint-placeholder-count="5">
+<button type="button" role="tab" aria-selected="{{f.ativo}}" onClick="{{f.pick}}" style="font-family: 'Press Start 2P', monospace; font-size: 9px; min-height: 44px; padding: 12px 14px; border: 3px solid {{f.borda}}; background: {{f.bg}}; color: {{f.fg}}; cursor: pointer">{{f.nome}} · {{f.qtd}}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{vazio}}" hint-placeholder-val="{{ false }}">
+<div style="border: 3px dashed #4A4566; padding: 48px 24px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 12px">NENHUM PEDIDO AQUI</p>
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 14px 18px">IR PARA A LOJA</a>
+</div>
+</sc-if>
+
+<sc-for list="{{pedidos}}" as="p" hint-placeholder-count="4">
+<article style="background: #1E1B2E; border: 3px solid {{p.bordaCard}}; display: flex; flex-direction: column">
+<div style="padding: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 20px">
+<div style="display: flex; gap: 8px; flex: none">
+<sc-for list="{{p.fotos}}" as="img" hint-placeholder-count="2">
+<img src="{{img.src}}" alt="{{img.alt}}" style="width: 64px; height: 64px; object-fit: cover; border: 2px solid #EDE9FF; display: block">
+</sc-for>
+<sc-if value="{{p.semFoto}}" hint-placeholder-val="{{ false }}">
+<div style="width: 64px; height: 64px; border: 2px dashed {{accent}}; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 18px; color: {{accent}}" aria-hidden="true">?</div>
+</sc-if>
+</div>
+<div style="flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 12px">{{p.num}}</h2>
+<sc-if value="{{p.encomenda}}" hint-placeholder-val="{{ false }}">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #EDE9FF; border: 2px solid #EDE9FF; padding: 4px 6px">ENCOMENDA</span>
+</sc-if>
+</div>
+<span style="font-size: 13px; color: #C9C4E3">{{p.data}} · {{p.resumo}}</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #14121F; background: {{p.cor}}; padding: 8px 10px">{{p.status}}</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 11px; color: #FFD23F">R$ [VALOR]</span>
+</div>
+</div>
+
+<sc-if value="{{p.temProgresso}}" hint-placeholder-val="{{ true }}">
+<div style="padding: 0 20px 18px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{p.fases}}" as="fa" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="height: 10px; background: {{fa.bg}}"></div>
+<span style="font-size: 11px; color: {{fa.fg}}">{{fa.nome}}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{p.cancelado}}" hint-placeholder-val="{{ false }}">
+<p style="margin: 0; padding: 0 20px 18px; font-size: 13px; color: #C9C4E3">Pedido cancelado em [00/00/0000]. Reembolso: [status do reembolso].</p>
+</sc-if>
+
+<div style="border-top: 2px solid #2C2840; padding: 14px 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<span style="font-size: 13px; color: #C9C4E3">{{p.dica}}</span>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<a href="{{p.acaoHref}}" style="font-family: 'Press Start 2P', monospace; font-size: 8px; text-decoration: none; color: #14121F; background: #EDE9FF; padding: 14px 12px">{{p.acao}}</a>
+<button type="button" onClick="{{p.alterna}}" aria-expanded="{{p.abertoAria}}" style="font-family: 'Press Start 2P', monospace; font-size: 8px; background: transparent; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 11px 12px; min-height: 44px; cursor: pointer">{{p.rotuloDetalhe}}</button>
+</div>
+</div>
+
+<sc-if value="{{p.aberto}}" hint-placeholder-val="{{ false }}">
+<div style="border-top: 3px dashed #4A4566; padding: 22px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; background: #191626">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">ITENS</h3>
+<sc-for list="{{p.itens}}" as="it" hint-placeholder-count="2">
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px"><span>{{it}}</span><span style="color: #C9C4E3">R$ [—]</span></div>
+</sc-for>
+<div style="border-top: 2px solid #2C2840; padding-top: 10px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #C9C4E3">
+<div style="display: flex; justify-content: space-between"><span>Frete</span><span>R$ [—]</span></div>
+<div style="display: flex; justify-content: space-between; color: #EDE9FF; font-weight: 700"><span>Total</span><span>R$ [VALOR]</span></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">ENTREGA</h3>
+<p style="margin: 0; font-size: 14px; line-height: 1.6">[Rua, número]<br>[Bairro] · [Cidade/UF]<br>[CEP]</p>
+<p style="margin: 0; font-size: 13px; color: #C9C4E3">Rastreio: {{p.rastreio}}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">PAGAMENTO</h3>
+<p style="margin: 0; font-size: 14px">{{p.pagamento}}</p>
+<a href="#" style="font-size: 13px">Baixar nota fiscal</a>
+<a href="Trocas.dc.html" style="font-size: 13px">Solicitar troca ou devolução</a>
+<a href="https://ig.me/m/[usuario]" style="font-size: 13px">Ajuda com este pedido</a>
+</div>
+</div>
+</sc-if>
+</article>
+</sc-for>
+</section>
+</main>
+
+<footer style="border-top: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 28px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 12px; color: #A9A3C9">
+<span>© Pixel Perfect Artesanato</span>
+<div style="display: flex; flex-wrap: wrap; gap: 20px"><a href="Privacidade.dc.html">Política de Privacidade</a><a href="Trocas.dc.html">Trocas e devoluções</a><a href="Termos.dc.html">Termos de Uso</a></div>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":1280,"height":2200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { filtro: 'todos', aberto: '0005' };
+  }
+  renderVals() {
+    const s = this.state;
+    const accent = this.props.accent ?? '#FF5FAE';
+    const IMG = {
+      garota: { src: '/_blob/ff963464d565c9b110e7df46e932d367', alt: 'Chaveiro Garota Pixel' },
+      e13: { src: '/_blob/67ddb026040a2247409a721a4508d547', alt: 'Chaveiro estrela número 13' },
+      er: { src: '/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45', alt: 'Chaveiro estrela letra R' }
+    };
+    const ST = {
+      aprovacao: { nome: 'AGUARDANDO APROVAÇÃO', cor: '#FFD23F', grupo: 'andamento', passo: 0 },
+      producao: { nome: 'EM PRODUÇÃO', cor: accent, grupo: 'andamento', passo: 2 },
+      enviado: { nome: 'ENVIADO', cor: '#4FD1FF', grupo: 'andamento', passo: 3 },
+      entregue: { nome: 'ENTREGUE', cor: '#7CFF6B', grupo: 'entregues', passo: 4 },
+      cancelado: { nome: 'CANCELADO', cor: '#A9A3C9', grupo: 'cancelados', passo: 0 }
+    };
+    const base = [
+      { id: '0005', st: 'producao', resumo: '2 itens', fotos: ['garota', 'er'], itens: ['Garota Pixel ×1', 'Estrela inicial R ×1'], pagamento: 'Pix · aprovado', rastreio: 'disponível após o envio', dica: 'Previsão de envio: [00/00]', acao: 'FALAR NO DIRECT', acaoHref: 'https://ig.me/m/[usuario]' },
+      { id: '0004', st: 'aprovacao', encomenda: true, resumo: 'Encomenda personalizada', fotos: [], itens: ['Chaveiro personalizado ×1'], pagamento: 'Aguardando aprovação do desenho', rastreio: '—', dica: 'Enviamos o desenho no seu Direct do Instagram para aprovar.', acao: 'VER NO DIRECT', acaoHref: 'https://ig.me/m/[usuario]' },
+      { id: '0003', st: 'enviado', resumo: '1 item', fotos: ['e13'], itens: ['Estrela nº 13 ×1'], pagamento: 'Cartão · [final 0000]', rastreio: '[AA000000000BR]', dica: 'Chega até [00/00]', acao: 'RASTREAR', acaoHref: '#' },
+      { id: '0002', st: 'entregue', resumo: '1 item', fotos: ['garota'], itens: ['Garota Pixel ×1'], pagamento: 'Pix · aprovado', rastreio: '[AA000000000BR]', dica: 'Entregue em [00/00/0000]', acao: 'COMPRAR DE NOVO', acaoHref: 'Produto.dc.html' },
+      { id: '0001', st: 'cancelado', resumo: '1 item', fotos: ['er'], itens: ['Estrela inicial R ×1'], pagamento: 'Boleto · não pago', rastreio: '—', dica: 'Mudou de ideia? O item ainda está na loja.', acao: 'VER PRODUTO', acaoHref: 'Produto.dc.html' }
+    ];
+    const nomesFase = ['Pago', 'Produção', 'Enviado', 'Entregue'];
+    const todos = base.map((o) => {
+      const st = ST[o.st];
+      const aberto = s.aberto === o.id;
+      return {
+        ...o,
+        grupo: st.grupo,
+        num: 'PEDIDO #[' + o.id + ']',
+        data: '[00/00/0000]',
+        status: st.nome,
+        cor: st.cor,
+        encomenda: !!o.encomenda,
+        fotos: o.fotos.map((k) => IMG[k]),
+        semFoto: o.fotos.length === 0,
+        temProgresso: o.st !== 'cancelado',
+        cancelado: o.st === 'cancelado',
+        fases: nomesFase.map((n, i) => ({ nome: n, bg: i < st.passo ? st.cor : '#2C2840', fg: i < st.passo ? '#EDE9FF' : '#8D88AD' })),
+        aberto,
+        abertoAria: aberto ? 'true' : 'false',
+        rotuloDetalhe: aberto ? 'FECHAR ▲' : 'DETALHES ▼',
+        bordaCard: aberto ? '#EDE9FF' : '#4A4566',
+        alterna: () => this.setState({ aberto: aberto ? null : o.id })
+      };
+    });
+    const filtrosDef = [
+      { id: 'todos', nome: 'TODOS' },
+      { id: 'andamento', nome: 'EM ANDAMENTO' },
+      { id: 'entregues', nome: 'ENTREGUES' },
+      { id: 'cancelados', nome: 'CANCELADOS' }
+    ];
+    const filtros = filtrosDef.map((f) => {
+      const ativo = f.id === s.filtro;
+      const qtd = f.id === 'todos' ? todos.length : todos.filter((o) => o.grupo === f.id).length;
+      return { ...f, qtd, ativo: ativo ? 'true' : 'false', bg: ativo ? '#EDE9FF' : 'transparent', fg: ativo ? '#14121F' : '#EDE9FF', borda: ativo ? '#EDE9FF' : '#4A4566', pick: () => this.setState({ filtro: f.id }) };
+    });
+    const pedidos = s.filtro === 'todos' ? todos : todos.filter((o) => o.grupo === s.filtro);
+    return { accent, filtros, pedidos, vazio: pedidos.length === 0 };
+  }
+}
+</script>
+</body>
+</html>

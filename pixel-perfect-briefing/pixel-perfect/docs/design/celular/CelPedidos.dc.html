@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Meus pedidos (celular)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+.chips::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 1700px; background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; display: flex; flex-direction: column">
+
+<header style="position: sticky; top: 0; z-index: 10; background: #14121F; border-bottom: 3px solid #2C2840; padding: 10px 12px; display: flex; align-items: center; gap: 12px">
+<a href="CelPerfil.dc.html" aria-label="Voltar para minha conta" style="width: 48px; height: 48px; box-sizing: border-box; border: 3px solid #4A4566; color: #EDE9FF; display: flex; align-items: center; justify-content: center; flex: none">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</a>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 13px">MEUS <span style="color: {{accent}}">PEDIDOS</span></h1>
+</header>
+
+<div class="chips" role="tablist" aria-label="Filtrar pedidos" style="display: flex; gap: 8px; overflow-x: auto; padding: 16px; scrollbar-width: none">
+<sc-for list="{{filtros}}" as="f" hint-placeholder-count="4">
+<button type="button" role="tab" aria-selected="{{f.ativo}}" onClick="{{f.pick}}" style="flex: none; white-space: nowrap; font-family: 'Press Start 2P', monospace; font-size: 8px; min-height: 44px; padding: 10px 12px; border: 3px solid {{f.borda}}; background: {{f.bg}}; color: {{f.fg}}; cursor: pointer">{{f.nome}} · {{f.qtd}}</button>
+</sc-for>
+</div>
+
+<div style="padding: 0 16px 32px; display: flex; flex-direction: column; gap: 14px">
+<sc-for list="{{pedidos}}" as="p" hint-placeholder-count="4">
+<article style="background: #1E1B2E; border: 3px solid {{p.bordaCard}}">
+<button type="button" onClick="{{p.alterna}}" aria-expanded="{{p.abertoAria}}" style="width: 100%; text-align: left; background: transparent; border: 0; color: #EDE9FF; padding: 14px; display: flex; flex-direction: column; gap: 12px; cursor: pointer; font-family: 'Space Mono', monospace">
+<span style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px">{{p.num}}</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #14121F; background: {{p.cor}}; padding: 6px 8px">{{p.status}}</span>
+</span>
+<span style="display: flex; align-items: center; gap: 10px">
+<sc-for list="{{p.fotos}}" as="img" hint-placeholder-count="1">
+<img src="{{img.src}}" alt="{{img.alt}}" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid #EDE9FF">
+</sc-for>
+<sc-if value="{{p.semFoto}}" hint-placeholder-val="{{ false }}">
+<span style="width: 48px; height: 48px; border: 2px dashed {{accent}}; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 14px; color: {{accent}}" aria-hidden="true">?</span>
+</sc-if>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px">{{p.resumo}}</span>
+<span style="font-size: 12px; color: #A9A3C9">{{p.data}} · R$ [VALOR]</span>
+</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: {{accent}}" aria-hidden="true">{{p.seta}}</span>
+</span>
+<sc-if value="{{p.temProgresso}}" hint-placeholder-val="{{ true }}">
+<span style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px">
+<sc-for list="{{p.fases}}" as="fa" hint-placeholder-count="4"><span style="height: 8px; background: {{fa}}"></span></sc-for>
+</span>
+</sc-if>
+</button>
+<sc-if value="{{p.aberto}}" hint-placeholder-val="{{ false }}">
+<div style="border-top: 3px dashed #4A4566; padding: 14px; display: flex; flex-direction: column; gap: 12px; background: #191626">
+<span style="font-size: 13px; color: #C9C4E3">{{p.dica}}</span>
+<div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px">
+<sc-for list="{{p.itens}}" as="it" hint-placeholder-count="2"><span>· {{it}}</span></sc-for>
+</div>
+<span style="font-size: 12px; color: #A9A3C9">Rastreio: {{p.rastreio}} · {{p.pagamento}}</span>
+<a href="{{p.acaoHref}}" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 9px; text-decoration: none; color: #14121F; background: #EDE9FF; padding: 14px">{{p.acao}}</a>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px"><a href="#">Nota fiscal</a><a href="Trocas.dc.html">Troca ou devolução</a><a href="https://ig.me/m/[usuario]">Ajuda</a></div>
+</div>
+</sc-if>
+</article>
+</sc-for>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":390,"height":1700}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { filtro: 'todos', aberto: '0005' };
+  }
+  renderVals() {
+    const s = this.state;
+    const accent = this.props.accent ?? '#FF5FAE';
+    const IMG = {
+      garota: { src: '/_blob/ff963464d565c9b110e7df46e932d367', alt: 'Chaveiro Garota Pixel' },
+      e13: { src: '/_blob/67ddb026040a2247409a721a4508d547', alt: 'Chaveiro estrela número 13' },
+      er: { src: '/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45', alt: 'Chaveiro estrela letra R' }
+    };
+    const ST = {
+      aprovacao: { nome: 'APROVAR DESENHO', cor: '#FFD23F', grupo: 'andamento', passo: 0 },
+      producao: { nome: 'EM PRODUÇÃO', cor: accent, grupo: 'andamento', passo: 2 },
+      enviado: { nome: 'ENVIADO', cor: '#4FD1FF', grupo: 'andamento', passo: 3 },
+      entregue: { nome: 'ENTREGUE', cor: '#7CFF6B', grupo: 'entregues', passo: 4 },
+      cancelado: { nome: 'CANCELADO', cor: '#A9A3C9', grupo: 'cancelados', passo: 0 }
+    };
+    const base = [
+      { id: '0005', st: 'producao', resumo: 'Garota Pixel + 1', fotos: ['garota'], itens: ['Garota Pixel ×1', 'Estrela inicial R ×1'], pagamento: 'Pix', rastreio: 'após o envio', dica: 'Previsão de envio: [00/00]', acao: 'FALAR NO DIRECT', acaoHref: 'https://ig.me/m/[usuario]' },
+      { id: '0004', st: 'aprovacao', resumo: 'Encomenda personalizada', fotos: [], itens: ['Chaveiro personalizado ×1'], pagamento: 'após aprovação', rastreio: '—', dica: 'O desenho está no seu Direct esperando aprovação.', acao: 'VER NO DIRECT', acaoHref: 'https://ig.me/m/[usuario]' },
+      { id: '0003', st: 'enviado', resumo: 'Estrela nº 13', fotos: ['e13'], itens: ['Estrela nº 13 ×1'], pagamento: 'Cartão', rastreio: '[AA000000000BR]', dica: 'Chega até [00/00]', acao: 'RASTREAR', acaoHref: '#' },
+      { id: '0002', st: 'entregue', resumo: 'Garota Pixel', fotos: ['garota'], itens: ['Garota Pixel ×1'], pagamento: 'Pix', rastreio: '[AA000000000BR]', dica: 'Entregue em [00/00/0000]', acao: 'COMPRAR DE NOVO', acaoHref: 'CelProduto.dc.html' },
+      { id: '0001', st: 'cancelado', resumo: 'Estrela inicial R', fotos: ['er'], itens: ['Estrela inicial R ×1'], pagamento: 'Boleto não pago', rastreio: '—', dica: 'Cancelado em [00/00/0000].', acao: 'VER PRODUTO', acaoHref: 'CelProduto.dc.html' }
+    ];
+    const todos = base.map((o) => {
+      const st = ST[o.st];
+      const aberto = s.aberto === o.id;
+      return {
+        ...o,
+        grupo: st.grupo,
+        num: '#[' + o.id + ']',
+        data: '[00/00]',
+        status: st.nome,
+        cor: st.cor,
+        fotos: o.fotos.map((k) => IMG[k]),
+        semFoto: o.fotos.length === 0,
+        temProgresso: o.st !== 'cancelado',
+        fases: [0, 1, 2, 3].map((i) => (i < st.passo ? st.cor : '#2C2840')),
+        aberto,
+        abertoAria: aberto ? 'true' : 'false',
+        seta: aberto ? '▲' : '▼',
+        bordaCard: aberto ? '#EDE9FF' : '#4A4566',
+        alterna: () => this.setState({ aberto: aberto ? null : o.id })
+      };
+    });
+    const filtros = [
+      { id: 'todos', nome: 'TODOS' }, { id: 'andamento', nome: 'EM ANDAMENTO' }, { id: 'entregues', nome: 'ENTREGUES' }, { id: 'cancelados', nome: 'CANCELADOS' }
+    ].map((f) => {
+      const ativo = f.id === s.filtro;
+      const qtd = f.id === 'todos' ? todos.length : todos.filter((o) => o.grupo === f.id).length;
+      return { ...f, qtd, ativo: ativo ? 'true' : 'false', bg: ativo ? '#EDE9FF' : 'transparent', fg: ativo ? '#14121F' : '#EDE9FF', borda: ativo ? '#EDE9FF' : '#4A4566', pick: () => this.setState({ filtro: f.id }) };
+    });
+    return { accent, filtros, pedidos: s.filtro === 'todos' ? todos : todos.filter((o) => o.grupo === s.filtro) };
+  }
+}
+</script>
+</body>
+</html>

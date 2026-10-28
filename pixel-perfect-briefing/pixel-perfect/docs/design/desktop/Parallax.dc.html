@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Home com parallax</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF5FAE}a:hover{color:#FFD23F}
+.camada{position:absolute;will-change:transform;pointer-events:none}
+</style>
+</helmet>
+<div style="background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; min-height: 100%; overflow-x: hidden">
+
+<header style="position: relative; z-index: 5; border-bottom: 4px solid #2C2840; background: #14121F">
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5; text-decoration: none; color: #EDE9FF">PIXEL PERFECT<br><span style="font-size: 9px; color: #A9A3C9">ARTESANATO</span></a>
+<nav aria-label="Principal" style="display: flex; flex-wrap: wrap; gap: 24px; font-family: 'Press Start 2P', monospace; font-size: 10px">
+<a href="Main.dc.html" style="text-decoration: none; color: #EDE9FF">LOJA</a>
+<a href="Encomendas.dc.html" style="text-decoration: none; color: #EDE9FF">ENCOMENDAS</a>
+<a href="Entrar.dc.html" style="text-decoration: none; color: #EDE9FF">ENTRAR</a>
+</nav>
+<a href="Carrinho.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: #FFD23F; padding: 14px 16px; box-shadow: 4px 4px 0 {{accent}}">CARRINHO [0]</a>
+</div>
+</header>
+
+<section id="px-s1" style="position: relative; height: 820px; overflow: hidden; background: #14121F">
+<div class="camada" aria-hidden="true" style="left: 0; right: 0; top: -160px; bottom: -160px; transform: {{t.estrelas}}">
+<sc-for list="{{estrelas}}" as="s" hint-placeholder-count="40">
+<div style="position: absolute; left: {{s.x}}; top: {{s.y}}; width: {{s.t}}; height: {{s.t}}; background: {{s.c}}"></div>
+</sc-for>
+</div>
+<div class="camada" aria-hidden="true" style="left: 0; right: 0; top: 110px; display: flex; justify-content: center; transform: {{t.lua}}">
+<div style="width: 120px; height: 120px; background: #FFD23F; box-shadow: 0 0 0 10px #14121F, 0 0 0 14px #FFD23F; margin-left: 52%"></div>
+</div>
+<div class="camada" aria-hidden="true" style="left: 0; right: 0; bottom: -40px; height: 380px; transform: {{t.montanhaFundo}}">
+<svg viewBox="0 0 1440 300" preserveAspectRatio="none" width="100%" height="100%" shape-rendering="crispEdges"><path fill="#2C2840" d="M0 300V180H80V140H160V100H240V60H320V100H400V140H480V100H560V40H640V0H720V40H800V80H880V120H960V80H1040V40H1120V80H1200V120H1280V160H1360V120H1440V300Z"></path></svg>
+</div>
+<div class="camada" aria-hidden="true" style="left: 0; right: 0; bottom: -60px; height: 260px; transform: {{t.montanhaFrente}}">
+<svg viewBox="0 0 1440 300" preserveAspectRatio="none" width="100%" height="100%" shape-rendering="crispEdges"><path fill="#1E1B2E" d="M0 300V120H120V80H200V120H320V160H440V120H520V80H600V120H720V160H840V120H920V60H1000V100H1120V140H1240V100H1320V140H1440V300Z"></path><path fill="{{accent}}" d="M0 120H120V128H0ZM120 80H200V88H120ZM200 120H320V128H200ZM440 120H520V128H440ZM520 80H600V88H520ZM840 120H920V128H840ZM920 60H1000V68H920ZM1240 100H1320V108H1240Z"></path></svg>
+</div>
+<div class="camada" style="left: 5%; top: 150px; width: clamp(110px, 15vw, 210px); transform: {{t.foto1}}">
+<div style="background: #2C2840; border: 4px solid #EDE9FF; padding: 8px; box-shadow: 8px 8px 0 {{accent}}"><img src="/_blob/ff963464d565c9b110e7df46e932d367" alt="Chaveiro Garota Pixel" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block"></div>
+</div>
+<div class="camada" style="right: 6%; top: 90px; width: clamp(100px, 13vw, 180px); transform: {{t.foto2}}">
+<div style="background: #2C2840; border: 4px solid #EDE9FF; padding: 8px; box-shadow: 8px 8px 0 #FFD23F"><img src="/_blob/67ddb026040a2247409a721a4508d547" alt="Chaveiro estrela número 13" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block"></div>
+</div>
+<div class="camada" style="right: 14%; top: 470px; width: clamp(90px, 11vw, 160px); transform: {{t.foto3}}">
+<div style="background: #2C2840; border: 4px solid #EDE9FF; padding: 8px; box-shadow: 8px 8px 0 {{accent}}"><img src="/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45" alt="Chaveiro estrela letra R" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block"></div>
+</div>
+<div style="position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; padding: 0 24px; text-align: center; transform: {{t.titulo}}">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 11px; color: #FFD23F">1 PLAYER · FEITO À MÃO</p>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: clamp(26px, 4vw, 48px); line-height: 1.35; max-width: 760px; text-shadow: 4px 4px 0 #14121F">UM MUNDO FEITO DE <span style="color: {{accent}}">CONTINHAS</span></h1>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 12px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 18px 22px; box-shadow: 6px 6px 0 #FFD23F; pointer-events: auto">INSERT COIN ›</a>
+<a href="Encomendas.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 12px; text-decoration: none; color: #EDE9FF; background: #14121F; border: 3px solid #EDE9FF; padding: 15px 20px; pointer-events: auto">ENCOMENDAR</a>
+</div>
+</div>
+<p aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 28px; z-index: 3; margin: 0; text-align: center; font-family: 'Press Start 2P', monospace; font-size: 9px; color: #EDE9FF">ROLE ▼</p>
+</section>
+
+<section id="px-s2" aria-label="Destaques" style="position: relative; overflow: hidden; background: {{accent}}; color: #14121F; padding: 28px 0; display: flex; flex-direction: column; gap: 14px">
+<div style="white-space: nowrap; font-family: 'Press Start 2P', monospace; font-size: 40px; line-height: 1.2; will-change: transform; transform: {{t.faixaA}}">★ FEITO À MÃO ★ PEÇAS ÚNICAS ★ FEITO À MÃO ★ PEÇAS ÚNICAS ★ FEITO À MÃO ★ PEÇAS ÚNICAS ★</div>
+<div style="white-space: nowrap; font-family: 'Press Start 2P', monospace; font-size: 40px; line-height: 1.2; color: #FFFFFF; -webkit-text-stroke: 2px #14121F; will-change: transform; transform: {{t.faixaB}}">ENCOMENDAS PELO DIRECT ▶ ENVIO P/ TODO BRASIL ▶ ENCOMENDAS PELO DIRECT ▶ ENVIO P/ TODO BRASIL ▶</div>
+</section>
+
+<section id="px-s3" style="position: relative; overflow: hidden; background: #14121F; padding: 140px 24px">
+<sc-for list="{{pecas}}" as="b" hint-placeholder-count="10">
+<div class="camada" aria-hidden="true" style="left: {{b.x}}; top: {{b.y}}; transform: {{b.tr}}">
+<div style="display: grid; grid-template-columns: {{b.cols}}; grid-auto-rows: {{b.lado}}">
+<sc-for list="{{b.cells}}" as="c" hint-placeholder-count="6"><div style="background: {{c.bg}}; box-shadow: {{c.sh}}"></div></sc-for>
+</div>
+</div>
+</sc-for>
+<div style="position: relative; z-index: 2; max-width: 760px; margin: 0 auto; background: #14121F; border: 4px solid #EDE9FF; box-shadow: 12px 12px 0 #FFD23F; padding: 48px; display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">COMO NASCE UM CHAVEIRO</p>
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 26px; line-height: 1.5">CONTA POR <span style="color: {{accent}}">CONTA</span></h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.7; color: #C9C4E3">Cada peça começa num desenho em pixel. Depois, as continhas são encaixadas uma a uma na base, passadas a ferro e finalizadas com a argola. Nenhuma sai igual à outra.</p>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px">
+<li style="border: 3px solid #4A4566; padding: 16px; display: flex; flex-direction: column; gap: 8px"><span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">01</span><span style="font-size: 14px">Desenho em pixel</span></li>
+<li style="border: 3px solid #4A4566; padding: 16px; display: flex; flex-direction: column; gap: 8px"><span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">02</span><span style="font-size: 14px">Montagem com pinça</span></li>
+<li style="border: 3px solid #4A4566; padding: 16px; display: flex; flex-direction: column; gap: 8px"><span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">03</span><span style="font-size: 14px">Ferro e acabamento</span></li>
+</ol>
+</div>
+</section>
+
+<section id="px-s4" style="position: relative; overflow: hidden; background: #1E1B2E; border-top: 4px solid #2C2840; border-bottom: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
+<div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 24px; position: relative; z-index: 2">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">VITRINE</p>
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 26px; line-height: 1.5">PERSONAGENS <span style="color: {{accent}}">DESBLOQUEADOS</span></h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.7; color: #C9C4E3">Modelos prontos pra levar agora. Toda semana aparece personagem novo por aqui.</p>
+<a href="Main.dc.html" style="align-self: flex-start; font-family: 'Press Start 2P', monospace; font-size: 11px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 16px 20px; box-shadow: 6px 6px 0 #FFD23F">VER A LOJA ›</a>
+</div>
+<div style="flex: 1 1 520px; min-width: 0; height: 620px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; overflow: hidden">
+<div style="display: flex; flex-direction: column; gap: 18px; will-change: transform; transform: {{t.coluna1}}">
+<img src="/_blob/ff963464d565c9b110e7df46e932d367" alt="Chaveiro Garota Pixel" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border: 4px solid #EDE9FF; display: block">
+<div style="aspect-ratio: 1 / 1; border: 4px dashed #4A4566; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 8px; color: #A9A3C9">[NOVA PEÇA]</div>
+<img src="/_blob/67ddb026040a2247409a721a4508d547" alt="Chaveiro estrela número 13" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border: 4px solid #EDE9FF; display: block">
+</div>
+<div style="display: flex; flex-direction: column; gap: 18px; margin-top: -160px; will-change: transform; transform: {{t.coluna2}}">
+<img src="/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45" alt="Chaveiro estrela letra R" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border: 4px solid {{accent}}; display: block">
+<img src="/_blob/ff963464d565c9b110e7df46e932d367" alt="Chaveiro Garota Pixel" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border: 4px solid #EDE9FF; display: block">
+<div style="aspect-ratio: 3 / 4; border: 4px dashed #4A4566; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 8px; color: #A9A3C9">[NOVA PEÇA]</div>
+<img src="/_blob/67ddb026040a2247409a721a4508d547" alt="Chaveiro estrela número 13" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border: 4px solid #EDE9FF; display: block">
+</div>
+<div style="display: flex; flex-direction: column; gap: 18px; margin-top: 60px; will-change: transform; transform: {{t.coluna3}}">
+<div style="aspect-ratio: 1 / 1; border: 4px dashed #4A4566; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 8px; color: #A9A3C9">[NOVA PEÇA]</div>
+<img src="/_blob/67ddb026040a2247409a721a4508d547" alt="Chaveiro estrela número 13" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border: 4px solid #FFD23F; display: block">
+<img src="/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45" alt="Chaveiro estrela letra R" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border: 4px solid #EDE9FF; display: block">
+</div>
+</div>
+</div>
+</section>
+
+<section id="px-s5" style="position: relative; height: 620px; overflow: hidden; background: #2A1F4A">
+<sc-for list="{{nuvens}}" as="n" hint-placeholder-count="5">
+<div class="camada" aria-hidden="true" style="left: {{n.x}}; top: {{n.y}}; transform: {{n.tr}}">
+<div style="display: flex; flex-direction: column; align-items: center; opacity: {{n.o}}">
+<div style="width: {{n.w1}}; height: {{n.h}}; background: #EDE9FF"></div>
+<div style="width: {{n.w2}}; height: {{n.h}}; background: #EDE9FF"></div>
+</div>
+</div>
+</sc-for>
+<div class="camada" aria-hidden="true" style="left: 0; right: 0; bottom: -30px; height: 220px; transform: {{t.cidade}}">
+<svg viewBox="0 0 1440 220" preserveAspectRatio="none" width="100%" height="100%" shape-rendering="crispEdges"><path fill="#14121F" d="M0 220V140H60V100H140V160H200V60H280V120H340V80H420V140H480V40H560V110H620V150H700V70H780V130H840V90H920V150H980V50H1060V120H1120V160H1180V80H1260V130H1320V100H1440V220Z"></path><path fill="#FFD23F" d="M220 80H232V92H220ZM252 100H264V112H252ZM500 60H512V72H500ZM532 90H544V102H532ZM720 90H732V102H720ZM1000 70H1012V82H1000ZM1032 100H1044V112H1032ZM1200 100H1212V112H1200Z"></path></svg>
+</div>
+<div style="position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 0 24px 120px; text-align: center; transform: {{t.cta}}">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">ENCOMENDAS ABERTAS</p>
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: clamp(22px, 3.4vw, 38px); line-height: 1.4; max-width: 760px; text-shadow: 4px 4px 0 #14121F">TEM UMA IDEIA? <span style="color: {{accent}}">A GENTE MONTA.</span></h2>
+<a href="https://ig.me/m/[usuario]" style="display: inline-flex; align-items: center; gap: 14px; font-family: 'Press Start 2P', monospace; font-size: 12px; text-decoration: none; color: #FFFFFF; background: #D62976; padding: 18px 24px; box-shadow: 6px 6px 0 #EDE9FF">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg>
+CHAMAR NO DIRECT</a>
+</div>
+</section>
+
+<footer style="background: #14121F">
+<div style="max-width: 1200px; margin: 0 auto; padding: 40px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 12px; color: #A9A3C9">
+<span>© Pixel Perfect Artesanato</span>
+<div style="display: flex; flex-wrap: wrap; gap: 20px"><a href="Privacidade.dc.html">Política de Privacidade</a><a href="Trocas.dc.html">Trocas e devoluções</a><a href="Termos.dc.html">Termos de Uso</a></div>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"intensidade":{"editor":"range","default":1,"min":0,"max":2,"step":0.1},"$preview":{"width":1280,"height":3400}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { off: {} };
+    this.ids = ['px-s1', 'px-s2', 'px-s3', 'px-s4', 'px-s5'];
+  }
+  componentDidMount() {
+    this.reduz = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    this.tick = () => {
+      this.raf = null;
+      const vh = window.innerHeight || 800;
+      const off = {};
+      this.ids.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) { off[id] = 0; return; }
+        const r = el.getBoundingClientRect();
+        const v = (r.top + r.height / 2 - vh / 2) / vh;
+        off[id] = Math.max(-1.5, Math.min(1.5, v));
+      });
+      this.setState({ off });
+    };
+    this.onScroll = () => { if (!this.raf) this.raf = requestAnimationFrame(this.tick); };
+    window.addEventListener('scroll', this.onScroll, { passive: true, capture: true });
+    window.addEventListener('resize', this.onScroll);
+    this.onScroll();
+  }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll, { capture: true });
+    window.removeEventListener('resize', this.onScroll);
+    if (this.raf) cancelAnimationFrame(this.raf);
+  }
+  renderVals() {
+    const k = this.reduz ? 0 : (this.props.intensidade ?? 1);
+    const o = this.state.off;
+    const y = (id, sp, extra) => 'translate3d(0,' + (-(o[id] || 0) * sp * 260 * k).toFixed(1) + 'px,0)' + (extra ? ' ' + extra : '');
+    const x = (id, sp) => 'translate3d(' + (-(o[id] || 0) * sp * 400 * k - 200).toFixed(1) + 'px,0,0)';
+    let seed = 7;
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    const estrelas = [];
+    for (let i = 0; i < 40; i++) {
+      const t = rnd() > 0.8 ? 6 : 4;
+      estrelas.push({ x: (rnd() * 100).toFixed(1) + '%', y: (rnd() * 70).toFixed(1) + '%', t: t + 'px', c: rnd() > 0.85 ? '#FF5FAE' : (rnd() > 0.7 ? '#FFD23F' : '#EDE9FF') });
+    }
+    const FORMAS = {
+      I: ['####'], O: ['##', '##'], T: ['###', '.#.'], L: ['#.', '#.', '##'],
+      J: ['.#', '.#', '##'], S: ['.##', '##.'], Z: ['##.', '.##']
+    };
+    const pecasDef = [
+      ['T', '5%', '8%', 34, '#FF5FAE', 0.9, -12, 20],
+      ['I', '80%', '6%', 28, '#FFD23F', 1.4, 18, -30],
+      ['L', '10%', '66%', 30, '#4FD1FF', 1.8, 8, 40],
+      ['O', '82%', '60%', 40, '#E8302A', 0.6, -6, 15],
+      ['S', '46%', '2%', 22, '#7CFF6B', 2.0, 0, -45],
+      ['Z', '90%', '36%', 24, '#9B5CFF', 1.2, 24, 30],
+      ['J', '1%', '38%', 22, '#FF9A3D', 2.2, -20, -25],
+      ['T', '62%', '84%', 30, '#9B5CFF', 1.0, 160, 20],
+      ['I', '24%', '88%', 22, '#FF5FAE', 1.6, 90, -35],
+      ['O', '36%', '-2%', 18, '#4FD1FF', 2.4, 10, 50]
+    ];
+    const giro = o['px-s3'] || 0;
+    const pecas = pecasDef.map(([f, px, py, lado, cor, sp, rot, spin]) => {
+      const mask = FORMAS[f];
+      const b = Math.max(3, Math.round(lado * 0.16));
+      const cells = [];
+      mask.forEach((r) => { for (let i = 0; i < r.length; i++) cells.push(r[i] === '#' ? { bg: cor, sh: 'inset ' + b + 'px ' + b + 'px 0 rgba(255,255,255,0.38), inset -' + b + 'px -' + b + 'px 0 rgba(0,0,0,0.32), inset 0 0 0 1px rgba(0,0,0,0.25)' } : { bg: 'transparent', sh: 'none' }); });
+      return { x: px, y: py, cols: 'repeat(' + mask[0].length + ', ' + lado + 'px)', lado: lado + 'px', cells, tr: y('px-s3', sp, 'rotate(' + (rot + giro * spin * k).toFixed(1) + 'deg)') };
+    });
+    const nuvensDef = [
+      ['8%', '60px', 160, 100, 24, 0.3, 0.9], ['62%', '30px', 220, 140, 28, 0.6, 0.7],
+      ['36%', '150px', 120, 70, 18, 1.0, 0.5], ['80%', '190px', 140, 90, 20, 1.3, 0.6], ['18%', '250px', 100, 60, 16, 1.6, 0.4]
+    ];
+    const nuvens = nuvensDef.map(([nx, ny, w1, w2, h, sp, op]) => ({ x: nx, y: ny, w1: w2 + 'px', w2: w1 + 'px', h: h + 'px', o: op, tr: y('px-s5', sp) }));
+    return {
+      accent: this.props.accent ?? '#FF5FAE',
+      estrelas,
+      pecas,
+      nuvens,
+      t: {
+        estrelas: y('px-s1', 0.15),
+        lua: y('px-s1', 0.3),
+        montanhaFundo: y('px-s1', 0.45),
+        montanhaFrente: y('px-s1', 0.7),
+        foto1: y('px-s1', 1.2, 'rotate(-6deg)'),
+        foto2: y('px-s1', 1.6, 'rotate(5deg)'),
+        foto3: y('px-s1', 2.0, 'rotate(-3deg)'),
+        titulo: y('px-s1', -0.25),
+        faixaA: x('px-s2', 1),
+        faixaB: x('px-s2', -1),
+        coluna1: y('px-s4', 0.6),
+        coluna2: y('px-s4', -0.6),
+        coluna3: y('px-s4', 0.9),
+        cidade: y('px-s5', 0.25),
+        cta: y('px-s5', -0.2)
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

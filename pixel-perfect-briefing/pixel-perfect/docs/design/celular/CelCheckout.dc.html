@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Finalizar compra (celular)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+.campo{font-family:'Space Mono',monospace;font-size:16px;background:#1E1B2E;color:#EDE9FF;border:3px solid #4A4566;padding:12px;min-height:52px;box-sizing:border-box;width:100%}
+.rot{font-size:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 2100px; background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; position: relative; display: flex; flex-direction: column">
+
+<header style="position: sticky; top: 0; z-index: 10; background: #14121F; border-bottom: 3px solid #2C2840; padding: 10px 12px; display: flex; align-items: center; gap: 12px">
+<a href="CelCarrinho.dc.html" aria-label="Voltar para o carrinho" style="width: 48px; height: 48px; box-sizing: border-box; border: 3px solid #4A4566; color: #EDE9FF; display: flex; align-items: center; justify-content: center; flex: none">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</a>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 13px; flex: 1">SAVE <span style="color: {{accent}}">GAME</span></h1>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #A9A3C9">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square" aria-hidden="true"><path d="M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>Seguro</span>
+</header>
+
+<ol style="list-style: none; margin: 0; padding: 14px 16px 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+<li style="display: flex; flex-direction: column; gap: 6px"><div style="height: 8px; background: #FFD23F"></div><span style="font-size: 11px">Dados</span></li>
+<li style="display: flex; flex-direction: column; gap: 6px"><div style="height: 8px; background: {{accent}}"></div><span style="font-size: 11px; font-weight: 700">Entrega</span></li>
+<li style="display: flex; flex-direction: column; gap: 6px"><div style="height: 8px; background: #2C2840"></div><span style="font-size: 11px; color: #A9A3C9">Pagamento</span></li>
+</ol>
+
+<details style="margin: 16px 16px 0; background: #2C2840; border: 3px solid #EDE9FF; padding: 14px">
+<summary style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px">RESUMO · 2 ITENS ▼</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">R$ [VALOR]</span>
+</summary>
+<div style="padding-top: 14px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 10px"><img src="/_blob/ff963464d565c9b110e7df46e932d367" alt="Chaveiro Garota Pixel" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid #EDE9FF"><span style="flex: 1; font-size: 13px">Garota Pixel ×1</span><span style="font-size: 13px">R$ [—]</span></div>
+<div style="display: flex; align-items: center; gap: 10px"><img src="/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45" alt="Chaveiro Estrela inicial R" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid #EDE9FF"><span style="flex: 1; font-size: 13px">Estrela inicial R ×1</span><span style="font-size: 13px">R$ [—]</span></div>
+</div>
+</details>
+
+<div style="margin: 16px 16px 0; border: 3px dashed {{accent}}; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 14px; line-height: 1.5">Já tem conta? Entre para preencher tudo automaticamente.</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<a href="CelEntrar.dc.html" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 9px; text-decoration: none; color: #14121F; background: #EDE9FF; padding: 14px 6px">ENTRAR</a>
+<a href="CelEntrar.dc.html" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 9px; text-decoration: none; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 11px 6px">CRIAR CONTA</a>
+</div>
+</div>
+
+<form style="padding: 20px 16px; display: flex; flex-direction: column; gap: 24px">
+<fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px">
+<legend style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F; padding: 0 0 14px">JOGADOR</legend>
+<label class="rot">Nome completo<input class="campo" type="text" autocomplete="name"></label>
+<label class="rot">E-mail<input class="campo" type="email" autocomplete="email"></label>
+<label class="rot">Celular<input class="campo" type="tel" autocomplete="tel"></label>
+<label class="rot">CPF<input class="campo" type="text" inputmode="numeric"></label>
+</fieldset>
+<fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px">
+<legend style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F; padding: 0 0 14px">ENTREGA</legend>
+<label class="rot">CEP<input class="campo" type="text" inputmode="numeric" autocomplete="postal-code"></label>
+<label class="rot">Rua<input class="campo" type="text" autocomplete="address-line1"></label>
+<div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px">
+<label class="rot">Número<input class="campo" type="text" inputmode="numeric"></label>
+<label class="rot">Complemento<input class="campo" type="text" autocomplete="address-line2"></label>
+</div>
+<label class="rot">Bairro<input class="campo" type="text"></label>
+<label class="rot">Cidade / UF<input class="campo" type="text" autocomplete="address-level2"></label>
+</fieldset>
+<fieldset style="border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F; padding: 0 0 14px">PAGAMENTO</legend>
+<sc-for list="{{pagamentos}}" as="p" hint-placeholder-count="3">
+<button type="button" role="radio" aria-checked="{{p.ativo}}" onClick="{{p.pick}}" style="display: flex; justify-content: space-between; align-items: center; text-align: left; min-height: 60px; padding: 12px 14px; border: 3px solid {{p.borda}}; background: {{p.bg}}; color: {{p.fg}}; cursor: pointer">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 10px">{{p.nome}}</span>
+<span style="font-family: 'Space Mono', monospace; font-size: 12px">{{p.nota}}</span>
+</button>
+</sc-for>
+</fieldset>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<label style="display: flex; align-items: flex-start; gap: 12px; font-size: 14px; line-height: 1.5"><input type="checkbox" style="width: 22px; height: 22px; margin: 0; flex: none; accent-color: #FF5FAE"><span>Salvar meus dados para as próximas compras. <span style="color: #A9A3C9">(opcional)</span></span></label>
+<p style="margin: 0; font-size: 12px; color: #A9A3C9; line-height: 1.6">Usamos seus dados só para este pedido. Ao continuar, você concorda com os <a href="Termos.dc.html">Termos</a> e declara ter lido a <a href="Privacidade.dc.html">Política de Privacidade</a>.</p>
+</div>
+</form>
+
+<div style="flex: 1"></div>
+<div style="position: sticky; bottom: 0; z-index: 10; background: #1E1B2E; border-top: 3px solid #EDE9FF; padding: 12px 16px 16px; display: flex; align-items: center; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 11px; color: #A9A3C9">Total</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 11px; color: #FFD23F">R$ [VALOR]</span>
+</div>
+<a href="{{destino}}" style="flex: 1; text-align: center; font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 20px 8px; box-shadow: 4px 4px 0 #FFD23F">SALVAR E PAGAR ›</a>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":390,"height":2100}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { pag: 'pix' };
+  }
+  renderVals() {
+    const s = this.state;
+    const pagamentos = [
+      { id: 'pix', nome: 'PIX', nota: 'aprovação na hora' },
+      { id: 'cartao', nome: 'CARTÃO', nota: '[parcelas]' },
+      { id: 'boleto', nome: 'BOLETO', nota: 'até 3 dias' }
+    ].map((p) => {
+      const ativo = p.id === s.pag;
+      return { ...p, ativo: ativo ? 'true' : 'false', bg: ativo ? '#EDE9FF' : 'transparent', fg: ativo ? '#14121F' : '#EDE9FF', borda: ativo ? '#EDE9FF' : '#4A4566', pick: () => this.setState({ pag: p.id }) };
+    });
+    const destino = { pix: 'CelPix.dc.html', cartao: 'Sucesso.dc.html', boleto: 'Aguardando.dc.html' }[s.pag];
+    return { accent: this.props.accent ?? '#FF5FAE', pagamentos, destino };
+  }
+}
+</script>
+</body>
+</html>

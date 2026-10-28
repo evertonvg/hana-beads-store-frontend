@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Cadastro</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+.campo{font-family:'Space Mono',monospace;font-size:15px;background:#14121F;color:#EDE9FF;border:3px solid #4A4566;padding:12px;min-height:48px;box-sizing:border-box;width:100%}
+.rot{font-size:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+</style>
+</helmet>
+<div style="background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; min-height: 100%">
+
+<header style="border-bottom: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5; text-decoration: none; color: #EDE9FF">PIXEL PERFECT<br><span style="font-size: 9px; color: #A9A3C9">ARTESANATO</span></a>
+<nav aria-label="Principal" style="display: flex; flex-wrap: wrap; gap: 24px; font-family: 'Press Start 2P', monospace; font-size: 10px">
+<a href="Main.dc.html" style="text-decoration: none; color: #EDE9FF">LOJA</a>
+<a href="Encomendas.dc.html" style="text-decoration: none; color: #EDE9FF">ENCOMENDAS</a>
+<a href="Entrar.dc.html" style="text-decoration: none; color: {{accent}}">ENTRAR</a>
+</nav>
+<a href="Carrinho.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: #FFD23F; padding: 14px 16px; box-shadow: 4px 4px 0 {{accent}}">CARRINHO [2]</a>
+</div>
+</header>
+
+<main style="max-width: 1100px; margin: 0 auto; padding: 64px 24px 96px; display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start">
+<div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">CRIAR CONTA</p>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 30px; line-height: 1.4">NEW <span style="color: {{accent}}">PLAYER</span></h1>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #C9C4E3">Com uma conta você acompanha seus pedidos, salva endereços e compra mais rápido.</p>
+<div style="border: 3px solid #4A4566; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.6; color: #FFD23F">SEUS DADOS, SUAS REGRAS</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 1.5; color: #C9C4E3">
+<li>Pedimos só o necessário para vender e entregar.</li>
+<li>Não vendemos seus dados para ninguém.</li>
+<li>Você pode ver, corrigir, baixar ou excluir seus dados quando quiser, no seu perfil.</li>
+</ul>
+<a href="Privacidade.dc.html" style="font-size: 14px">Ler a Política de Privacidade</a>
+</div>
+</div>
+
+<form style="flex: 1 1 480px; min-width: 0; background: #2C2840; border: 4px solid #EDE9FF; box-shadow: 10px 10px 0 {{accent}}; padding: 32px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">CADASTRO RÁPIDO</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px">
+<a href="Perfil.dc.html" aria-label="Cadastrar com Google" style="display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; font-family: 'Press Start 2P', monospace; font-size: 9px; text-decoration: none; color: #EDE9FF; background: #14121F; border: 3px solid #EDE9FF"><span style="width: 20px; height: 20px; background: #EDE9FF; color: #14121F; display: flex; align-items: center; justify-content: center; font-size: 10px" aria-hidden="true">G</span>GOOGLE</a>
+<a href="Perfil.dc.html" aria-label="Cadastrar com Facebook" style="display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; font-family: 'Press Start 2P', monospace; font-size: 9px; text-decoration: none; color: #EDE9FF; background: #14121F; border: 3px solid #EDE9FF"><span style="width: 20px; height: 20px; background: #EDE9FF; color: #14121F; display: flex; align-items: center; justify-content: center; font-size: 10px" aria-hidden="true">f</span>FACEBOOK</a>
+<a href="Perfil.dc.html" aria-label="Cadastrar com Apple" style="display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; font-family: 'Press Start 2P', monospace; font-size: 9px; text-decoration: none; color: #EDE9FF; background: #14121F; border: 3px solid #EDE9FF"><span style="width: 20px; height: 20px; background: #EDE9FF; color: #14121F; display: flex; align-items: center; justify-content: center; font-size: 10px" aria-hidden="true">A</span>APPLE</a>
+</div>
+<p style="margin: 0; font-size: 12px; color: #A9A3C9; line-height: 1.6">Ao continuar com uma rede social, você concorda com os <a href="Termos.dc.html">Termos de Uso</a> e a <a href="Privacidade.dc.html">Política de Privacidade</a>. Recebemos só nome, e-mail e foto de perfil.</p>
+<div style="display: flex; align-items: center; gap: 12px; font-family: 'Press Start 2P', monospace; font-size: 9px; color: #A9A3C9; padding-top: 4px"><span style="flex: 1; height: 3px; background: #4A4566"></span>OU COM E-MAIL<span style="flex: 1; height: 3px; background: #4A4566"></span></div>
+</div>
+<label class="rot">Nome completo<input class="campo" type="text" autocomplete="name"></label>
+<label class="rot">E-mail<input class="campo" type="email" autocomplete="email"></label>
+<label class="rot">Celular<input class="campo" type="tel" autocomplete="tel" placeholder="(00) 00000-0000"></label>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<label class="rot">Senha<input class="campo" type="password" autocomplete="new-password"></label>
+<label class="rot">Confirmar senha<input class="campo" type="password" autocomplete="new-password"></label>
+</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; font-size: 13px; color: #C9C4E3">
+<li>▪ Mínimo de 8 caracteres</li>
+<li>▪ Uma letra maiúscula</li>
+<li>▪ Um número</li>
+<li>▪ Um símbolo</li>
+</ul>
+
+<div style="border-top: 3px dashed #4A4566; padding-top: 20px; display: flex; flex-direction: column; gap: 14px">
+<label style="display: flex; align-items: flex-start; gap: 12px; font-size: 14px; line-height: 1.5; cursor: pointer">
+<input type="checkbox" checked="{{aceite}}" onChange="{{alternaAceite}}" style="width: 22px; height: 22px; margin: 0; flex: none; accent-color: #FF5FAE">
+<span>Li e concordo com os <a href="Termos.dc.html">Termos de Uso</a> e com a <a href="Privacidade.dc.html">Política de Privacidade</a>. <span style="color: #FFD23F">(obrigatório)</span></span>
+</label>
+<label style="display: flex; align-items: flex-start; gap: 12px; font-size: 14px; line-height: 1.5; cursor: pointer">
+<input type="checkbox" style="width: 22px; height: 22px; margin: 0; flex: none; accent-color: #FF5FAE">
+<span>Quero receber novidades e lançamentos por e-mail. <span style="color: #A9A3C9">(opcional)</span></span>
+</label>
+<p style="margin: 0; font-size: 12px; color: #A9A3C9; line-height: 1.5">Você pode mudar essas escolhas a qualquer momento em Meu perfil › Privacidade.</p>
+</div>
+
+<sc-if value="{{aceite}}" hint-placeholder-val="{{ false }}">
+<a href="Perfil.dc.html" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 12px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 18px; box-shadow: 5px 5px 0 #FFD23F">CRIAR CONTA ›</a>
+</sc-if>
+<sc-if value="{{semAceite}}" hint-placeholder-val="{{ true }}">
+<button type="button" disabled style="font-family: 'Press Start 2P', monospace; font-size: 12px; color: #A9A3C9; background: #1E1B2E; border: 3px solid #4A4566; padding: 16px; min-height: 52px">CRIAR CONTA ›</button>
+</sc-if>
+<p style="margin: 0; font-size: 14px; text-align: center">Já tem conta? <a href="Entrar.dc.html">Entrar</a></p>
+</form>
+</main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { aceite: false };
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      accent: this.props.accent ?? '#FF5FAE',
+      aceite: s.aceite,
+      semAceite: !s.aceite,
+      alternaAceite: () => this.setState({ aceite: !s.aceite })
+    };
+  }
+}
+</script>
+</body>
+</html>

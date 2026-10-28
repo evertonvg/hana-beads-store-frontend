@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Entrar (celular)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+.campo{font-family:'Space Mono',monospace;font-size:16px;background:#1E1B2E;color:#EDE9FF;border:3px solid #4A4566;padding:12px;min-height:52px;box-sizing:border-box;width:100%}
+.rot{font-size:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.social{display:flex;align-items:center;justify-content:center;gap:12px;min-height:52px;font-family:'Press Start 2P',monospace;font-size:9px;text-decoration:none;color:#EDE9FF;background:#1E1B2E;border:3px solid #EDE9FF}
+.marca{width:22px;height:22px;background:#EDE9FF;color:#14121F;display:flex;align-items:center;justify-content:center;font-size:10px}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 1300px; background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; display: flex; flex-direction: column">
+
+<header style="padding: 10px 12px; border-bottom: 3px solid #2C2840; display: flex; align-items: center; justify-content: space-between">
+<a href="CelHome.dc.html" aria-label="Voltar ao início" style="width: 48px; height: 48px; box-sizing: border-box; border: 3px solid #4A4566; color: #EDE9FF; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</a>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 11px; line-height: 1.5; text-align: center">PIXEL PERFECT<br><span style="font-size: 7px; color: #A9A3C9">ARTESANATO</span></span>
+<span style="width: 48px"></span>
+</header>
+
+<main style="padding: 24px 16px 40px; display: flex; flex-direction: column; gap: 22px">
+<div role="tablist" aria-label="Acesso" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 3px solid #EDE9FF">
+<button type="button" role="tab" aria-selected="{{abaEntrarAria}}" onClick="{{irEntrar}}" style="font-family: 'Press Start 2P', monospace; font-size: 9px; min-height: 52px; border: 0; background: {{bgEntrar}}; color: {{fgEntrar}}; cursor: pointer">ENTRAR</button>
+<button type="button" role="tab" aria-selected="{{abaCriarAria}}" onClick="{{irCriar}}" style="font-family: 'Press Start 2P', monospace; font-size: 9px; min-height: 52px; border: 0; background: {{bgCriar}}; color: {{fgCriar}}; cursor: pointer">CRIAR CONTA</button>
+</div>
+
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 18px; line-height: 1.5; text-align: center">{{titulo}}</h1>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<a href="CelPerfil.dc.html" class="social" aria-label="Continuar com Google"><span class="marca" aria-hidden="true">G</span>CONTINUAR COM GOOGLE</a>
+<a href="CelPerfil.dc.html" class="social" aria-label="Continuar com Apple"><span class="marca" aria-hidden="true">A</span>CONTINUAR COM APPLE</a>
+<a href="CelPerfil.dc.html" class="social" aria-label="Continuar com Facebook"><span class="marca" aria-hidden="true">f</span>CONTINUAR COM FACEBOOK</a>
+<p style="margin: 0; font-size: 12px; color: #A9A3C9; line-height: 1.5; text-align: center">Recebemos só nome, e-mail e foto. Nada é publicado nas suas redes.</p>
+</div>
+
+<div style="display: flex; align-items: center; gap: 12px; font-family: 'Press Start 2P', monospace; font-size: 8px; color: #A9A3C9"><span style="flex: 1; height: 3px; background: #2C2840"></span>OU COM E-MAIL<span style="flex: 1; height: 3px; background: #2C2840"></span></div>
+
+<sc-if value="{{modoEntrar}}" hint-placeholder-val="{{ true }}">
+<form style="display: flex; flex-direction: column; gap: 16px">
+<label class="rot">E-mail<input class="campo" type="email" autocomplete="email"></label>
+<label class="rot">Senha<input class="campo" type="password" autocomplete="current-password"></label>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+<label style="display: flex; align-items: center; gap: 10px; font-size: 14px; min-height: 44px"><input type="checkbox" style="width: 22px; height: 22px; accent-color: #FF5FAE"> Manter conectado</label>
+<a href="Entrar.dc.html" style="font-size: 14px; padding: 12px 0">Esqueci a senha</a>
+</div>
+<a href="CelPerfil.dc.html" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 12px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 18px; box-shadow: 4px 4px 0 #FFD23F">ENTRAR ›</a>
+</form>
+</sc-if>
+
+<sc-if value="{{modoCriar}}" hint-placeholder-val="{{ false }}">
+<form style="display: flex; flex-direction: column; gap: 16px">
+<label class="rot">Nome completo<input class="campo" type="text" autocomplete="name"></label>
+<label class="rot">E-mail<input class="campo" type="email" autocomplete="email"></label>
+<label class="rot">Celular<input class="campo" type="tel" autocomplete="tel"></label>
+<label class="rot">Senha<input class="campo" type="password" autocomplete="new-password"></label>
+<p style="margin: 0; font-size: 12px; color: #C9C4E3">Mín. 8 caracteres, com maiúscula, número e símbolo.</p>
+<div style="display: flex; flex-direction: column; gap: 12px; border-top: 3px dashed #4A4566; padding-top: 16px">
+<label style="display: flex; align-items: flex-start; gap: 12px; font-size: 14px; line-height: 1.5"><input type="checkbox" checked="{{aceite}}" onChange="{{alternaAceite}}" style="width: 22px; height: 22px; margin: 0; flex: none; accent-color: #FF5FAE"><span>Li e concordo com os <a href="Termos.dc.html">Termos</a> e a <a href="Privacidade.dc.html">Política de Privacidade</a>. <span style="color: #FFD23F">(obrigatório)</span></span></label>
+<label style="display: flex; align-items: flex-start; gap: 12px; font-size: 14px; line-height: 1.5"><input type="checkbox" style="width: 22px; height: 22px; margin: 0; flex: none; accent-color: #FF5FAE"><span>Quero receber novidades por e-mail. <span style="color: #A9A3C9">(opcional)</span></span></label>
+</div>
+<sc-if value="{{aceite}}" hint-placeholder-val="{{ false }}">
+<a href="CelPerfil.dc.html" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 12px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 18px; box-shadow: 4px 4px 0 #FFD23F">CRIAR CONTA ›</a>
+</sc-if>
+<sc-if value="{{semAceite}}" hint-placeholder-val="{{ true }}">
+<button type="button" disabled style="font-family: 'Press Start 2P', monospace; font-size: 12px; color: #A9A3C9; background: #1E1B2E; border: 3px solid #4A4566; min-height: 56px">CRIAR CONTA ›</button>
+</sc-if>
+</form>
+</sc-if>
+</main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":390,"height":1300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { aba: 'entrar', aceite: false };
+  }
+  renderVals() {
+    const s = this.state;
+    const e = s.aba === 'entrar';
+    return {
+      accent: this.props.accent ?? '#FF5FAE',
+      modoEntrar: e,
+      modoCriar: !e,
+      titulo: e ? 'PLAYER LOGIN' : 'NEW PLAYER',
+      abaEntrarAria: e ? 'true' : 'false',
+      abaCriarAria: e ? 'false' : 'true',
+      bgEntrar: e ? '#EDE9FF' : 'transparent',
+      fgEntrar: e ? '#14121F' : '#EDE9FF',
+      bgCriar: e ? 'transparent' : '#EDE9FF',
+      fgCriar: e ? '#EDE9FF' : '#14121F',
+      irEntrar: () => this.setState({ aba: 'entrar' }),
+      irCriar: () => this.setState({ aba: 'criar' }),
+      aceite: s.aceite,
+      semAceite: !s.aceite,
+      alternaAceite: () => this.setState({ aceite: !s.aceite })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Encomendas</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF5FAE}a:hover{color:#FFD23F}
+</style>
+</helmet>
+<div style="background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; min-height: 100%">
+
+<header style="border-bottom: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5; text-decoration: none; color: #EDE9FF">PIXEL PERFECT<br><span style="font-size: 9px; color: #A9A3C9">ARTESANATO</span></a>
+<nav aria-label="Principal" style="display: flex; flex-wrap: wrap; gap: 24px; font-family: 'Press Start 2P', monospace; font-size: 10px">
+<a href="Main.dc.html" style="text-decoration: none; color: #EDE9FF">LOJA</a>
+<a href="Encomendas.dc.html" style="text-decoration: none; color: {{accent}}">ENCOMENDAS</a>
+<a href="Main.dc.html" style="text-decoration: none; color: #EDE9FF">SOBRE</a>
+<a href="Entrar.dc.html" style="text-decoration: none; color: #EDE9FF">ENTRAR</a>
+</nav>
+<a href="Carrinho.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: #FFD23F; padding: 14px 16px; box-shadow: 4px 4px 0 {{accent}}">CARRINHO [2]</a>
+</div>
+</header>
+
+<section style="max-width: 1200px; margin: 0 auto; padding: 80px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 56px">
+<div style="flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 11px; color: #FFD23F">▶ ENCOMENDAS ABERTAS</p>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 36px; line-height: 1.4">TEM UMA IDEIA? <span style="color: {{accent}}">A GENTE MONTA.</span></h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #C9C4E3; max-width: 520px">Inicial, número, seu personagem favorito, seu pet. Chama no Direct do Instagram, conta o que você imaginou e a gente transforma em pixel art.</p>
+<a href="https://ig.me/m/[usuario]" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 14px; font-family: 'Press Start 2P', monospace; font-size: 12px; text-decoration: none; color: #FFFFFF; background: #D62976; padding: 18px 24px; box-shadow: 6px 6px 0 #EDE9FF">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg>
+CHAMAR NO DIRECT</a>
+<p style="margin: 0; font-size: 13px; color: #A9A3C9">Atendimento: [dias e horários]</p>
+</div>
+<div style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 12px; max-width: 460px">
+<div style="align-self: flex-end; background: #2C2840; border: 3px solid #4A4566; padding: 14px 16px; max-width: 80%; font-size: 15px; line-height: 1.5">Oi! Queria uma estrela com a letra R, dá pra fazer em rosa?</div>
+<div style="align-self: flex-start; background: {{accent}}; color: #14121F; padding: 14px 16px; max-width: 80%; font-size: 15px; line-height: 1.5; font-weight: 700">Dá sim! Te mando o desenho em pixel pra aprovar antes de montar.</div>
+<div style="align-self: flex-start; background: #EDE9FF; padding: 10px; border: 3px solid #EDE9FF; max-width: 70%">
+<img src="/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45" alt="Chaveiro de estrela vermelha e rosa com a letra R" style="width: 100%; height: 220px; object-fit: cover; display: block">
+</div>
+<div style="align-self: flex-end; background: #2C2840; border: 3px solid #4A4566; padding: 14px 16px; font-size: 15px">Perfeito!!</div>
+<p style="margin: 0; font-size: 12px; color: #A9A3C9; text-align: center">Exemplo ilustrativo de conversa</p>
+</div>
+</section>
+
+<section style="background: #1E1B2E; border-top: 4px solid #2C2840; border-bottom: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 88px 24px; display: flex; flex-direction: column; gap: 44px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 22px; line-height: 1.5">COMO FUNCIONA</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px">
+<li style="border: 3px solid #EDE9FF; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">FASE 1</span>
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1.6">CONTA A IDEIA</h3>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">Manda no Direct uma foto de referência ou descreve o que quer.</p>
+</li>
+<li style="border: 3px solid #EDE9FF; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">FASE 2</span>
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1.6">APROVA O DESENHO</h3>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">A gente manda o risco em pixel e o orçamento. Ajusta até ficar do seu jeito.</p>
+</li>
+<li style="border: 3px solid #EDE9FF; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">FASE 3</span>
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1.6">CONTA POR CONTA</h3>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">Com o pagamento confirmado, a peça entra na fila de produção.</p>
+</li>
+<li style="border: 3px solid #EDE9FF; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">FASE 4</span>
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1.6">ITEM COLETADO!</h3>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">Foto da peça pronta e envio para sua casa.</p>
+</li>
+</ol>
+</div>
+</section>
+
+<section style="max-width: 1200px; margin: 0 auto; padding: 88px 24px; display: flex; flex-direction: column; gap: 40px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 22px; line-height: 1.5">O QUE DÁ PRA <span style="color: {{accent}}">ENCOMENDAR</span></h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px">
+<article style="background: #1E1B2E; border: 3px solid #4A4566; display: flex; flex-direction: column">
+<img src="/_blob/67ddb026040a2247409a721a4508d547" alt="Chaveiro de estrela vermelha com o número 13" style="width: 100%; height: 240px; object-fit: cover; display: block">
+<div style="padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1.6">INICIAIS E NÚMEROS</h3>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3; line-height: 1.5">Estrela, coração ou outra forma com a letra ou número que você quiser.</p>
+</div>
+</article>
+<article style="background: #1E1B2E; border: 3px solid #4A4566; display: flex; flex-direction: column">
+<img src="/_blob/ff963464d565c9b110e7df46e932d367" alt="Chaveiro de personagem em pixel art com cabelo rosa" style="width: 100%; height: 240px; object-fit: cover; display: block">
+<div style="padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1.6">PERSONAGENS</h3>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3; line-height: 1.5">Você em versão pixel, um personagem seu, as cores que preferir.</p>
+</div>
+</article>
+<article style="background: #1E1B2E; border: 3px dashed {{accent}}; display: flex; flex-direction: column">
+<div style="height: 240px; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 48px; color: {{accent}}" aria-hidden="true">?</div>
+<div style="padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1.6">SUA IDEIA</h3>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3; line-height: 1.5">Pet, comida, ícone, presente pra alguém. Conta pra gente que a gente avalia.</p>
+</div>
+</article>
+</div>
+</section>
+
+<section style="max-width: 1200px; margin: 0 auto; padding: 0 24px 88px; display: flex; flex-wrap: wrap; gap: 32px">
+<div style="flex: 1 1 380px; min-width: 0; background: #2C2840; border: 4px solid #EDE9FF; box-shadow: 10px 10px 0 {{accent}}; padding: 28px; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 13px; line-height: 1.6; color: #FFD23F">ANTES DE CHAMAR, TENHA EM MÃOS</h2>
+<ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 1.5">
+<li>Foto ou descrição do que você quer</li>
+<li>Cores preferidas</li>
+<li>Quantidade de peças</li>
+<li>Data que você precisa receber</li>
+</ul>
+</div>
+<div style="flex: 2 1 480px; min-width: 0; display: flex; flex-direction: column; border-top: 3px solid #2C2840">
+<details style="border-bottom: 3px solid #2C2840; padding: 18px 0">
+<summary style="font-family: 'Press Start 2P', monospace; font-size: 10px; cursor: pointer; line-height: 1.6">QUANTO TEMPO DEMORA?</summary>
+<p style="margin: 14px 0 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">[Prazo de produção das encomendas.]</p>
+</details>
+<details style="border-bottom: 3px solid #2C2840; padding: 18px 0">
+<summary style="font-family: 'Press Start 2P', monospace; font-size: 10px; cursor: pointer; line-height: 1.6">QUANTO CUSTA?</summary>
+<p style="margin: 14px 0 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">[Faixa de preço ou "a partir de".]</p>
+</details>
+<details style="border-bottom: 3px solid #2C2840; padding: 18px 0">
+<summary style="font-family: 'Press Start 2P', monospace; font-size: 10px; cursor: pointer; line-height: 1.6">COMO PAGO?</summary>
+<p style="margin: 14px 0 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">[Formas de pagamento aceitas.]</p>
+</details>
+<details style="border-bottom: 3px solid #2C2840; padding: 18px 0">
+<summary style="font-family: 'Press Start 2P', monospace; font-size: 10px; cursor: pointer; line-height: 1.6">FAZEM PEDIDOS EM QUANTIDADE?</summary>
+<p style="margin: 14px 0 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">[Lembrancinhas, festas, eventos.]</p>
+</details>
+</div>
+</section>
+
+<section style="background: {{accent}}; color: #14121F">
+<div style="max-width: 1200px; margin: 0 auto; padding: 64px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 20px; line-height: 1.5">READY PLAYER YOU?</h2>
+<a href="https://ig.me/m/[usuario]" style="display: inline-flex; align-items: center; gap: 14px; font-family: 'Press Start 2P', monospace; font-size: 12px; text-decoration: none; color: #EDE9FF; background: #14121F; padding: 18px 24px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg>
+FAZER MINHA ENCOMENDA</a>
+</div>
+</section>
+
+<footer style="max-width: 1200px; margin: 0 auto; padding: 40px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 13px; color: #A9A3C9">
+<span>© Pixel Perfect Artesanato</span>
+<div style="display: flex; gap: 24px; font-family: 'Press Start 2P', monospace; font-size: 9px"><a href="https://instagram.com/[usuario]">INSTAGRAM</a><a href="Trocas.dc.html">TROCAS</a><a href="Privacidade.dc.html">PRIVACIDADE</a></div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":1280,"height":2300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#FF5FAE' };
+  }
+}
+</script>
+</body>
+</html>

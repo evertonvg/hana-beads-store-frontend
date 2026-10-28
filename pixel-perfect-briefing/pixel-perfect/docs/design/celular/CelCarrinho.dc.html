@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Carrinho (celular)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 1500px; background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; position: relative; display: flex; flex-direction: column">
+
+<header style="position: sticky; top: 0; z-index: 10; background: #14121F; border-bottom: 3px solid #2C2840; padding: 10px 12px; display: flex; align-items: center; gap: 12px">
+<a href="CelLoja.dc.html" aria-label="Voltar para a loja" style="width: 48px; height: 48px; box-sizing: border-box; border: 3px solid #4A4566; color: #EDE9FF; display: flex; align-items: center; justify-content: center; flex: none">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</a>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 14px; flex: 1">INVENTÁRIO</h1>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F" aria-live="polite">{{total}} ITENS</span>
+</header>
+
+<sc-if value="{{temItens}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column">
+<div style="padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{itens}}" as="i" hint-placeholder-count="2">
+<article style="background: #1E1B2E; border: 3px solid #4A4566; padding: 12px; display: flex; gap: 12px">
+<img src="{{i.img}}" alt="{{i.alt}}" style="width: 92px; height: 92px; object-fit: cover; border: 2px solid #EDE9FF; flex: none">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; gap: 8px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px; line-height: 1.6">{{i.nome}}</h2>
+<button type="button" onClick="{{i.remover}}" aria-label="Remover {{i.nome}}" style="width: 36px; height: 36px; flex: none; background: transparent; border: 2px solid #4A4566; color: #C9C4E3; cursor: pointer; display: flex; align-items: center; justify-content: center">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg>
+</button>
+</div>
+<span style="font-size: 12px; color: #C9C4E3">{{i.opcoes}}</span>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto">
+<div style="display: flex; align-items: center; border: 2px solid #EDE9FF">
+<button type="button" onClick="{{i.menos}}" aria-label="Diminuir quantidade" style="font-family: 'Press Start 2P', monospace; font-size: 11px; width: 40px; height: 40px; background: transparent; color: #EDE9FF; border: 0; cursor: pointer">-</button>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 11px; width: 28px; text-align: center">{{i.qtd}}</span>
+<button type="button" onClick="{{i.mais}}" aria-label="Aumentar quantidade" style="font-family: 'Press Start 2P', monospace; font-size: 11px; width: 40px; height: 40px; background: transparent; color: #EDE9FF; border: 0; cursor: pointer">+</button>
+</div>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">R$ [—]</span>
+</div>
+</div>
+</article>
+</sc-for>
+</div>
+
+<div style="margin: 0 16px; border: 3px dashed #4A4566; padding: 14px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px">[Faltam R$ X para frete grátis]</span>
+<div style="height: 10px; background: #1E1B2E"><div style="height: 100%; width: 70%; background: #7CFF6B"></div></div>
+</div>
+
+<section style="padding: 20px 16px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="cep-cel" style="font-size: 14px">Calcular frete</label>
+<div style="display: flex; gap: 8px">
+<input id="cep-cel" type="text" inputmode="numeric" placeholder="00000-000" style="flex: 1; min-width: 0; font-family: 'Space Mono', monospace; font-size: 16px; background: #1E1B2E; color: #EDE9FF; border: 3px solid #4A4566; padding: 10px; min-height: 48px; box-sizing: border-box">
+<button type="button" style="font-family: 'Press Start 2P', monospace; font-size: 9px; background: #EDE9FF; color: #14121F; border: 0; padding: 0 16px; min-height: 48px">OK</button>
+</div>
+</div>
+<details style="border: 3px solid #4A4566; padding: 14px">
+<summary style="font-size: 14px; cursor: pointer">Tem um código secreto (cupom)?</summary>
+<input type="text" aria-label="Cupom" placeholder="↑↑↓↓←→←→BA" style="margin-top: 12px; font-family: 'Space Mono', monospace; font-size: 16px; background: #1E1B2E; color: #EDE9FF; border: 3px solid #4A4566; padding: 10px; min-height: 48px; box-sizing: border-box; width: 100%">
+</details>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; padding-top: 6px">
+<div style="display: flex; justify-content: space-between"><span>Subtotal</span><span>R$ [VALOR]</span></div>
+<div style="display: flex; justify-content: space-between; color: #C9C4E3"><span>Frete</span><span>calcule acima</span></div>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{vazio}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 48px 16px; display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center">
+<div style="display: grid; grid-template-columns: repeat(3, 56px); gap: 8px" aria-hidden="true">
+<div style="height: 56px; border: 3px dashed #4A4566"></div><div style="height: 56px; border: 3px dashed {{accent}}; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 14px; color: {{accent}}">?</div><div style="height: 56px; border: 3px dashed #4A4566"></div>
+</div>
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 15px; line-height: 1.5">INVENTÁRIO VAZIO</h2>
+<p style="margin: 0; font-size: 15px; color: #C9C4E3">Nenhum item coletado ainda.</p>
+<a href="CelLoja.dc.html" style="width: 100%; box-sizing: border-box; text-align: center; font-family: 'Press Start 2P', monospace; font-size: 11px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 18px; box-shadow: 4px 4px 0 #FFD23F">IR PARA A LOJA</a>
+<button type="button" onClick="{{restaurar}}" style="font-family: 'Space Mono', monospace; font-size: 13px; background: transparent; color: #A9A3C9; border: 0; text-decoration: underline; min-height: 44px; cursor: pointer">Desfazer remoção</button>
+</div>
+</sc-if>
+
+<div style="flex: 1"></div>
+<sc-if value="{{temItens}}" hint-placeholder-val="{{ true }}">
+<div style="position: sticky; bottom: 0; z-index: 10; background: #1E1B2E; border-top: 3px solid #EDE9FF; padding: 12px 16px 16px; display: flex; align-items: center; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 11px; color: #A9A3C9">Total</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 11px; color: #FFD23F">R$ [VALOR]</span>
+</div>
+<a href="CelCheckout.dc.html" style="flex: 1; text-align: center; font-family: 'Press Start 2P', monospace; font-size: 11px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 20px 8px; box-shadow: 4px 4px 0 #FFD23F">FINALIZAR ›</a>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":390,"height":1500}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { q: { a: 1, b: 1 }, fora: {} };
+  }
+  renderVals() {
+    const s = this.state;
+    const q = s.q;
+    const set = (id, v) => this.setState({ q: { ...q, [id]: Math.max(1, v) } });
+    const base = [
+      { id: 'a', nome: 'GAROTA PIXEL', opcoes: 'Argola: mosquetão', img: '/_blob/ff963464d565c9b110e7df46e932d367', alt: 'Chaveiro Garota Pixel' },
+      { id: 'b', nome: 'ESTRELA INICIAL R', opcoes: 'Argola: estrela', img: '/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45', alt: 'Chaveiro estrela letra R' }
+    ];
+    const itens = base.filter((i) => !s.fora[i.id]).map((i) => ({
+      ...i,
+      qtd: q[i.id],
+      menos: () => set(i.id, q[i.id] - 1),
+      mais: () => set(i.id, q[i.id] + 1),
+      remover: () => this.setState({ fora: { ...s.fora, [i.id]: true } })
+    }));
+    return {
+      accent: this.props.accent ?? '#FF5FAE',
+      itens,
+      total: itens.reduce((t, i) => t + i.qtd, 0),
+      temItens: itens.length > 0,
+      vazio: itens.length === 0,
+      restaurar: () => this.setState({ fora: {} })
+    };
+  }
+}
+</script>
+</body>
+</html>

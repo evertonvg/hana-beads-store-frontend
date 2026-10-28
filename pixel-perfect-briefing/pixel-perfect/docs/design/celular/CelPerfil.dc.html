@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Minha conta (celular)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 1300px; background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; display: flex; flex-direction: column">
+
+<header style="padding: 18px 16px 14px; border-bottom: 3px solid #2C2840">
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 14px">MINHA <span style="color: {{accent}}">CONTA</span></h1>
+</header>
+
+<section style="padding: 20px 16px 0; display: flex; align-items: center; gap: 14px">
+<div style="width: 64px; height: 64px; background: {{accent}}; color: #14121F; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 22px; box-shadow: 4px 4px 0 #FFD23F; flex: none" aria-hidden="true">R</div>
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #FFD23F">PLAYER 1</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1.5">[NOME]</span>
+<span style="font-size: 12px; color: #A9A3C9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">[email@exemplo.com]</span>
+</div>
+</section>
+
+<a href="CelPedidos.dc.html" style="margin: 20px 16px 0; text-decoration: none; color: #EDE9FF; background: #2C2840; border: 3px solid #EDE9FF; box-shadow: 6px 6px 0 {{accent}}; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px">ÚLTIMO PEDIDO #[0005]</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #14121F; background: {{accent}}; padding: 6px 8px">EM PRODUÇÃO</span>
+</div>
+<div style="display: flex; gap: 8px">
+<img src="/_blob/ff963464d565c9b110e7df46e932d367" alt="Chaveiro Garota Pixel" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid #EDE9FF">
+<img src="/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45" alt="Chaveiro Estrela inicial R" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid #EDE9FF">
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px" aria-label="Andamento: 2 de 4 fases">
+<div style="height: 8px; background: {{accent}}"></div><div style="height: 8px; background: {{accent}}"></div><div style="height: 8px; background: #14121F"></div><div style="height: 8px; background: #14121F"></div>
+</div>
+<span style="font-size: 12px; color: #C9C4E3">Previsão de envio: [00/00] · Ver detalhes ›</span>
+</a>
+
+<nav aria-label="Opções da conta" style="padding: 24px 16px; display: flex; flex-direction: column">
+<sc-for list="{{itens}}" as="i" hint-placeholder-count="7">
+<a href="{{i.href}}" style="display: flex; align-items: center; gap: 14px; padding: 16px 0; border-bottom: 2px solid #2C2840; text-decoration: none; color: #EDE9FF; min-height: 28px">
+<span style="width: 36px; height: 36px; border: 2px solid #4A4566; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 9px; color: {{i.cor}}; flex: none" aria-hidden="true">{{i.ic}}</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 15px">{{i.nome}}</span><span style="font-size: 12px; color: #A9A3C9">{{i.desc}}</span></span>
+<span style="color: {{accent}}; font-family: 'Press Start 2P', monospace; font-size: 10px" aria-hidden="true">›</span>
+</a>
+</sc-for>
+<a href="Entrar.dc.html" style="margin-top: 20px; text-align: center; font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #EDE9FF; border: 3px solid #4A4566; padding: 16px">SAIR</a>
+</nav>
+
+<div style="flex: 1"></div>
+<nav aria-label="Atalhos" style="position: sticky; bottom: 0; z-index: 10; background: #1E1B2E; border-top: 3px solid #EDE9FF; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+<a href="CelHome.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: #EDE9FF; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M3 11l9-7 9 7v10H3z"></path><path d="M10 21v-6h4v6"></path></svg>INÍCIO</a>
+<a href="CelLoja.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: #EDE9FF; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>LOJA</a>
+<a href="Encomendas.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: #EDE9FF; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg>ENCOMENDA</a>
+<a href="CelPerfil.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: {{accent}}; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M8 8a4 4 0 1 0 8 0 4 4 0 1 0-8 0"></path><path d="M4 21v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2"></path></svg>CONTA</a>
+</nav>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":390,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accent ?? '#FF5FAE';
+    return {
+      accent,
+      itens: [
+        { ic: '#', nome: 'Meus pedidos', desc: 'Acompanhe e rastreie', href: 'CelPedidos.dc.html', cor: accent },
+        { ic: '@', nome: 'Meus dados', desc: 'Nome, e-mail, celular, senha', href: 'Perfil.dc.html', cor: '#FFD23F' },
+        { ic: '⌂', nome: 'Endereços', desc: '1 endereço salvo', href: 'Perfil.dc.html', cor: '#4FD1FF' },
+        { ic: '♥', nome: 'Favoritos', desc: 'Itens que você curtiu', href: 'CelLoja.dc.html', cor: accent },
+        { ic: 'G', nome: 'Contas conectadas', desc: 'Google, Apple, Facebook', href: 'Perfil.dc.html', cor: '#EDE9FF' },
+        { ic: '!', nome: 'Privacidade e dados', desc: 'Consentimentos, baixar ou excluir dados', href: 'Perfil.dc.html', cor: '#7CFF6B' },
+        { ic: '↺', nome: 'Trocas e devoluções', desc: 'Solicitar ou acompanhar', href: 'Trocas.dc.html', cor: '#FF9A3D' },
+        { ic: '?', nome: 'Ajuda', desc: 'Fale com a gente no Direct do Instagram', href: 'https://ig.me/m/[usuario]', cor: '#FF8CC4' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

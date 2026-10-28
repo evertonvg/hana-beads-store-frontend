@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Pedido concluído</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF5FAE}a:hover{color:#FFD23F}
+</style>
+</helmet>
+<div style="background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; min-height: 100%">
+
+<header style="border-bottom: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5; text-decoration: none; color: #EDE9FF">PIXEL PERFECT<br><span style="font-size: 9px; color: #A9A3C9">ARTESANATO</span></a>
+<a href="Carrinho.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: #FFD23F; padding: 14px 16px; box-shadow: 4px 4px 0 {{accent}}">CARRINHO [0]</a>
+</div>
+</header>
+
+<main style="max-width: 900px; margin: 0 auto; padding: 88px 24px 96px; display: flex; flex-direction: column; align-items: center; gap: 36px; text-align: center">
+<div style="display: flex; gap: 18px" aria-hidden="true">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 28px; color: #FFD23F">★</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 40px; color: {{accent}}">★</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 28px; color: #FFD23F">★</span>
+</div>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 48px; line-height: 1.3">STAGE<br><span style="color: {{accent}}">CLEAR!</span></h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #C9C4E3; max-width: 560px">Pedido recebido! Agora é com a gente: suas continhas já estão na fila de produção.</p>
+
+<div style="width: 100%; background: #2C2840; border: 4px solid #EDE9FF; box-shadow: 12px 12px 0 {{accent}}; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px; text-align: left">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-family: 'Press Start 2P', monospace; font-size: 11px">
+<span>PEDIDO <span style="color: #FFD23F">#[0000]</span></span>
+<span style="color: #C9C4E3">SCORE: R$ [VALOR]</span>
+</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px">
+<li style="background: #FFD23F; color: #14121F; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px">FASE 1 ✓</span><span style="font-size: 14px; font-weight: 700">Pagamento confirmado</span></li>
+<li style="background: {{accent}}; color: #14121F; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px">FASE 2 ▶</span><span style="font-size: 14px; font-weight: 700">Montando conta por conta</span></li>
+<li style="border: 3px solid #4A4566; padding: 13px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #C9C4E3">FASE 3</span><span style="font-size: 14px">Enviado</span></li>
+<li style="border: 3px solid #4A4566; padding: 13px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #C9C4E3">FASE 4</span><span style="font-size: 14px">Item coletado!</span></li>
+</ol>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3">Você vai receber uma foto da peça pronta por e-mail antes do envio. Prazo estimado: [X] dias úteis.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 11px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 18px 22px; box-shadow: 6px 6px 0 #FFD23F">JOGAR DE NOVO</a>
+<a href="Pedidos.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 11px; text-decoration: none; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 15px 20px">ACOMPANHAR PEDIDO</a>
+</div>
+</main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#FF5FAE' };
+  }
+}
+</script>
+</body>
+</html>

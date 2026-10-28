@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Personalizar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF5FAE}a:hover{color:#FFD23F}
+</style>
+</helmet>
+<div style="background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; min-height: 100%">
+
+<header style="border-bottom: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5; text-decoration: none; color: #EDE9FF">PIXEL PERFECT<br><span style="font-size: 9px; color: #A9A3C9">ARTESANATO</span></a>
+<nav aria-label="Principal" style="display: flex; flex-wrap: wrap; gap: 24px; font-family: 'Press Start 2P', monospace; font-size: 10px">
+<a href="Main.dc.html" style="text-decoration: none; color: #EDE9FF">LOJA</a>
+<a href="Personalizar.dc.html" style="text-decoration: none; color: {{accent}}">PERSONALIZE</a>
+<a href="Main.dc.html" style="text-decoration: none; color: #EDE9FF">SOBRE</a>
+</nav>
+<a href="Carrinho.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: #FFD23F; padding: 14px 16px; box-shadow: 4px 4px 0 {{accent}}">CARRINHO [2]</a>
+</div>
+</header>
+
+<main style="max-width: 1200px; margin: 0 auto; padding: 56px 24px 96px; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 14px; text-align: center; align-items: center">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">MODO CRIAÇÃO</p>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 34px; line-height: 1.4">SELECT YOUR <span style="color: {{accent}}">PLAYER</span></h1>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: stretch">
+<div style="flex: 1 1 460px; min-width: 0; background: #2C2840; border: 4px solid #EDE9FF; box-shadow: 12px 12px 0 {{accent}}; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">
+<span>P1</span><span>{{qtd}} CONTAS</span>
+</div>
+<div style="background: #0B0A12; border: 3px solid #4A4566; display: flex; align-items: center; justify-content: center; padding: 40px 16px">
+<div style="position: relative; width: 312px; height: 312px">
+<div style="display: grid; grid-template-columns: repeat(13, 24px); grid-template-rows: repeat(13, 24px)">
+<sc-for list="{{celulas}}" as="c" hint-placeholder-count="169">
+<div style="width: 24px; height: 24px; background: {{c.bg}}; border-radius: {{c.raio}}; box-shadow: {{c.sombra}}"></div>
+</sc-for>
+</div>
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding-top: {{ajusteY}}; font-family: 'Press Start 2P', monospace; font-size: 56px; color: #FFFFFF; text-shadow: 4px 4px 0 rgba(0,0,0,0.35); pointer-events: none">{{texto}}</div>
+</div>
+</div>
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; text-align: center; color: #EDE9FF">▶ P1 READY</p>
+</div>
+
+<div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
+<fieldset style="border: 3px solid #4A4566; padding: 20px; margin: 0; display: flex; flex-direction: column; gap: 14px">
+<legend style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F; padding: 0 8px">01 · FORMA</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<sc-for list="{{formas}}" as="f" hint-placeholder-count="3">
+<button type="button" onClick="{{f.pick}}" aria-pressed="{{f.ativo}}" style="font-family: 'Press Start 2P', monospace; font-size: 10px; min-height: 48px; padding: 12px 16px; border: 3px solid {{f.borda}}; background: {{f.bg}}; color: {{f.fg}}; cursor: pointer">{{f.nome}}</button>
+</sc-for>
+</div>
+</fieldset>
+<fieldset style="border: 3px solid #4A4566; padding: 20px; margin: 0; display: flex; flex-direction: column; gap: 14px">
+<legend style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F; padding: 0 8px">02 · COR</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<sc-for list="{{cores}}" as="k" hint-placeholder-count="6">
+<button type="button" onClick="{{k.pick}}" aria-label="{{k.nome}}" aria-pressed="{{k.ativo}}" style="width: 48px; height: 48px; background: {{k.hex}}; border: 3px solid #14121F; box-shadow: 0 0 0 {{k.anel}} #EDE9FF; cursor: pointer"></button>
+</sc-for>
+</div>
+</fieldset>
+<fieldset style="border: 3px solid #4A4566; padding: 20px; margin: 0; display: flex; flex-direction: column; gap: 14px">
+<legend style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F; padding: 0 8px">03 · INICIAL OU NÚMERO</legend>
+<label for="texto-player" style="font-size: 14px; color: #C9C4E3">Até 2 caracteres</label>
+<input id="texto-player" type="text" maxlength="2" value="{{texto}}" onChange="{{mudaTexto}}" style="font-family: 'Press Start 2P', monospace; font-size: 22px; width: 140px; min-height: 56px; padding: 10px 14px; background: #0B0A12; color: #EDE9FF; border: 3px solid #EDE9FF; box-sizing: border-box">
+</fieldset>
+<fieldset style="border: 3px solid #4A4566; padding: 20px; margin: 0; display: flex; flex-direction: column; gap: 14px">
+<legend style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F; padding: 0 8px">04 · ARGOLA</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<sc-for list="{{argolas}}" as="g" hint-placeholder-count="2">
+<button type="button" onClick="{{g.pick}}" aria-pressed="{{g.ativo}}" style="font-family: 'Press Start 2P', monospace; font-size: 10px; min-height: 48px; padding: 12px 16px; border: 3px solid {{g.borda}}; background: {{g.bg}}; color: {{g.fg}}; cursor: pointer">{{g.nome}}</button>
+</sc-for>
+</div>
+</fieldset>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; border-top: 4px dashed #4A4566; padding-top: 24px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 16px; color: #FFD23F">R$ [PREÇO]</span>
+<a href="Carrinho.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 12px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 18px 22px; box-shadow: 6px 6px 0 #FFD23F">CONFIRMAR ›</a>
+</div>
+</div>
+</div>
+</main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":1280,"height":1300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { forma: 'estrela', cor: '#E8302A', texto: 'R', argola: 'estrela' };
+  }
+  renderVals() {
+    const masks = {
+      estrela: ['......#......','.....###.....','.....###.....','....#####....','#############','.###########.','..#########..','...#######...','...#######...','..#########..','..####.####..','.###.....###.','.##.......##.'],
+      coracao: ['.............','..###...###..','.#####.#####.','#############','#############','#############','.###########.','..#########..','...#######...','....#####....','.....###.....','......#......','.............'],
+      quadrado: ['.............','.###########.','.###########.','.###########.','.###########.','.###########.','.###########.','.###########.','.###########.','.###########.','.###########.','.###########.','.............']
+    };
+    const s = this.state;
+    const m = masks[s.forma];
+    const celulas = [];
+    let qtd = 0;
+    for (let r = 0; r < 13; r++) {
+      for (let c = 0; c < 13; c++) {
+        const on = m[r][c] === '#';
+        if (on) qtd++;
+        celulas.push({ bg: on ? s.cor : 'transparent', raio: on ? '50%' : '0', sombra: on ? 'inset -2px -2px 0 rgba(0,0,0,0.2)' : 'none' });
+      }
+    }
+    const opt = (lista, chave) => lista.map((o) => {
+      const ativo = o.id === s[chave];
+      return { ...o, ativo: ativo ? 'true' : 'false', bg: ativo ? '#EDE9FF' : 'transparent', fg: ativo ? '#14121F' : '#EDE9FF', borda: ativo ? '#EDE9FF' : '#4A4566', pick: () => this.setState({ [chave]: o.id }) };
+    });
+    const cores = [
+      { hex: '#E8302A', nome: 'Vermelho' }, { hex: '#FF5FAE', nome: 'Rosa' }, { hex: '#9B5CFF', nome: 'Roxo' },
+      { hex: '#2D8BFF', nome: 'Azul' }, { hex: '#2FBF71', nome: 'Verde' }, { hex: '#FFD23F', nome: 'Amarelo' }
+    ].map((k) => {
+      const ativo = k.hex === s.cor;
+      return { ...k, ativo: ativo ? 'true' : 'false', anel: ativo ? '3px' : '0px', pick: () => this.setState({ cor: k.hex }) };
+    });
+    return {
+      accent: this.props.accent ?? '#FF5FAE',
+      celulas, qtd, cores,
+      formas: opt([{ id: 'estrela', nome: 'ESTRELA' }, { id: 'coracao', nome: 'CORAÇÃO' }, { id: 'quadrado', nome: 'QUADRADO' }], 'forma'),
+      argolas: opt([{ id: 'estrela', nome: 'ESTRELA' }, { id: 'mosquetao', nome: 'MOSQUETÃO' }], 'argola'),
+      texto: s.texto,
+      ajusteY: s.forma === 'estrela' ? '36px' : '0',
+      mudaTexto: (e) => this.setState({ texto: String(e.target.value || '').toUpperCase().slice(0, 2) })
+    };
+  }
+}
+</script>
+</body>
+</html>

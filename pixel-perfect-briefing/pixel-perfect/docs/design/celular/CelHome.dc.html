@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Home (celular)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+.carrossel::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 3000px; background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; position: relative; display: flex; flex-direction: column">
+
+<header style="position: sticky; top: 0; z-index: 10; background: #14121F; border-bottom: 3px solid #2C2840; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<button type="button" onClick="{{abrirMenu}}" aria-label="Abrir menu" style="width: 48px; height: 48px; background: transparent; border: 3px solid #4A4566; color: #EDE9FF; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+</button>
+<a href="CelHome.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1.5; text-decoration: none; color: #EDE9FF; text-align: center">PIXEL PERFECT<br><span style="font-size: 7px; color: #A9A3C9">ARTESANATO</span></a>
+<a href="CelCarrinho.dc.html" aria-label="Carrinho, 2 itens" style="position: relative; width: 48px; height: 48px; background: #FFD23F; color: #14121F; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 0 {{accent}}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" aria-hidden="true"><path d="M5 8h14l-1 13H6L5 8z"></path><path d="M9 8V5h6v3"></path></svg>
+<span style="position: absolute; top: -8px; right: -8px; min-width: 22px; height: 22px; background: {{accent}}; color: #14121F; font-family: 'Press Start 2P', monospace; font-size: 9px; display: flex; align-items: center; justify-content: center">2</span>
+</a>
+</header>
+
+<section style="padding: 28px 16px 36px; display: flex; flex-direction: column; gap: 20px">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px; color: #FFD23F">1 PLAYER · FEITO À MÃO</p>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 21px; line-height: 1.5">PRESS <span style="color: {{accent}}">START</span> NO SEU NOVO CHAVEIRO</h1>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9C4E3">Modelos prontos pra levar agora ou do seu jeito, sob encomenda pelo Instagram.</p>
+<div style="background: #2C2840; border: 3px solid #EDE9FF; box-shadow: 8px 8px 0 {{accent}}; padding: 12px">
+<div style="display: flex; justify-content: space-between; font-family: 'Press Start 2P', monospace; font-size: 7px; color: #FFD23F; padding-bottom: 8px"><span>HI-SCORE 999</span><span>LVL 01</span></div>
+<img src="/_blob/ff963464d565c9b110e7df46e932d367" alt="Chaveiro de pixel art de personagem com cabelo rosa" style="width: 100%; height: 300px; object-fit: cover; display: block">
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding-top: 8px">
+<a href="CelLoja.dc.html" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 12px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 18px; box-shadow: 5px 5px 0 #FFD23F">INSERT COIN ›</a>
+<a href="Encomendas.dc.html" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 12px; text-decoration: none; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 15px">ENCOMENDAR</a>
+</div>
+</section>
+
+<div style="background: {{accent}}; color: #14121F; font-family: 'Press Start 2P', monospace; font-size: 9px; padding: 12px 16px; white-space: nowrap; overflow: hidden">★ FEITO À MÃO ★ PEÇAS ÚNICAS ★ ENVIO P/ TODO BRASIL ★</div>
+
+<section style="padding: 40px 0 40px 16px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding-right: 16px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5">SELECIONE<br>SEU ITEM</h2>
+<a href="CelLoja.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 9px; padding: 12px 0">VER TODOS ›</a>
+</div>
+<div class="carrossel" style="display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 16px 12px 0; scrollbar-width: none">
+<sc-for list="{{produtos}}" as="p" hint-placeholder-count="3">
+<a href="CelProduto.dc.html" style="flex: 0 0 240px; scroll-snap-align: start; text-decoration: none; color: #EDE9FF; background: #1E1B2E; border: 3px solid #4A4566; display: flex; flex-direction: column">
+<div style="position: relative">
+<img src="{{p.img}}" alt="{{p.alt}}" style="width: 100%; height: 240px; object-fit: cover; display: block">
+<span style="position: absolute; top: 10px; left: 10px; font-family: 'Press Start 2P', monospace; font-size: 7px; background: #14121F; color: #FFD23F; padding: 6px 8px">{{p.raridade}}</span>
+</div>
+<span style="padding: 14px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.5">{{p.nome}}</span>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">R$ [PREÇO]</span>
+</span>
+</a>
+</sc-for>
+</div>
+<div style="display: flex; gap: 6px; padding-right: 16px; justify-content: center" aria-hidden="true">
+<span style="width: 18px; height: 6px; background: {{accent}}"></span><span style="width: 6px; height: 6px; background: #4A4566"></span><span style="width: 6px; height: 6px; background: #4A4566"></span>
+</div>
+</section>
+
+<section style="margin: 0 16px; background: #2C2840; border: 3px solid #EDE9FF; box-shadow: 8px 8px 0 #FFD23F; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 8px; color: #FFD23F">ENCOMENDAS ABERTAS</p>
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.6">TEM UMA IDEIA? <span style="color: {{accent}}">A GENTE MONTA.</span></h2>
+<p style="margin: 0; font-size: 14px; line-height: 1.6; color: #C9C4E3">Inicial, número, personagem, pet. Manda no Direct e a gente transforma em pixel.</p>
+<a href="https://ig.me/m/[usuario]" style="display: flex; align-items: center; justify-content: center; gap: 10px; font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #FFFFFF; background: #D62976; padding: 16px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg>
+CHAMAR NO DIRECT</a>
+</section>
+
+<section style="padding: 48px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5">COMO FUNCIONA</h2>
+<sc-for list="{{fases}}" as="f" hint-placeholder-count="3">
+<div style="display: flex; gap: 14px; align-items: flex-start; border: 3px solid #4A4566; padding: 16px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #14121F; background: #FFD23F; padding: 8px; flex: none">{{f.n}}</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.5">{{f.t}}</span>
+<span style="font-size: 13px; line-height: 1.5; color: #C9C4E3">{{f.d}}</span>
+</div>
+</div>
+</sc-for>
+</section>
+
+<section style="padding: 32px 16px; display: flex; flex-direction: column; gap: 14px; text-align: center">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 16px">CONTINUE? <span style="color: {{accent}}">9</span></h2>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3">Receba os novos personagens antes de todo mundo.</p>
+<label for="email-cel" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Seu e-mail</label>
+<input id="email-cel" type="email" placeholder="seu@email.com" style="font-family: 'Space Mono', monospace; font-size: 16px; background: #1E1B2E; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 14px; min-height: 52px; box-sizing: border-box; width: 100%">
+<button type="button" style="font-family: 'Press Start 2P', monospace; font-size: 11px; background: #FFD23F; color: #14121F; border: 0; padding: 16px; min-height: 52px">YES!</button>
+</section>
+
+<footer style="padding: 24px 16px 32px; border-top: 3px solid #2C2840; display: flex; flex-direction: column; gap: 4px">
+<a href="Trocas.dc.html" style="font-size: 14px; padding: 12px 0; border-bottom: 2px solid #2C2840; text-decoration: none; color: #EDE9FF; display: flex; justify-content: space-between">Trocas e devoluções <span aria-hidden="true">›</span></a>
+<a href="Privacidade.dc.html" style="font-size: 14px; padding: 12px 0; border-bottom: 2px solid #2C2840; text-decoration: none; color: #EDE9FF; display: flex; justify-content: space-between">Política de Privacidade <span aria-hidden="true">›</span></a>
+<a href="Termos.dc.html" style="font-size: 14px; padding: 12px 0; border-bottom: 2px solid #2C2840; text-decoration: none; color: #EDE9FF; display: flex; justify-content: space-between">Termos de Uso <span aria-hidden="true">›</span></a>
+<div style="display: flex; gap: 20px; padding-top: 16px; font-family: 'Press Start 2P', monospace; font-size: 8px"><a href="https://instagram.com/[usuario]">INSTAGRAM</a></div>
+<p style="margin: 12px 0 0; font-size: 12px; color: #A9A3C9">© Pixel Perfect Artesanato</p>
+</footer>
+
+<div style="flex: 1"></div>
+<nav aria-label="Atalhos" style="position: sticky; bottom: 0; z-index: 10; background: #1E1B2E; border-top: 3px solid #EDE9FF; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+<a href="CelHome.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: {{accent}}; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M3 11l9-7 9 7v10H3z"></path><path d="M10 21v-6h4v6"></path></svg>INÍCIO</a>
+<a href="CelLoja.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: #EDE9FF; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>LOJA</a>
+<a href="Encomendas.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: #EDE9FF; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg>ENCOMENDA</a>
+<a href="CelPerfil.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 12px; text-decoration: none; color: #EDE9FF; font-family: 'Press Start 2P', monospace; font-size: 7px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M8 8a4 4 0 1 0 8 0 4 4 0 1 0-8 0"></path><path d="M4 21v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2"></path></svg>CONTA</a>
+</nav>
+
+<sc-if value="{{menuAberto}}" hint-placeholder-val="{{ false }}">
+<div role="dialog" aria-modal="true" aria-label="Menu" style="position: fixed; top: 0; left: 0; width: 390px; height: 100vh; z-index: 30; background: #14121F; display: flex; flex-direction: column">
+<div style="padding: 10px 12px; border-bottom: 3px solid #2C2840; display: flex; align-items: center; justify-content: space-between">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">MENU</span>
+<button type="button" onClick="{{fecharMenu}}" aria-label="Fechar menu" style="width: 48px; height: 48px; background: transparent; border: 3px solid #4A4566; color: #EDE9FF; font-family: 'Press Start 2P', monospace; font-size: 12px; cursor: pointer">X</button>
+</div>
+<nav aria-label="Principal" style="padding: 12px 16px; display: flex; flex-direction: column">
+<a href="CelLoja.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 16px; padding: 20px 0; border-bottom: 3px solid #2C2840; text-decoration: none; color: #EDE9FF; display: flex; justify-content: space-between">LOJA <span style="color: {{accent}}">›</span></a>
+<a href="Encomendas.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 16px; padding: 20px 0; border-bottom: 3px solid #2C2840; text-decoration: none; color: #EDE9FF; display: flex; justify-content: space-between">ENCOMENDAS <span style="color: {{accent}}">›</span></a>
+<a href="CelPedidos.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 16px; padding: 20px 0; border-bottom: 3px solid #2C2840; text-decoration: none; color: #EDE9FF; display: flex; justify-content: space-between">MEUS PEDIDOS <span style="color: {{accent}}">›</span></a>
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 16px; padding: 20px 0; border-bottom: 3px solid #2C2840; text-decoration: none; color: #EDE9FF; display: flex; justify-content: space-between">SOBRE <span style="color: {{accent}}">›</span></a>
+</nav>
+<div style="padding: 20px 16px; display: flex; flex-direction: column; gap: 12px">
+<a href="CelEntrar.dc.html" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 11px; text-decoration: none; color: #14121F; background: {{accent}}; padding: 16px; box-shadow: 4px 4px 0 #FFD23F">ENTRAR</a>
+<a href="CelEntrar.dc.html" style="text-align: center; font-family: 'Press Start 2P', monospace; font-size: 11px; text-decoration: none; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 13px">CRIAR CONTA</a>
+</div>
+<div style="margin-top: auto; padding: 20px 16px 28px; border-top: 3px solid #2C2840; display: flex; flex-direction: column; gap: 12px">
+<a href="https://ig.me/m/[usuario]" style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #FF8CC4; text-decoration: none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg>
+Falar no Instagram</a>
+<div style="display: flex; gap: 20px; font-size: 13px"><a href="#">Instagram</a><a href="Trocas.dc.html">Trocas</a><a href="Privacidade.dc.html">Privacidade</a></div>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":390,"height":3000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { menu: false };
+  }
+  renderVals() {
+    return {
+      accent: this.props.accent ?? '#FF5FAE',
+      menuAberto: this.state.menu,
+      abrirMenu: () => this.setState({ menu: true }),
+      fecharMenu: () => this.setState({ menu: false }),
+      produtos: [
+        { nome: 'GAROTA PIXEL', raridade: '★★★ ÉPICO', img: '/_blob/ff963464d565c9b110e7df46e932d367', alt: 'Chaveiro Garota Pixel' },
+        { nome: 'ESTRELA Nº', raridade: '★★ RARO', img: '/_blob/67ddb026040a2247409a721a4508d547', alt: 'Chaveiro estrela número 13' },
+        { nome: 'ESTRELA INICIAL', raridade: '★★ RARO', img: '/_blob/c9c1d7aa851c7c0fb3461d1f4394cb45', alt: 'Chaveiro estrela letra R' }
+      ],
+      fases: [
+        { n: '01', t: 'CHAMA NO DIRECT', d: 'Conta sua ideia: personagem, inicial, cores.' },
+        { n: '02', t: 'CONTA POR CONTA', d: 'Você aprova o desenho e a gente monta.' },
+        { n: '03', t: 'ITEM COLETADO!', d: 'Chega na sua casa embalado com carinho.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

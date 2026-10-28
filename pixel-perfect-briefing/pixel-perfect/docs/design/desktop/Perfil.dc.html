@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pixel Perfect — Meu perfil</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14121F}
+a{color:#FF8CC4}a:hover{color:#FFD23F}
+.campo{font-family:'Space Mono',monospace;font-size:15px;background:#14121F;color:#EDE9FF;border:3px solid #4A4566;padding:12px;min-height:48px;box-sizing:border-box;width:100%}
+.rot{font-size:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+</style>
+</helmet>
+<div style="background: #14121F; color: #EDE9FF; font-family: 'Space Mono', monospace; min-height: 100%">
+
+<header style="border-bottom: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="Main.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5; text-decoration: none; color: #EDE9FF">PIXEL PERFECT<br><span style="font-size: 9px; color: #A9A3C9">ARTESANATO</span></a>
+<nav aria-label="Principal" style="display: flex; flex-wrap: wrap; gap: 24px; font-family: 'Press Start 2P', monospace; font-size: 10px">
+<a href="Main.dc.html" style="text-decoration: none; color: #EDE9FF">LOJA</a>
+<a href="Encomendas.dc.html" style="text-decoration: none; color: #EDE9FF">ENCOMENDAS</a>
+<a href="Perfil.dc.html" style="text-decoration: none; color: {{accent}}">MINHA CONTA</a>
+</nav>
+<a href="Carrinho.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-decoration: none; color: #14121F; background: #FFD23F; padding: 14px 16px; box-shadow: 4px 4px 0 {{accent}}">CARRINHO [2]</a>
+</div>
+</header>
+
+<main style="max-width: 1200px; margin: 0 auto; padding: 48px 24px 96px; display: flex; flex-direction: column; gap: 36px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px">
+<div style="width: 72px; height: 72px; background: {{accent}}; color: #14121F; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 24px; box-shadow: 5px 5px 0 #FFD23F" aria-hidden="true">R</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">PLAYER 1</p>
+<h1 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 22px; line-height: 1.4">[NOME DO CLIENTE]</h1>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+<nav aria-label="Minha conta" style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{abas}}" as="a" hint-placeholder-count="4">
+<button type="button" onClick="{{a.pick}}" aria-current="{{a.atual}}" style="text-align: left; font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.5; padding: 16px; min-height: 52px; border: 3px solid {{a.borda}}; background: {{a.bg}}; color: {{a.fg}}; cursor: pointer">{{a.nome}}</button>
+</sc-for>
+<a href="Entrar.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 10px; padding: 16px; text-decoration: none; color: #C9C4E3">SAIR ›</a>
+</nav>
+
+<section style="flex: 999 1 560px; min-width: 0; background: #1E1B2E; border: 3px solid #4A4566; padding: 32px; display: flex; flex-direction: column; gap: 24px">
+
+<sc-if value="{{verDados}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 22px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 14px">MEUS DADOS</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px">
+<label class="rot">Nome completo<input class="campo" type="text" value="[Nome do cliente]"></label>
+<label class="rot">E-mail<input class="campo" type="email" value="[email@exemplo.com]"></label>
+<label class="rot">Celular<input class="campo" type="tel" value="[(00) 00000-0000]"></label>
+<label class="rot">CPF <span style="color: #A9A3C9; font-size: 12px">opcional · usado só para emitir nota fiscal</span><input class="campo" type="text" inputmode="numeric"></label>
+</div>
+<div style="border-top: 3px dashed #4A4566; padding-top: 22px; display: flex; flex-direction: column; gap: 12px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 11px; color: #FFD23F">CONTAS CONECTADAS</h3>
+<p style="margin: 0 0 4px; font-size: 13px; color: #A9A3C9">Use uma rede social para entrar sem senha. Você pode desconectar quando quiser.</p>
+<sc-for list="{{redes}}" as="r" hint-placeholder-count="3">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 2px solid #2C2840">
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="width: 32px; height: 32px; background: #EDE9FF; color: #14121F; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 12px" aria-hidden="true">{{r.letra}}</span>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px">{{r.nome}}</span><span style="font-size: 12px; color: #A9A3C9">{{r.status}}</span></div>
+</div>
+<button type="button" onClick="{{r.alterna}}" style="font-family: 'Press Start 2P', monospace; font-size: 9px; min-height: 44px; padding: 10px 14px; border: 3px solid {{r.borda}}; background: {{r.bg}}; color: {{r.fg}}; cursor: pointer">{{r.acao}}</button>
+</div>
+</sc-for>
+</div>
+<div style="border-top: 3px dashed #4A4566; padding-top: 22px; display: flex; flex-direction: column; gap: 16px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 11px; color: #FFD23F">ALTERAR SENHA</h3>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<label class="rot">Senha atual<input class="campo" type="password" autocomplete="current-password"></label>
+<label class="rot">Nova senha<input class="campo" type="password" autocomplete="new-password"></label>
+<label class="rot">Confirmar nova senha<input class="campo" type="password" autocomplete="new-password"></label>
+</div>
+</div>
+<button type="button" style="align-self: flex-start; font-family: 'Press Start 2P', monospace; font-size: 11px; color: #14121F; background: {{accent}}; border: 0; padding: 16px 22px; min-height: 52px; box-shadow: 5px 5px 0 #FFD23F; cursor: pointer">SALVAR</button>
+</div>
+</sc-if>
+
+<sc-if value="{{verEnderecos}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 22px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 14px">ENDEREÇOS</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px">
+<article style="border: 3px solid #EDE9FF; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #14121F; background: #FFD23F; padding: 6px 8px; align-self: flex-start">PRINCIPAL</span>
+<p style="margin: 0; font-size: 14px; line-height: 1.6">[Rua, número]<br>[Bairro] · [Cidade/UF]<br>[CEP]</p>
+<div style="display: flex; gap: 16px"><button type="button" style="font-family: 'Space Mono', monospace; font-size: 14px; background: transparent; color: #FF8CC4; border: 0; text-decoration: underline; min-height: 44px; padding: 0; cursor: pointer">Editar</button><button type="button" style="font-family: 'Space Mono', monospace; font-size: 14px; background: transparent; color: #C9C4E3; border: 0; text-decoration: underline; min-height: 44px; padding: 0; cursor: pointer">Remover</button></div>
+</article>
+<button type="button" style="border: 3px dashed #4A4566; background: transparent; color: #EDE9FF; font-family: 'Press Start 2P', monospace; font-size: 10px; min-height: 160px; cursor: pointer">+ NOVO ENDEREÇO</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{verPedidos}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 14px">ÚLTIMOS PEDIDOS</h2>
+<a href="Pedidos.dc.html" style="font-family: 'Press Start 2P', monospace; font-size: 9px; text-decoration: none; color: #14121F; background: #EDE9FF; padding: 14px">VER TODOS ›</a>
+</div>
+<sc-for list="{{pedidos}}" as="p" hint-placeholder-count="2">
+<article style="border: 3px solid #4A4566; padding: 18px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'Press Start 2P', monospace; font-size: 11px">{{p.num}}</span>
+<span style="font-size: 13px; color: #C9C4E3">{{p.data}} · {{p.itens}}</span>
+</div>
+<span style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #14121F; background: {{p.cor}}; padding: 8px 10px">{{p.status}}</span>
+<a href="Pedidos.dc.html" style="font-size: 14px">Ver detalhes</a>
+</article>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{verPrivacidade}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 26px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 14px; line-height: 1.5">PRIVACIDADE E DADOS</h2>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">Aqui você controla o que fazemos com seus dados, conforme a Lei Geral de Proteção de Dados (LGPD).</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h3 style="margin: 0 0 10px; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFD23F">COMUNICAÇÕES</h3>
+<sc-for list="{{consentimentos}}" as="c" hint-placeholder-count="2">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 2px solid #2C2840">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 15px">{{c.nome}}</span>
+<span style="font-size: 12px; color: #A9A3C9">{{c.desc}}</span>
+</div>
+<button type="button" role="switch" aria-checked="{{c.ligado}}" aria-label="{{c.nome}}" onClick="{{c.alterna}}" style="width: 64px; height: 36px; flex: none; border: 3px solid #EDE9FF; background: {{c.fundo}}; padding: 3px; display: flex; justify-content: {{c.lado}}; cursor: pointer"><span style="width: 24px; height: 24px; background: #EDE9FF; display: block"></span></button>
+</div>
+</sc-for>
+<p style="margin: 8px 0 0; font-size: 12px; color: #A9A3C9">E-mails sobre seus pedidos (confirmação, envio) continuam chegando, pois fazem parte da compra.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px">
+<div style="border: 3px solid #4A4566; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px; line-height: 1.6">BAIXAR MEUS DADOS</h3>
+<p style="margin: 0; font-size: 13px; color: #C9C4E3; line-height: 1.5">Receba uma cópia de tudo que guardamos sobre você.</p>
+<button type="button" style="align-self: flex-start; font-family: 'Press Start 2P', monospace; font-size: 9px; background: #EDE9FF; color: #14121F; border: 0; padding: 12px 14px; min-height: 44px; cursor: pointer">SOLICITAR</button>
+</div>
+<div style="border: 3px solid #4A4566; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px; line-height: 1.6">COOKIES</h3>
+<p style="margin: 0; font-size: 13px; color: #C9C4E3; line-height: 1.5">Reveja suas escolhas de cookies neste navegador.</p>
+<a href="Main.dc.html" style="align-self: flex-start; font-family: 'Press Start 2P', monospace; font-size: 9px; text-decoration: none; background: #EDE9FF; color: #14121F; padding: 14px">GERENCIAR</a>
+</div>
+<div style="border: 3px solid #4A4566; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 9px; line-height: 1.6">FALAR COM O ENCARREGADO</h3>
+<p style="margin: 0; font-size: 13px; color: #C9C4E3; line-height: 1.5">Dúvidas ou pedidos sobre seus dados: [e-mail do encarregado].</p>
+<a href="Privacidade.dc.html" style="font-size: 13px">Ver Política de Privacidade</a>
+</div>
+</div>
+
+<div style="border: 3px solid #FF6B6B; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<h3 style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FF8A8A">EXCLUIR MINHA CONTA</h3>
+<p style="margin: 0; font-size: 14px; color: #C9C4E3; line-height: 1.6">Apagamos seu cadastro, endereços e preferências. Dados de pedidos e notas fiscais ficam guardados apenas pelo prazo exigido por lei.</p>
+<sc-if value="{{semConfirmar}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{pedirExclusao}}" style="align-self: flex-start; font-family: 'Press Start 2P', monospace; font-size: 9px; background: transparent; color: #FF8A8A; border: 3px solid #FF6B6B; padding: 12px 14px; min-height: 48px; cursor: pointer">EXCLUIR CONTA</button>
+</sc-if>
+<sc-if value="{{confirmando}}" hint-placeholder-val="{{ false }}">
+<div style="background: #2C2840; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<p style="margin: 0; font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.6">GAME OVER DE VERDADE? ESSA AÇÃO NÃO PODE SER DESFEITA.</p>
+<label class="rot">Digite sua senha para confirmar<input class="campo" type="password" autocomplete="current-password"></label>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<button type="button" style="font-family: 'Press Start 2P', monospace; font-size: 9px; background: #FF6B6B; color: #14121F; border: 0; padding: 14px; min-height: 48px; cursor: pointer">SIM, EXCLUIR</button>
+<button type="button" onClick="{{cancelarExclusao}}" style="font-family: 'Press Start 2P', monospace; font-size: 9px; background: transparent; color: #EDE9FF; border: 3px solid #EDE9FF; padding: 12px 14px; min-height: 48px; cursor: pointer">CANCELAR</button>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+</section>
+</div>
+</main>
+
+<footer style="border-top: 4px solid #2C2840">
+<div style="max-width: 1200px; margin: 0 auto; padding: 28px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 12px; color: #A9A3C9">
+<span>© Pixel Perfect Artesanato</span>
+<div style="display: flex; flex-wrap: wrap; gap: 20px"><a href="Privacidade.dc.html">Política de Privacidade</a><a href="Trocas.dc.html">Trocas e devoluções</a><a href="Termos.dc.html">Termos de Uso</a></div>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5FAE","options":["#FF5FAE","#4FD1FF","#7CFF6B","#FF8A3D"]},"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { aba: 'dados', email: true, whats: false, confirmar: false, google: true, facebook: false, apple: false };
+  }
+  renderVals() {
+    const s = this.state;
+    const accent = this.props.accent ?? '#FF5FAE';
+    const abas = [
+      { id: 'dados', nome: 'MEUS DADOS' },
+      { id: 'enderecos', nome: 'ENDEREÇOS' },
+      { id: 'pedidos', nome: 'PEDIDOS' },
+      { id: 'privacidade', nome: 'PRIVACIDADE E DADOS' }
+    ].map((a) => {
+      const ativo = a.id === s.aba;
+      return { ...a, atual: ativo ? 'page' : 'false', bg: ativo ? '#EDE9FF' : 'transparent', fg: ativo ? '#14121F' : '#EDE9FF', borda: ativo ? '#EDE9FF' : '#4A4566', pick: () => this.setState({ aba: a.id, confirmar: false }) };
+    });
+    const sw = (id, nome, desc) => {
+      const on = !!s[id];
+      return { nome, desc, ligado: on ? 'true' : 'false', fundo: on ? accent : '#14121F', lado: on ? 'flex-end' : 'flex-start', alterna: () => this.setState({ [id]: !on }) };
+    };
+    return {
+      accent,
+      abas,
+      verDados: s.aba === 'dados',
+      verEnderecos: s.aba === 'enderecos',
+      verPedidos: s.aba === 'pedidos',
+      verPrivacidade: s.aba === 'privacidade',
+      consentimentos: [
+        sw('email', 'Novidades por e-mail', 'Lançamentos e promoções')      ],
+      pedidos: [
+        { num: 'PEDIDO #[0000]', data: '[00/00/0000]', itens: '2 itens', status: 'EM PRODUÇÃO', cor: '#FF5FAE' },
+        { num: 'PEDIDO #[0000]', data: '[00/00/0000]', itens: '1 item', status: 'ENTREGUE', cor: '#FFD23F' }
+      ],
+      redes: [['google', 'Google', 'G'], ['facebook', 'Facebook', 'f'], ['apple', 'Apple', 'A']].map(([id, nome, letra]) => {
+        const on = !!s[id];
+        return { nome, letra, status: on ? 'Conectada · [e-mail da conta]' : 'Não conectada', acao: on ? 'DESCONECTAR' : 'CONECTAR', bg: on ? 'transparent' : '#EDE9FF', fg: on ? '#EDE9FF' : '#14121F', borda: on ? '#4A4566' : '#EDE9FF', alterna: () => this.setState({ [id]: !on }) };
+      }),
+      semConfirmar: !s.confirmar,
+      confirmando: s.confirmar,
+      pedirExclusao: () => this.setState({ confirmar: true }),
+      cancelarExclusao: () => this.setState({ confirmar: false })
+    };
+  }
+}
+</script>
+</body>
+</html>
