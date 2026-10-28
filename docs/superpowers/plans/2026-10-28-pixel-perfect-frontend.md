@@ -4,9 +4,10 @@
 
 **Goal:** Entregar todas as telas do MVP da loja (desktop e celular) em Next.js, fiéis ao design, com fluxos completos (catálogo → carrinho → checkout → pagamento → conta) funcionando contra uma camada de dados mock tipada, cobertos por Playwright (E2E + snapshots visuais + acessibilidade).
 
-**Architecture:** App Router com Server Components por padrão; Client Components só onde há interação. Toda leitura/escrita de dados passa por *ports* (interfaces TypeScript em `lib/data/ports.ts`) resolvidos por `getData()` em `lib/data/index.ts`; neste plano só existe o adaptador `mock` (estado em memória no servidor + fixtures). Supabase, Mercado Pago, Melhor Envio, ViaCEP e Resend entram num plano futuro implementando os mesmos ports — nenhuma tela muda.
+**Architecture:** App Router com Server Components por padrão; Client Components só onde há interação. Toda leitura/escrita de dados passa por _ports_ (interfaces TypeScript em `lib/data/ports.ts`) resolvidos por `getData()` em `lib/data/index.ts`; neste plano só existe o adaptador `mock` (estado em memória no servidor + fixtures). Supabase, Mercado Pago, Melhor Envio, ViaCEP e Resend entram num plano futuro implementando os mesmos ports — nenhuma tela muda.
 
 **Tech Stack:**
+
 - **Base:** Next.js 16.4 (App Router, Turbopack) · React 19 · TypeScript (versão instalada pelo `create-next-app`) · Tailwind CSS 4.3 (tokens via `@theme`) · **npm 11** (o que vem com o Node 24) · Node 24.
 - **UI:** Headless UI 2 (Dialog, Switch, Tab, RadioGroup, Disclosure, Checkbox, Field) · `class-variance-authority` + `clsx` + `tailwind-merge` (variantes/`cn`) · `lucide-react` (ícones) · `sonner` (toasts) · `qrcode.react` (QR do Pix) · GSAP 3.15 + `@gsap/react` (parallax).
 - **Estado e dados no cliente:** TanStack Query 5 (cotação de frete, preço do carrinho, polling do Pix) · Zustand 5 + `persist` (carrinho no `localStorage`) · `nuqs` 2 (filtros da loja na URL).
@@ -19,17 +20,17 @@
 
 ### Decisões tomadas com o dono (2026-10-28)
 
-| Decisão | Escolha |
-|---|---|
-| Escopo deste plano | **Frontend com dados mock.** Integrações reais (Supabase, Mercado Pago, Melhor Envio, ViaCEP, Resend, Umami) = plano futuro. |
-| Home final (decisão em aberto do briefing §2) | **Estrutura de `Main.dc.html` + seções de parallax de `Parallax.dc.html`.** |
-| Verificação de telas | **E2E dos fluxos + `toHaveScreenshot` em 1280px e 390px + axe**, e revisão lado a lado com o `.dc.html` antes de aprovar cada baseline. |
+| Decisão                                       | Escolha                                                                                                                                 |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Escopo deste plano                            | **Frontend com dados mock.** Integrações reais (Supabase, Mercado Pago, Melhor Envio, ViaCEP, Resend, Umami) = plano futuro.            |
+| Home final (decisão em aberto do briefing §2) | **Estrutura de `Main.dc.html` + seções de parallax de `Parallax.dc.html`.**                                                             |
+| Verificação de telas                          | **E2E dos fluxos + `toHaveScreenshot` em 1280px e 390px + axe**, e revisão lado a lado com o `.dc.html` antes de aprovar cada baseline. |
 
 ### Desvios conscientes do briefing (listar ao dono)
 
 1. **Tailwind v4**: tokens ficam em `app/globals.css` (`@theme`), não em `tailwind.config` (v4 não usa mais arquivo de config). Nomes de token idênticos aos do briefing §3.
 2. **`proxy.ts`** no lugar de `middleware.ts` (renomeado no Next 16).
-3. **E-mails transacionais (React Email) e `/admin`** ficam fora: dependem de backend. Apenas os *gatilhos* existem nos ports mock (ex.: `auth.requestPasswordReset` não envia nada, só registra).
+3. **E-mails transacionais (React Email) e `/admin`** ficam fora: dependem de backend. Apenas os _gatilhos_ existem nos ports mock (ex.: `auth.requestPasswordReset` não envia nada, só registra).
 4. **Recuperar senha** é um estado dentro de `/entrar` (como em `Entrar.dc.html`); `/recuperar-senha` redireciona para `/entrar?modo=recuperar`.
 5. **Logo:** logotipo em texto + grade 3×3 dos cabeçalhos (nenhum dos 6 caminhos escolhido).
 6. **Login com Apple** fica atrás de `NEXT_PUBLIC_AUTH_APPLE=false` (decisão em aberto).
@@ -37,36 +38,36 @@
 
 ### Avaliação de bibliotecas (diretriz do dono: preferir ferramentas prontas de mercado)
 
-| Necessidade | Escolha | Por quê | Descartadas |
-|---|---|---|---|
-| Componentes acessíveis sem estilo (modal, gaveta, switch, abas, acordeão, radio) | **Headless UI** | Da Tailwind Labs, sem estilo próprio (o visual pixel fica 100% nosso), cobre foco preso, `Escape`, ARIA e teclado. | Radix (ótimo, mas mais peças avulsas), React Aria (mais completo e mais verboso), shadcn/ui (traz estilo arredondado que teríamos que desfazer) |
-| Dados do servidor no cliente | **TanStack Query** | Cache, `refetchInterval` (polling do Pix pausa sozinho com a aba oculta), `useMutation` para frete/cupom, devtools. Será o mesmo código quando o backend real entrar. | SWR (menos recursos de mutation), hooks próprios |
-| Estado do carrinho | **Zustand + persist** | `persist` já faz `localStorage`, versão e migração; API mínima. | Redux Toolkit (pesado demais), Context + código próprio |
-| Filtros na URL | **nuqs** | Parsers tipados, adapter oficial do Next App Router, leitura no servidor (`createLoader`), throttle de URL para a busca. | `URLSearchParams` na mão |
-| Formulários | **React Hook Form + Zod** | Padrão de mercado; o mesmo schema Zod valida no cliente e na server action. | Formik (parado), Conform (menos adotado) |
-| Máscaras e documentos BR | **react-imask** + **@brazilian-utils** | CPF/CEP/telefone validados por lib conhecida, sem regex caseira. | máscaras próprias |
-| Datas | **date-fns** (`ptBR`) | Formatar datas e calcular prazo de 7 dias (CDC). | Day.js, Luxon |
-| Ícones | **lucide-react** | SVG com `stroke` e `currentColor`; aceita `strokeLinecap="square"` como pede o briefing. | ícones SVG desenhados à mão |
-| Toasts ("Item removido · DESFAZER") | **sonner** | Acessível, com ação no toast. | react-hot-toast |
-| QR Code do Pix | **qrcode.react** | Gera QR real a partir do "copia e cola"; o Mercado Pago devolve esse texto. | desenhar o QR fake do design |
-| Consentimento de cookies | **vanilla-cookieconsent** | Categorias, revisão de versão, bloqueio de scripts por categoria, botões de mesmo peso; tema via CSS. | banner próprio |
-| Sessão (mock) | **iron-session** | Cookie criptografado e assinado, sem cripto caseira. No backend será trocado por Supabase Auth. | HMAC próprio |
-| Envs | **@t3-oss/env-nextjs** | Valida envs com Zod no build e separa servidor de cliente. | parser próprio |
-| Upload de fotos | **react-dropzone** | Arrastar e soltar, `accept`, `maxSize`, `maxFiles`. | input próprio |
-| Galeria de componentes | **Storybook 10** | Documentação viva do UI kit e checagem de a11y por componente. | rota `/dev/ui` |
+| Necessidade                                                                      | Escolha                                | Por quê                                                                                                                                                               | Descartadas                                                                                                                                     |
+| -------------------------------------------------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Componentes acessíveis sem estilo (modal, gaveta, switch, abas, acordeão, radio) | **Headless UI**                        | Da Tailwind Labs, sem estilo próprio (o visual pixel fica 100% nosso), cobre foco preso, `Escape`, ARIA e teclado.                                                    | Radix (ótimo, mas mais peças avulsas), React Aria (mais completo e mais verboso), shadcn/ui (traz estilo arredondado que teríamos que desfazer) |
+| Dados do servidor no cliente                                                     | **TanStack Query**                     | Cache, `refetchInterval` (polling do Pix pausa sozinho com a aba oculta), `useMutation` para frete/cupom, devtools. Será o mesmo código quando o backend real entrar. | SWR (menos recursos de mutation), hooks próprios                                                                                                |
+| Estado do carrinho                                                               | **Zustand + persist**                  | `persist` já faz `localStorage`, versão e migração; API mínima.                                                                                                       | Redux Toolkit (pesado demais), Context + código próprio                                                                                         |
+| Filtros na URL                                                                   | **nuqs**                               | Parsers tipados, adapter oficial do Next App Router, leitura no servidor (`createLoader`), throttle de URL para a busca.                                              | `URLSearchParams` na mão                                                                                                                        |
+| Formulários                                                                      | **React Hook Form + Zod**              | Padrão de mercado; o mesmo schema Zod valida no cliente e na server action.                                                                                           | Formik (parado), Conform (menos adotado)                                                                                                        |
+| Máscaras e documentos BR                                                         | **react-imask** + **@brazilian-utils** | CPF/CEP/telefone validados por lib conhecida, sem regex caseira.                                                                                                      | máscaras próprias                                                                                                                               |
+| Datas                                                                            | **date-fns** (`ptBR`)                  | Formatar datas e calcular prazo de 7 dias (CDC).                                                                                                                      | Day.js, Luxon                                                                                                                                   |
+| Ícones                                                                           | **lucide-react**                       | SVG com `stroke` e `currentColor`; aceita `strokeLinecap="square"` como pede o briefing.                                                                              | ícones SVG desenhados à mão                                                                                                                     |
+| Toasts ("Item removido · DESFAZER")                                              | **sonner**                             | Acessível, com ação no toast.                                                                                                                                         | react-hot-toast                                                                                                                                 |
+| QR Code do Pix                                                                   | **qrcode.react**                       | Gera QR real a partir do "copia e cola"; o Mercado Pago devolve esse texto.                                                                                           | desenhar o QR fake do design                                                                                                                    |
+| Consentimento de cookies                                                         | **vanilla-cookieconsent**              | Categorias, revisão de versão, bloqueio de scripts por categoria, botões de mesmo peso; tema via CSS.                                                                 | banner próprio                                                                                                                                  |
+| Sessão (mock)                                                                    | **iron-session**                       | Cookie criptografado e assinado, sem cripto caseira. No backend será trocado por Supabase Auth.                                                                       | HMAC próprio                                                                                                                                    |
+| Envs                                                                             | **@t3-oss/env-nextjs**                 | Valida envs com Zod no build e separa servidor de cliente.                                                                                                            | parser próprio                                                                                                                                  |
+| Upload de fotos                                                                  | **react-dropzone**                     | Arrastar e soltar, `accept`, `maxSize`, `maxFiles`.                                                                                                                   | input próprio                                                                                                                                   |
+| Galeria de componentes                                                           | **Storybook 10**                       | Documentação viva do UI kit e checagem de a11y por componente.                                                                                                        | rota `/dev/ui`                                                                                                                                  |
 
 Para o plano de backend (não instalar agora): **MSW** (mock de APIs externas em testes), **@supabase/ssr**, **mercadopago** SDK, **@sentry/nextjs** (com revisão LGPD antes: replay de sessão grava dados pessoais).
 
 ### Avaliação de serviços Docker (projeto frontend)
 
-| Serviço | Valor para este projeto | Decisão |
-|---|---|---|
-| **Playwright oficial** (`mcr.microsoft.com/playwright:v1.64.1-noble`) | Os screenshots variam com o SO e as fontes. Rodar os snapshots num Linux fixo deixa os baselines estáveis e idênticos aos de um CI futuro. | **Adotar agora** (Task 2 e Task 22) |
-| **Umami + Postgres** (analytics sem cookies, previsto no briefing) | Testar de verdade que o script de métricas só carrega após o aceite de cookies. | **Opcional agora** (perfil `analytics` no compose, Task 9) |
-| **Supabase local** (via `supabase start`, sobe Postgres, Auth, Storage, Studio e Mailpit) | Backend real de desenvolvimento. | Plano de backend |
-| **Mailpit** | Ver e-mails transacionais (React Email) sem enviar. Já vem dentro do Supabase local. | Plano de backend |
-| **WireMock/Mockoon** (Mercado Pago, Melhor Envio) | Simular webhooks e APIs externas. | Plano de backend (MSW deve bastar) |
-| **Container de dev do Next** | Não compensa no Windows: hot reload mais lento e `node_modules` duplicado. O deploy é na Vercel. | Não adotar |
+| Serviço                                                                                   | Valor para este projeto                                                                                                                    | Decisão                                                    |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| **Playwright oficial** (`mcr.microsoft.com/playwright:v1.64.1-noble`)                     | Os screenshots variam com o SO e as fontes. Rodar os snapshots num Linux fixo deixa os baselines estáveis e idênticos aos de um CI futuro. | **Adotar agora** (Task 2 e Task 22)                        |
+| **Umami + Postgres** (analytics sem cookies, previsto no briefing)                        | Testar de verdade que o script de métricas só carrega após o aceite de cookies.                                                            | **Opcional agora** (perfil `analytics` no compose, Task 9) |
+| **Supabase local** (via `supabase start`, sobe Postgres, Auth, Storage, Studio e Mailpit) | Backend real de desenvolvimento.                                                                                                           | Plano de backend                                           |
+| **Mailpit**                                                                               | Ver e-mails transacionais (React Email) sem enviar. Já vem dentro do Supabase local.                                                       | Plano de backend                                           |
+| **WireMock/Mockoon** (Mercado Pago, Melhor Envio)                                         | Simular webhooks e APIs externas.                                                                                                          | Plano de backend (MSW deve bastar)                         |
+| **Container de dev do Next**                                                              | Não compensa no Windows: hot reload mais lento e `node_modules` duplicado. O deploy é na Vercel.                                           | Não adotar                                                 |
 
 Observação: nesta máquina o Docker às vezes precisa de `wsl --shutdown` e reiniciar o Docker Desktop após o boot. Por isso os testes funcionais rodam fora do Docker e só os visuais rodam dentro.
 
@@ -195,12 +196,14 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 1: Fundação do projeto (scaffold, tokens, fontes, ferramentas de teste)
 
 **Files:**
+
 - Move: `pixel-perfect-briefing/pixel-perfect/CLAUDE.md` → `CLAUDE.md`; `pixel-perfect-briefing/pixel-perfect/docs/` → `docs/`; remover `pixel-perfect-briefing/` e `briefing.md` da raiz (idêntico a `docs/briefing.md`, conferido com `diff`).
 - Copy: `docs/design/img/*.webp` → `public/img/produtos/`
 - Create: scaffold `create-next-app` (TS, App Router, Tailwind, ESLint, sem `src/`, alias `@/*`), `app/globals.css`, `app/layout.tsx`, `app/page.tsx` (placeholder temporário), `lib/env.ts`, `.env.example`, `vitest.config.ts`, `playwright.config.ts`, `tests/e2e/support/fixtures.ts`, `tests/e2e/smoke.spec.ts`, `tests/unit/env.test.ts`, `.npmrc` (`min-release-age=14`, `save-exact=true`), `README.md` (comandos).
 - Modify: `package.json` scripts: `dev`, `build`, `start`, `lint` (`eslint .`), `typecheck` (`tsc --noEmit`), `test` (`vitest run`), `e2e` (`playwright test`), `check` (`npm run lint && npm run typecheck && npm test`).
 
 **Interfaces:**
+
 - Produces: classes Tailwind de todos os tokens (`bg-bg`, `bg-surface`, `text-text-muted`, `bg-accent`, `shadow-hard`…), `font-pixel`, `font-mono`; `env` de `lib/env.ts`:
   `export const env = createEnv({ server: { DATA_SOURCE: z.enum(["mock"]).default("mock"), SESSION_SECRET: z.string().min(32) }, client: { NEXT_PUBLIC_* }, experimental__runtimeEnv: { ... } })` (`iron-session` exige segredo com 32+ caracteres; o E2E usa `e2e-secret-e2e-secret-e2e-secret-00`); `publicEnvSchema` exportado à parte para teste; derivado `export const publicEnv: { siteUrl: string; contactChannel: "instagram" | "whatsapp"; instagramUser: string | null; whatsappNumber: string | null; freeShippingCents: number | null; parallaxIntensity: number; authApple: boolean; analyticsSrc: string | null }` via `toPublicEnv(parsed)`.
 - Produces: fixtures Playwright `test`, `expect`, `resetMock`, `login`, `expectA11y`, `snap` (contratos acima).
@@ -218,10 +221,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 2: Padronização de código (ESLint, Prettier, Husky, commitlint, VS Code) + Docker para testes visuais
 
 **Files:**
+
 - Create: `eslint.config.mjs` (substitui o gerado), `.prettierrc.json`, `.prettierignore`, `.editorconfig`, `.gitattributes`, `commitlint.config.mjs`, `.husky/pre-commit`, `.husky/commit-msg`, `.husky/pre-push`, `.vscode/settings.json`, `.vscode/extensions.json`, `docker-compose.yml`, `docker/playwright.sh`, `tests/unit/tooling.test.ts`
 - Modify: `package.json` (scripts `prepare`, `lint`, `lint:fix`, `format`, `format:check`, `check`, `e2e:visual` e bloco `lint-staged`), `README.md`
 
 **Interfaces (regras que todas as tasks seguintes cumprem):**
+
 - **Prettier** (`.prettierrc.json`): `{ "semi": true, "singleQuote": false, "trailingComma": "all", "printWidth": 100, "endOfLine": "lf", "plugins": ["prettier-plugin-tailwindcss"], "tailwindStylesheet": "./app/globals.css", "tailwindFunctions": ["cn", "cva"] }`. O plugin ordena as classes Tailwind. `.prettierignore`: `docs/design/`, `package-lock.json`, `tests/e2e/__screenshots__/`.
 - **ESLint** (flat config): `eslint-config-next` (core-web-vitals + typescript; já inclui `jsx-a11y` e `react-hooks`), `typescript-eslint` `recommendedTypeChecked` em `**/*.{ts,tsx}`, `eslint-plugin-playwright` `flat/recommended` em `tests/e2e/**`, `@vitest/eslint-plugin` em `tests/unit/**`, e `eslint-config-prettier` **por último**. Regras extras: `no-console: ["warn", { allow: ["warn", "error"] }]`, `@typescript-eslint/consistent-type-imports: "error"`, `@typescript-eslint/no-floating-promises: "error"`. Ignorar `.next/`, `storybook-static/`, `playwright-report/`, `test-results/`, `docs/design/**`.
 - **Husky:** `pre-commit` → `npx lint-staged`; `commit-msg` → `npx commitlint --edit "$1"`; `pre-push` → `npm run typecheck && npm test`.
@@ -246,10 +251,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 3: Formatação e canal de contato configurável
 
 **Files:**
+
 - Create: `lib/format.ts`, `lib/contact.ts`
 - Test: `tests/unit/format.test.ts`, `tests/unit/contact.test.ts`, `tests/unit/no-hardcoded-channel.test.ts`
 
 **Interfaces:**
+
 - Produces (`lib/format.ts`):
   `formatPrice(cents: number | null): string` — `null` → `"[PREÇO]"`, `1990` → `"R$ 19,90"` (`Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"})`, espaço normal no lugar do NBSP);
   `formatTotal(cents: number | null): string` — igual, mas `null` → `"[VALOR]"`;
@@ -271,10 +278,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 4: UI kit pixel (Headless UI + cva) e Storybook
 
 **Files:**
+
 - Create: `lib/cn.ts`, `components/ui/*` (lista na estrutura) + `*.stories.tsx`, `components/ui/PixQr.tsx`, `components/pixel/PixelGrid.tsx`, `PixelBlock.tsx`, `BeadArt.tsx` (+ stories), `components/contact/ContactButton.tsx`, `components/contact/SuggestedMessage.tsx`, `.storybook/main.ts`, `.storybook/preview.tsx`
 - Test: `tests/unit/ui/*.test.tsx`
 
 **Interfaces (props exatas):**
+
 - Base: comportamento e ARIA vêm do **Headless UI**; o visual é só nosso (classes Tailwind com tokens). Variantes com `cva`; classes condicionais com `cn()` (`lib/cn.ts`: `export function cn(...i: ClassValue[]) { return twMerge(clsx(i)) }`).
 - `Button({ variant: "primary"|"secondary"|"yellow"|"danger"|"ghost", size?: "sm"|"md"|"lg", asChild?: never, href?: string, ...button/anchor props })` — variantes via `cva` (`buttonVariants` exportado para reuso em links); `href` renderiza `next/link`. Primário: `bg-accent text-bg font-pixel text-[11px] md:text-xs px-[22px] py-[18px] shadow-hard`; secundário: `border-[3px] border-text`; `min-h-11`. Estado `:active` desloca `translate(6px,6px)` e zera sombra (`motion-reduce:` sem transição).
 - Pílulas, só visual sobre três primitivas: `PillToggle({ pressed, onPressedChange, children })` = `<button aria-pressed>` (filtros multi, ex. cores); `PillTabs({ label, tabs: { id, label }[], selected, onChange, panels? })` = Headless `TabGroup/TabList/Tab` (`aria-selected`, setas); `PillRadioGroup<T extends string>({ label, options: { value: T; label: string; note?: string }[], value: T, onChange })` = Headless `RadioGroup/Radio` (`role="radio"`, `aria-checked`, setas). Selecionada: `bg-text text-bg border-text`; normal: `border-[3px] border-border`.
@@ -303,11 +312,13 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 5: Shell de layout (Header, menu celular, TabBar, Footer) + 404
 
 **Files:**
+
 - Create: `components/layout/Header.tsx`, `MobileHeader.tsx`, `MobileMenu.tsx`, `MobileTabBar.tsx`, `Footer.tsx`, `components/pixel/PixelNumber404.tsx`, `app/not-found.tsx`, `app/providers.tsx` (`QueryClientProvider` com `staleTime: 30_000`, `NuqsAdapter` de `nuqs/adapters/next/app`, `<Toaster />`; `npm install @tanstack/react-query nuqs` e `npm install -D @tanstack/react-query-devtools`, devtools só em dev)
 - Modify: `app/layout.tsx`
 - Test: `tests/e2e/layout.spec.ts`, `tests/e2e/layout.mobile.spec.ts`, `tests/e2e/not-found.spec.ts`
 
 **Interfaces:**
+
 - Consumes: UI kit (Task 4), `getContact` (Task 3).
 - Produces: `Header({ session: SessionUser | null })` — Server Component; `SessionUser` vem da Task 14, até lá recebe `null`. Botão `CARRINHO [n]` é um client island que lê o contador do carrinho (0 até a Task 11, depois `useCartStore(s => s.count())`). `MobileTabBar({ variant: "nav" })` com Início/Loja/Encomenda/Conta (`aria-current="page"` na rota ativa); páginas de produto/carrinho/checkout escondem a TabBar e usam a própria barra fixa (`<body data-bar="buy">` via layout de segmento).
 - Menu desktop: `LOJA · ENCOMENDAS · SOBRE · ENTRAR` (ou `MINHA CONTA` logado). `SOBRE` aponta para `/#sobre` (texto "Sobre" é placeholder do dono). Footer: links Loja, Encomendas, Trocas e devoluções, Privacidade, Termos, **Cookies** (botão que reabre preferências — Task 9; até lá `href="#"` desabilitado), canal de contato, `[razão social] · [00.000.000/0000-00]`.
@@ -322,10 +333,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 6: Domínio, ports e catálogo mock
 
 **Files:**
+
 - Create: `lib/data/types.ts`, `lib/data/ports.ts`, `lib/data/index.ts`, `lib/data/mock/fixtures.ts`, `lib/data/mock/store.ts`, `lib/data/mock/catalog.ts`, `lib/shop-query.ts`, `app/api/__mock__/reset/route.ts`
 - Test: `tests/unit/shop-query.test.ts`, `tests/unit/mock-catalog.test.ts`
 
 **Interfaces:**
+
 - Produces (`types.ts`, campos espelham briefing §7 em camelCase):
   ```ts
   type Rarity = "comum" | "raro" | "epico";
@@ -334,12 +347,36 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
   type RingOption = "mosquetao" | "estrela";
   type ProductImage = { url: string; alt: string };
   type BeadArtSpec = { rows: string[]; palette: Record<string, string>; letter?: string };
-  type Product = { id: string; slug: string; name: string; description: string; priceCents: number | null;
-    rarity: Rarity | null; isNew: boolean; stock: number; categories: CategoryId[]; categoryLabel: string;
-    colors: ColorId[]; images: ProductImage[]; art: BeadArtSpec | null; illustrative: boolean;
-    sizeCm: number | null; beadCount: number | null; cuteness: "MAX";
-    options: { type: "argola"; value: RingOption; priceDeltaCents: number }[]; featuredRank: number | null };
-  type OrderStatus = "aguardando_aprovacao" | "aguardando_pagamento" | "pago" | "em_producao" | "enviado" | "entregue" | "cancelado" | "reembolsado";
+  type Product = {
+    id: string;
+    slug: string;
+    name: string;
+    description: string;
+    priceCents: number | null;
+    rarity: Rarity | null;
+    isNew: boolean;
+    stock: number;
+    categories: CategoryId[];
+    categoryLabel: string;
+    colors: ColorId[];
+    images: ProductImage[];
+    art: BeadArtSpec | null;
+    illustrative: boolean;
+    sizeCm: number | null;
+    beadCount: number | null;
+    cuteness: "MAX";
+    options: { type: "argola"; value: RingOption; priceDeltaCents: number }[];
+    featuredRank: number | null;
+  };
+  type OrderStatus =
+    | "aguardando_aprovacao"
+    | "aguardando_pagamento"
+    | "pago"
+    | "em_producao"
+    | "enviado"
+    | "entregue"
+    | "cancelado"
+    | "reembolsado";
   type PaymentMethod = "pix" | "cartao" | "boleto";
   ```
   (Tipos de pedido, endereço, usuário e devolução são adicionados nas tasks que os usam, no mesmo arquivo.)
@@ -363,11 +400,13 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 7: Home (estrutura de `Main.dc.html`)
 
 **Files:**
+
 - Delete: `app/page.tsx` (placeholder da Task 1; conflitaria com `(loja)/page.tsx`)
 - Create: `app/(loja)/page.tsx`, `components/home/Hero.tsx`, `Ticker.tsx`, `Featured.tsx`, `HowItWorks.tsx`, `NewsletterForm.tsx`, `FinalCta.tsx`, `lib/data/mock/newsletter.ts`, `lib/validation/newsletter.ts`, `app/(loja)/actions.ts`
 - Test: `tests/e2e/home.spec.ts`, `tests/unit/newsletter-schema.test.ts`
 
 **Interfaces:**
+
 - Consumes: `getData().catalog.featured(3)`, UI kit, `ContactButton`.
 - Produces: `NewsletterPort { subscribe(input: { email: string; consent: true; consentVersion: string }): Promise<{ status: "ok" | "already" }> }` (adicionar em `Ports`); form em React Hook Form + `zodResolver(newsletterSchema)` (`npm install react-hook-form @hookform/resolvers`) que chama a server action `subscribeNewsletter(input: NewsletterInput): Promise<FormState>`, que revalida com o mesmo schema; com `type FormState = { status: "idle" | "ok" | "error"; message?: string; fieldErrors?: Record<string, string> }` (tipo compartilhado em `lib/validation/form-state.ts`, reusado por todas as actions).
 - Conteúdo: hero `1 PLAYER · FEITO À MÃO`, título do design, CTAs `INSERT COIN ›` → `/loja` e `ENCOMENDAR` → `/encomendas`; ticker rosa; vitrine `SELECIONE SEU ITEM` com 3 destaques (barra de raridade 90%/60%/60% do design) e `VER TODOS` → `/loja` (carrossel horizontal com scroll-snap no celular, conforme `CelHome.dc.html`); "Como funciona a encomenda" com as 3 fases do `CelHome` (`01 CHAMA NO ${getContact().short.toUpperCase()}`, `02 CONTA POR CONTA`, `03 ITEM COLETADO!`, descrições do design), botão `contactLabel("encomendar")`; newsletter "CONTINUE? 9 … YES!" com e-mail + checkbox de consentimento **desmarcado e obrigatório para enviar**, só e-mail.
@@ -382,11 +421,13 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 8: Parallax da home (GSAP + ScrollTrigger)
 
 **Files:**
+
 - Create: `components/home/ParallaxHero.tsx`, `ParallaxTicker.tsx`, `BlocksSection.tsx` (quadro "Conta por conta" com peças girando), `ParallaxShowcase.tsx` (colunas em velocidades diferentes), `components/home/ParallaxCity.tsx` (nuvens + cidade no CTA final), `lib/motion.ts`
 - Modify: `app/(loja)/page.tsx` (troca Hero/Ticker/Featured/FinalCta pelas versões parallax mantendo o mesmo conteúdo e DOM acessível)
 - Test: `tests/unit/motion.test.ts`, `tests/e2e/parallax.desktop.spec.ts`
 
 **Interfaces:**
+
 - Produces (`lib/motion.ts`): `parallaxOffset(progress: number, speed: number, intensity: number, range = 260): number` (= `-clamp(progress,-1.5,1.5) * speed * range * intensity`, como em `Parallax.dc.html`); `seededRandom(seed: number): () => number` (LCG do design); `useReducedMotion(): boolean`.
 - Camadas e velocidades exatamente como em `Parallax.dc.html` (`estrelas 0.15`, `lua 0.3`, `montanhaFundo 0.45`, `montanhaFrente 0.7`, `foto1 1.2 rot -6°`, `foto2 1.6 rot 5°`, `foto3 2.0 rot -3°`, `titulo -0.25`, faixas ±1 em X com range 400 e offset -200, colunas `0.6/-0.6/0.9`, `cidade 0.25`, `cta -0.2`; 40 estrelas com seed 7; 10 peças de `pecasDef`; 5 nuvens de `nuvensDef`). Intensidade = `publicEnv.parallaxIntensity`.
 - Implementação: `useGSAP` + `ScrollTrigger` com `scrub: true`, transformando só `transform` (camadas `will-change: transform`, `aria-hidden="true"`). Com `prefers-reduced-motion: reduce` **nenhum** ScrollTrigger é criado e as camadas ficam em `transform: none`. `gsap.registerPlugin` só no cliente.
@@ -400,11 +441,13 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 9: Consentimento de cookies (vanilla-cookieconsent)
 
 **Files:**
+
 - Create: `lib/consent.ts` (config), `components/layout/CookieConsent.tsx` (client, roda `CookieConsent.run`), `app/cookieconsent.css` (tema pixel), `components/layout/ConsentScripts.tsx`
 - Modify: `app/layout.tsx`, `components/layout/Footer.tsx` (link "Cookies"), `docker-compose.yml` (fixar a tag do Umami)
 - Test: `tests/unit/consent-config.test.ts`, `tests/e2e/cookies.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `publicEnv.analyticsSrc` (Task 1).
 - Produces (`lib/consent.ts`): `consentConfig: CookieConsentConfig` com:
   - `cookie: { name: "pp_consent", expiresAfterDays: 180, sameSite: "Lax" }`, `revision: 1` (subir a revisão invalida consentimentos antigos e reabre o banner);
@@ -433,10 +476,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 10: Loja / catálogo
 
 **Files:**
+
 - Create: `app/(loja)/loja/page.tsx`, `components/loja/ProductCard.tsx`, `ShopFilters.tsx` (client), `ShopToolbar.tsx`, `ShopPagination.tsx`, `FavoriteButton.tsx`, `StockAlertButton.tsx`, `lib/data/mock/engagement.ts`
 - Test: `tests/e2e/loja.spec.ts`, `tests/e2e/loja.mobile.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `shopParsers`, `shopUrlKeys`, `loadShopQuery`, `serializeShopQuery`, `catalog.list` (Task 6), `formatPrice`, UI kit, `BeadArt`.
 - Produces: `EngagementPort { toggleFavorite(userId: string, productId: string): Promise<boolean>; favorites(userId: string): Promise<string[]>; requestStockAlert(i: { userId: string | null; email: string; productId: string; consentedAt: string }): Promise<void> }` (adicionar em `Ports`); server actions `toggleFavoriteAction(productId)` e `stockAlertAction(prev, fd)` — sem sessão, `toggleFavoriteAction` retorna `{ status: "auth_required" }` e o cliente navega para `/entrar?next=/loja?...`.
 - Página Server Component: `const q = await loadShopQuery(props.searchParams)`, chama `catalog.list(q)`, renderiza a grade. `ShopFilters` (client) usa `useQueryStates(shopParsers, { urlKeys: shopUrlKeys, shallow: false, history: "replace", scroll: false })`; `shallow: false` refaz o Server Component a cada mudança. Busca com `limitUrlUpdates: debounce(300)` do nuqs; mudar qualquer filtro grava `pagina: null` (volta a 1). Categorias (rótulos desktop `TODOS · PERSONAGENS · ESTRELAS · INICIAIS E NÚMEROS · BICHINHOS · MINI ÍCONES`; celular abrevia `INICIAIS`), cores (6 swatches circulares, multi, `aria-pressed`), "Só disponíveis" (Switch), ordenação (`Destaques, Novidades, Menor preço, Maior preço`), faixa de preço **omitida enquanto todos os preços forem `null`** (renderizar só se houver ≥ 2 preços distintos) — registrar como pendência. Contador `N ITENS`.
@@ -453,11 +498,13 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 11: Núcleo do carrinho (Zustand + persist)
 
 **Files:**
+
 - Create: `lib/cart/types.ts`, `lib/cart/store.ts`, `lib/cart/merge.ts`, `lib/cart/totals.ts`, `components/cart/CartCount.tsx`
 - Modify: `components/layout/Header.tsx`/`MobileHeader.tsx` (contador real via `CartCount`)
 - Test: `tests/unit/cart-store.test.ts`, `tests/unit/cart-merge.test.ts`, `tests/unit/cart-totals.test.ts`, `tests/e2e/cart-persist.spec.ts`
 
 **Interfaces:**
+
 - Produces (funções puras; regra de domínio, por isso código próprio):
   ```ts
   type CartLine = { productId: string; ring: RingOption; qty: number };        // chave = `${productId}:${ring}`
@@ -492,10 +539,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 12: Página de produto + gaveta "ITEM COLETADO!"
 
 **Files:**
+
 - Create: `app/(loja)/produto/[slug]/page.tsx`, `components/loja/ProductGallery.tsx`, `ProductAttributes.tsx`, `AddToCartForm.tsx`, `CartDrawer.tsx`, `StickyBuyBar.tsx`, `components/cart/FreeShippingBar.tsx`
 - Test: `tests/e2e/produto.spec.ts`, `tests/e2e/produto.mobile.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `catalog.bySlug/related`, `useCartStore`, `computeTotals`, `freeShippingRemaining`, `Drawer`/`BottomSheet`, `Accordion`, `PillRadioGroup`, `QuantityStepper`.
 - Produces: `CartDrawer({ open, onClose, lastAdded: { product: Product; ring: RingOption; qty: number } })` (usado só no produto). `FreeShippingBar({ subtotalCents: number | null })` — reutilizado na Task 13: threshold `null` → texto `[Faltam R$ X para frete grátis]`.
 - Página: `generateMetadata` (título `NOME — Pixel Perfect`), `notFound()` para slug inexistente. Galeria até 4 fotos (miniaturas como botões `aria-label="Ver foto N"`; produtos sem foto usam `BeadArt` grande; `[FOTO 2..4]` placeholders do design só se o produto tiver só 1 foto — não renderizar placeholders vazios em produção: **renderizar só fotos existentes**). Selo de raridade, nome, `formatPrice`, descrição. Atributos RPG: `TAMANHO` 55% `[X] cm` (ou valor real), `CONTAS` 85% `[000]`, `FOFURA` 100% `MAX`. Argola `MOSQUETÃO`/`ESTRELA` (`PillRadioGroup`), quantidade, `+ PEGAR ITEM`. Acordeões `DETALHES`, `CUIDADOS`, `ENVIO E TROCAS` (link `/trocas`). `VOCÊ TAMBÉM PODE DESBLOQUEAR` (3 relacionados) + card "Quer outro modelo? Encomende o seu" (`ContactButton`).
@@ -511,10 +560,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 13: Carrinho (`/carrinho`) com frete e cupom
 
 **Files:**
+
 - Create: `app/(loja)/carrinho/page.tsx`, `components/cart/CartView.tsx`, `CartLine.tsx`, `ShippingQuote.tsx`, `CouponForm.tsx`, `CartSummary.tsx`, `lib/data/mock/shipping.ts`, `lib/data/mock/coupons.ts`, `app/(loja)/carrinho/actions.ts`
 - Test: `tests/e2e/carrinho.spec.ts`, `tests/unit/mock-shipping.test.ts`
 
 **Interfaces:**
+
 - Produces: `ShippingPort { quote(i: { cep: string; items: { productId: string; qty: number }[] }): Promise<ShippingQuote[] | { error: "cep_invalido" | "cep_nao_atendido" }> }`, `type ShippingQuote = { id: string; service: string; carrier: string; priceCents: number | null; days: string }` — mock: CEP com 8 dígitos começando em `0`–`9` → 2 opções (`PAC`, `SEDEX`, `priceCents: null`, `days: "[X] dias"`); `00000000` → `cep_nao_atendido`; tamanho ≠ 8 → `cep_invalido`. `CouponPort { validate(code: string, subtotalCents: number | null): Promise<{ ok: true; code: string; discountCents: number | null; label: string } | { ok: false; reason: "invalido" | "expirado" }> }` — mock aceita `TESTE10` (`label: "[desconto]"`, `discountCents: null`), `EXPIRADO` → expirado. Server actions `quoteShippingAction`, `validateCouponAction` (resolvem preços no servidor via `catalog.byIds`; o cliente só manda ids e quantidades), chamadas com `useMutation` do TanStack Query.
 - Página client: lê `useCartStore`; preços via `useQuery({ queryKey: ["cart-prices", lines], queryFn: () => priceCartAction(lines), placeholderData: keepPreviousData })`, em que `priceCartAction(lines) → { lines: PricedLine[]; unknownIds: string[] }` e o cliente chama `pruneUnknown(unknownIds)`. Título `INVENTÁRIO`, linhas (foto, nome, raridade, "Argola: …", stepper, remover → `toast("Item removido.", { action: { label: "DESFAZER", onClick: undo }, duration: 6000 })` do sonner), CEP (`MaskedInput mask="cep"`, `inputMode="numeric"`), opções de frete (radio), cupom (form RHF; `Código secreto`, placeholder `↑↑↓↓←→←→BA`), `FreeShippingBar`, resumo (subtotal/frete/desconto/total via `formatTotal`), `FINALIZAR` → `/checkout`, `‹ CONTINUAR JOGANDO` → `/loja`. O frete escolhido e o cupom ficam em `sessionStorage` (`pp_checkout_draft`) para o checkout.
 - Vazio (`CarrinhoVazio.dc.html`): `INVENTÁRIO VAZIO`, sugestões = `catalog.featured(3)`, CTA loja.
@@ -528,11 +579,13 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 14: Autenticação mock (Entrar, Criar conta, Recuperar senha) + proteção de rotas
 
 **Files:**
+
 - Create: `lib/session.ts`, `lib/data/mock/auth.ts`, `lib/validation/auth.ts`, `app/(conta)/entrar/page.tsx`, `app/(conta)/cadastro/page.tsx`, `app/(conta)/recuperar-senha/page.tsx`, `app/(conta)/actions.ts`, `components/conta/LoginForm.tsx`, `SignupForm.tsx`, `PasswordRules.tsx`, `SocialButtons.tsx`, `proxy.ts`
 - Modify: `components/layout/Header.tsx` (sessão), `lib/cart/store.ts` (mescla ao logar via `replace`)
 - Test: `tests/unit/auth-schema.test.ts`, `tests/unit/session.test.ts`, `tests/e2e/auth.spec.ts`, `tests/e2e/auth.mobile.spec.ts`
 
 **Interfaces:**
+
 - Produces: `type SessionUser = { id: string; name: string; email: string }`; `lib/session.ts` com **iron-session** (`npm install iron-session`): `getIronSession<{ userId?: string; expiresAt?: number }>(await cookies(), { cookieName: "pp_session", password: env.SESSION_SECRET, cookieOptions: { httpOnly: true, sameSite: "lax", secure: production } })`; `ttl` de 30 dias com "manter conectado", senão cookie de sessão; `createSession(userId, remember)`, `getSession(): Promise<SessionUser | null>` (checa `expiresAt`), `destroySession()`.
 - Produces: `AuthPort { signIn(email, password): Promise<SessionUser | null>; signUp(i: { name; email; phone; password; acceptTerms: true; marketingEmail: boolean; termsVersion: string }): Promise<SessionUser | { error: "email_em_uso" }>; signInWithProvider(p: "google" | "facebook" | "apple"): Promise<SessionUser>; requestPasswordReset(email: string): Promise<void>; savedCart(userId): Promise<CartState | null>; saveCart(userId, s: CartState): Promise<void> }` (mock: provider loga como `ana`).
 - `lib/validation/auth.ts`: `passwordRules = [{ id: "len", label: "8+ caracteres", test }, { id: "upper", label: "1 maiúscula" }, { id: "digit", label: "1 número" }, { id: "symbol", label: "1 símbolo" }]`; `signupSchema`, `loginSchema`.
@@ -552,10 +605,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 15: Checkout (`SAVE GAME`)
 
 **Files:**
+
 - Create: `app/(checkout)/checkout/page.tsx`, `app/(checkout)/checkout/actions.ts`, `components/checkout/CheckoutForm.tsx`, `PaymentPicker.tsx`, `lib/validation/checkout.ts`, `lib/data/mock/orders.ts`, `lib/data/mock/address-lookup.ts`
 - Test: `tests/unit/checkout-schema.test.ts`, `tests/unit/mock-orders.test.ts`, `tests/e2e/checkout.spec.ts`, `tests/e2e/checkout.mobile.spec.ts`
 
 **Interfaces:**
+
 - Produces (types): `type Address = { id?: string; label?: string; cep: string; street: string; number: string; complement?: string; district: string; city: string; state: string; isDefault?: boolean }`; `type Customer = { name: string; email: string; phone: string; cpf: string }`; `type Order = { id: string; number: string; userId: string | null; guestToken: string | null; status: OrderStatus; paymentMethod: PaymentMethod; items: { productId: string | null; name: string; ring: RingOption; unitPriceCents: number | null; qty: number; image: ProductImage | null }[]; subtotalCents: number | null; shippingCents: number | null; discountCents: number; totalCents: number | null; shippingAddress: Address; customer: Customer; shippingService: string; trackingCode: string | null; isCustom: boolean; createdAt: string; events: { status: OrderStatus; at: string; note?: string }[]; payment: PixPayment | BoletoPayment | CardPayment }` (`PixPayment`/`BoletoPayment`/`CardPayment` na Task 16, declarar aqui como `{ kind: "pix"|"boleto"|"cartao" } & Record<string, unknown>` e refinar lá).
 - Produces: `AddressLookupPort { byCep(cep: string): Promise<Omit<Address,"number"|"complement"> | null> }` (mock: `01001000` → Praça da Sé, Sé, São Paulo/SP; demais válidos → `null` = preencher manual). `OrdersPort { create(i: CreateOrderInput, idempotencyKey: string): Promise<Order>; get(id: string, viewer: { userId: string | null; guestTokens: string[] }): Promise<Order | null>; listForUser(userId: string): Promise<Order[]>; setStatus(id: string, s: OrderStatus): Promise<void> }` — `get` retorna `null` se o viewer não é dono (simula RLS).
 - `CheckoutForm` em React Hook Form + `zodResolver(checkoutSchema)`; `MaskedInput` para CEP, CPF, celular, cartão e validade; o autopreenchimento do CEP usa `useQuery({ queryKey: ["cep", cep], queryFn: () => lookupCepAction(cep), enabled: isValidCep(cep) })` e preenche com `setValue`.
@@ -571,10 +626,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 16: Telas de pagamento (Pix, Boleto, Recusado, Confirmado)
 
 **Files:**
+
 - Create: `app/(checkout)/pedido/[id]/pagamento/page.tsx`, `app/(checkout)/pedido/[id]/confirmado/page.tsx`, `app/(checkout)/pedido/[id]/actions.ts`, `components/checkout/PixPanel.tsx`, `BoletoPanel.tsx`, `DeclinedPanel.tsx`, `components/checkout/usePaymentStatus.ts`, `lib/data/mock/payments.ts`, `app/api/pedidos/[id]/status/route.ts`, `app/api/__mock__/pedidos/[id]/route.ts`
 - Test: `tests/unit/pix-countdown.test.ts`, `tests/e2e/pagamento.spec.ts`, `tests/e2e/pagamento.mobile.spec.ts`
 
 **Interfaces:**
+
 - Produces: `type PixPayment = { kind: "pix"; copyPaste: string; expiresAt: string }` (mock: `copyPaste = "[codigo-pix]"`, expira em **30 min**); `type BoletoPayment = { kind: "boleto"; line: string; pdfUrl: string | null; dueDate: string | null }` (mock: linha `"[linha digitável]"`, `pdfUrl: null` → botão "BAIXAR PDF" desabilitado com nota); `type CardPayment = { kind: "cartao"; result: "aprovado" | "recusado"; last4: string }`.
 - Produces: `PaymentsPort { start(orderId: string, method: PaymentMethod, card?: { number: string; ... }): Promise<Order["payment"]>; renewPix(orderId: string): Promise<PixPayment>; status(orderId: string): Promise<OrderStatus> }`; cartão `4000000000000002` → `recusado`, status permanece `aguardando_pagamento`.
 - `pixRemaining(expiresAt: string, now: number): { seconds: number; label: string; ratio: number; low: boolean }` (segundos via `differenceInSeconds` do date-fns, mínimo 0) — `label` `MM:SS`, `low` quando < 5 min (cor `danger`), `ratio` para a barra.
@@ -592,10 +649,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 17: Minha conta (`/conta`)
 
 **Files:**
+
 - Create: `app/(conta)/conta/page.tsx`, `app/(conta)/conta/actions.ts`, `components/conta/ProfileTabs.tsx`, `ProfileForm.tsx`, `ChangePasswordForm.tsx`, `AddressBook.tsx`, `ConsentSwitches.tsx`, `ConnectedAccounts.tsx`, `DeleteAccount.tsx`, `AccountMenuMobile.tsx`, `lib/data/mock/account.ts`, `lib/validation/address.ts`, `app/api/conta/exportar/route.ts`
 - Test: `tests/e2e/conta.spec.ts`, `tests/e2e/conta.mobile.spec.ts`, `tests/unit/mock-account.test.ts`
 
 **Interfaces:**
+
 - Produces: `AccountPort { profile(userId): Promise<Profile>; updateProfile(userId, p: { name; phone; cpf?: string | null }): Promise<void>; changePassword(userId, current, next): Promise<{ ok: boolean }>; addresses(userId): Promise<Address[]>; upsertAddress(userId, a: Address): Promise<Address>; deleteAddress(userId, id): Promise<void>; setDefaultAddress(userId, id): Promise<void>; consents(userId): Promise<ConsentRecord[]>; setConsent(userId, type: "email_marketing", granted: boolean): Promise<void>; connections(userId): Promise<{ provider: "google"|"facebook"|"apple"; email: string | null }[]>; connect/disconnect(userId, provider): Promise<void>; exportData(userId): Promise<Record<string, unknown>>; deleteAccount(userId, password): Promise<{ ok: boolean }> }`; `type Profile = { id; name; email; phone; cpf: string | null; avatarUrl: string | null }`; `type ConsentRecord = { type: "email_marketing"|"terms"|"privacy"; granted: boolean; version: string; grantedAt: string; revokedAt: string | null }` — **histórico append-only** (`setConsent` adiciona registro, não sobrescreve).
 - `deleteAccount` mock: apaga perfil/endereços/consents/favoritos, anonimiza pedidos (`customer` → `{ name: "[removido]", ... }`, `userId: null`), destrói sessão. Desconectar a última forma de login (sem senha e 1 provedor) é bloqueado com mensagem.
 - Desktop (`Perfil.dc.html`): abas `MEUS DADOS · ENDEREÇOS · PEDIDOS · PRIVACIDADE E DADOS` sincronizadas com `?aba=` (`aria-current="page"`); Meus dados (CPF opcional), alterar senha, contas conectadas (`Conectada · email` / `Não conectada`, `CONECTAR`/`DESCONECTAR`); Endereços CRUD + principal (form com autopreenchimento CEP da Task 15); Pedidos: 2 últimos + link `/conta/pedidos`; Privacidade: switch "Novidades por e-mail — Lançamentos e promoções", `BAIXAR MEUS DADOS` (`GET /api/conta/exportar` → `Content-Disposition: attachment; filename="pixel-perfect-meus-dados.json"`), `GERENCIAR COOKIES` (`openCookiePreferences()`), contato do encarregado `[e-mail do encarregado]`, `EXCLUIR CONTA` → confirmação com senha (estado `confirmando` do design) → logout e home com aviso.
@@ -610,11 +669,13 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 18: Meus pedidos (`/conta/pedidos`)
 
 **Files:**
+
 - Create: `app/(conta)/conta/pedidos/page.tsx`, `components/conta/OrderCard.tsx`, `OrdersFilter.tsx`, `lib/orders-view.ts`
 - Modify: `lib/data/mock/fixtures.ts` (pedidos #0001–#0005 da ana, conforme `Pedidos.dc.html`)
 - Test: `tests/unit/orders-view.test.ts`, `tests/e2e/pedidos.spec.ts`
 
 **Interfaces:**
+
 - Produces (`lib/orders-view.ts`): `orderStatusView(o: Order, channel = getContact()): { label: string; color: string; group: "andamento" | "entregues" | "cancelados"; step: 0|1|2|3|4; action: { label: string; href: string } }` — mapa do design: `aguardando_aprovacao` → `AGUARDANDO APROVAÇÃO` (celular: `APROVAR DESENHO`) yellow, passo 0, ação `contactLabel("ver")`; `aguardando_pagamento` → `AGUARDANDO PAGAMENTO` yellow, passo 0, ação `PAGAR` → `/pedido/id/pagamento`; `pago` → `PAGO` accent passo 1; `em_producao` → `EM PRODUÇÃO` accent passo 2, ação `contactLabel("falar")`; `enviado` → `ENVIADO` cyan passo 3, `RASTREAR` (href `#rastreio-<id>` até existir URL de rastreio); `entregue` → `ENTREGUE` green passo 4, `COMPRAR DE NOVO` → `/produto/<slug>`; `cancelado`/`reembolsado` → muted, sem progresso, `VER PRODUTO`. `filterOrders(orders, filter: "todos"|"andamento"|"entregues"|"cancelados", q: string)` (busca por número e nome de item).
 - Página: `HISTÓRICO DE PARTIDAS`, filtros com contadores (`?filtro=`), busca, cards (fotos, `PEDIDO #0005`, data, status, valor `formatTotal`, `OrderProgress` com nomes de fase, selo `ENCOMENDA` se `isCustom`), `DETALHES ▼`/`FECHAR ▲` (`aria-expanded`): itens, frete, total, endereço, rastreio, pagamento, nota fiscal (placeholder), link "Solicitar troca" → `/trocas?pedido=<id>`, ajuda (`ContactButton`). Vazio por filtro com mensagem. Mobile conforme `CelPedidos.dc.html` (resumo compacto, setas ▲▼).
 
@@ -627,10 +688,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 19: Encomendas (`/encomendas`)
 
 **Files:**
+
 - Create: `app/(loja)/encomendas/page.tsx`, `components/encomendas/*` (Steps, OrderTypes, Checklist, Faq, ChatExample)
 - Test: `tests/e2e/encomendas.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `ContactButton`, `SuggestedMessage`, `Accordion`, `getContact`.
 - Conteúdo de `Encomendas.dc.html`: explicação, exemplo ilustrativo de conversa (marcado `aria-label="Exemplo ilustrativo de conversa"`), 4 fases, tipos de encomenda, checklist "antes de chamar", FAQ (prazo `[prazo]`, preço, pagamento, quantidade) em `Accordion`. Todo CTA = `ContactButton kind="chamar"|"encomendar"`; junto do principal, `SuggestedMessage text="Oi! Quero encomendar um chaveiro: [ideia], cores [ ], para [data]"` (aparece porque Instagram não aceita pré-preenchimento; com WhatsApp o texto vai no `href`).
 
@@ -643,11 +706,13 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 20: Páginas legais (MDX) — Privacidade, Termos, conteúdo de Trocas
 
 **Files:**
+
 - Create: `content/legal/privacidade.mdx`, `termos.mdx`, `trocas.mdx`, `components/legal/LegalLayout.tsx`, `components/legal/Toc.tsx`, `components/legal/mdx.tsx` (`<Canal/>`, `<Placeholder>`, `<RightsGrid/>`), `mdx-components.tsx`, `app/privacidade/page.tsx`, `app/termos/page.tsx`
 - Modify: `next.config.ts` (`@next/mdx`, `pageExtensions`)
 - Test: `tests/e2e/legal.spec.ts`
 
 **Interfaces:**
+
 - Produces: `LegalLayout({ title: string; kicker?: string; updatedAt: string | null; toc: { id: string; label: string }[]; children })`; `<Canal variant="nome"|"short"|"link" />` renderiza o canal ativo (único lugar do MDX que cita o canal); `<RightsGrid/>` com os 8 direitos de `Privacidade.dc.html`.
 - Texto: transcrever **literalmente** os rascunhos de `Privacidade.dc.html` e `Termos.dc.html` (título de Termos: `REGRAS DO JOGO`), preservando todos os `[placeholders]` (`[razão social]`, `[00.000.000/0000-00]`, `[e-mail do encarregado]`, `[intermediador de pagamento]`…). Nenhum texto jurídico novo. Cabeçalho de cada MDX: comentário `{/* RASCUNHO — pendente revisão jurídica */}`. `trocas.mdx` = política de `Trocas.dc.html` (usada na Task 21), regra de encomendas `[a definir com advogado]`.
 - Índice com âncoras (`<nav aria-label="Nesta página">`), headings com `id` estável (slug), `scroll-margin-top` para o header.
@@ -661,10 +726,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 21: Trocas e devoluções (`/trocas`) com formulário
 
 **Files:**
+
 - Create: `app/trocas/page.tsx`, `app/trocas/actions.ts`, `components/trocas/ReturnForm.tsx`, `components/trocas/PhotoPicker.tsx`, `lib/validation/return.ts`, `lib/data/mock/returns.ts`
 - Test: `tests/unit/return-schema.test.ts`, `tests/e2e/trocas.spec.ts`
 
 **Interfaces:**
+
 - Produces: `ReturnsPort { create(userId: string, i: { orderId: string; reason: "arrependimento"|"defeito"|"diferente"|"outro"; description: string; preference: "troca"|"reembolso"|"conserto"; photos: File[] }): Promise<{ protocol: string }> }` — protocolo `T-` + 4 dígitos sequenciais (formato do design `[T-0000]`); valida que o pedido é do usuário (senão erro "Pedido não encontrado").
 - `returnSchema`: `description` 10–1000 chars; fotos 0–4, cada uma `image/jpeg|png|webp` ≤ **5 MB** (limite proposto — confirmar com o dono; constante `MAX_RETURN_PHOTO_BYTES`); `reason="arrependimento"` só se pedido entregue há ≤ 7 dias (mock usa `events`), senão mensagem citando CDC art. 49.
 - Página (`Trocas.dc.html`): destaques (7 dias arrependimento — CDC art. 49; 90 dias defeito; frete de volta por conta da loja), política (MDX `trocas.mdx`), formulário: deslogado mostra "Entre para solicitar" + `ENTRAR` (`next=/trocas`); logado: select de pedido (`?pedido=` pré-seleciona), motivos (`PillRadioGroup` com os 4 do design), descrição, fotos via **react-dropzone** (`npm install react-dropzone`; `useDropzone({ accept: { "image/jpeg": [], "image/png": [], "image/webp": [] }, maxSize: MAX_RETURN_PHOTO_BYTES, maxFiles: 4 })`, com preview, remover e erros de `fileRejections` traduzidos), preferência `TROCA · REEMBOLSO · CONSERTO`, `ENVIAR` → estado enviado com protocolo e `NOVA SOLICITAÇÃO`.
@@ -678,10 +745,12 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 22: Fechamento — varredura de qualidade, Lighthouse e documentação
 
 **Files:**
+
 - Create: `tests/e2e/a11y-sweep.spec.ts`, `tests/e2e/visual-sweep.spec.ts`, `docs/PENDENCIAS.md`
 - Modify: `README.md`
 
 **Interfaces:**
+
 - Consumes: todas as rotas. Lista canônica de rotas em `tests/e2e/support/routes.ts`: `/`, `/loja`, `/produto/garota-pixel`, `/produto/planeta-pixel`, `/encomendas`, `/carrinho`, `/entrar`, `/cadastro`, `/privacidade`, `/termos`, `/trocas`, `/rota-inexistente`, e (logado) `/conta`, `/conta/pedidos`, `/checkout`.
 
 - [ ] **Step 1:** `a11y-sweep.spec.ts`: para cada rota × projeto → `expectA11y`, todos os alvos interativos visíveis ≥ 44×44 (exceto links em texto corrido `p a`), nenhum `border-radius` fora de `.bead`, sem overflow horizontal no mobile, nenhum erro no console. Rodar → corrigir o que falhar → PASS.

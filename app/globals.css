@@ -42,8 +42,7 @@
   --shadow-hard: 6px 6px 0 var(--color-yellow);
   --shadow-hard-sm: 4px 4px 0 var(--color-accent);
   --shadow-hard-lg: 12px 12px 0 var(--color-accent);
-  --shadow-bevel:
-    inset 4px 4px 0 rgba(255, 255, 255, 0.38), inset -4px -4px 0 rgba(0, 0, 0, 0.32);
+  --shadow-bevel: inset 4px 4px 0 rgba(255, 255, 255, 0.38), inset -4px -4px 0 rgba(0, 0, 0, 0.32);
 
   /* Zero radius: wipe the scale; only rounded-full stays for beads/dots */
   --radius-*: initial;

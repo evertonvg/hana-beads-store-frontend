@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { publicEnvSchema, toPublicEnv } from "@/lib/env";
 
-const parse = (raw: Record<string, string | undefined>) =>
-  toPublicEnv(publicEnvSchema.parse(raw));
+const parse = (raw: Record<string, string | undefined>) => toPublicEnv(publicEnvSchema.parse(raw));
 
 describe("publicEnv", () => {
   it("applies defaults when nothing is set", () => {
@@ -22,9 +21,7 @@ describe("publicEnv", () => {
   });
 
   it("falls back to instagram on an unknown contact channel", () => {
-    expect(parse({ NEXT_PUBLIC_CONTACT_CHANNEL: "telegram" }).contactChannel).toBe(
-      "instagram",
-    );
+    expect(parse({ NEXT_PUBLIC_CONTACT_CHANNEL: "telegram" }).contactChannel).toBe("instagram");
   });
 
   it("reads optional values", () => {

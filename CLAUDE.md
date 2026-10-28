@@ -8,6 +8,7 @@ A especificação completa está em **`docs/briefing.md`** — leia antes de qua
 As telas de referência estão em **`docs/design/`** (veja "Como ler os arquivos de design" abaixo).
 
 ## Stack
+
 - Next.js (App Router) + TypeScript + Tailwind CSS
 - Supabase (Postgres, Auth com e-mail/Google/Apple/Facebook, Storage, RLS)
 - Mercado Pago (Pix, cartão, boleto) com webhook
@@ -17,6 +18,7 @@ As telas de referência estão em **`docs/design/`** (veja "Como ler os arquivos
 - Hospedagem: Vercel (plano pago, uso comercial)
 
 ## Regras de trabalho
+
 - Idioma da interface: **português do Brasil**. Código, nomes de variáveis e commits podem ser em inglês.
 - **Nunca invente preços, prazos, dados da empresa ou textos jurídicos.** Tudo que no design aparece entre colchetes (`[PREÇO]`, `[X] dias`, `[CNPJ]`…) é placeholder: mantenha como placeholder ou leia de configuração/banco, e liste o que falta no fim da tarefa.
 - Siga os **tokens de design** (`docs/briefing.md` › Design system). Não use cantos arredondados, gradientes nem sombras desfocadas: o estilo é pixel, com bordas sólidas e sombras duras (`6px 6px 0`).
@@ -28,7 +30,9 @@ As telas de referência estão em **`docs/design/`** (veja "Como ler os arquivos
 - Prefira Server Components; use Client Components só onde há interação.
 
 ## Como ler os arquivos de design (`docs/design/**/*.dc.html`)
+
 São protótipos em HTML de uma ferramenta de design. Use-os como **referência visual e de comportamento**, não copie a estrutura literalmente:
+
 - Estilos estão inline (`style="…"`) — converta para classes Tailwind usando os tokens.
 - `{{nome}}` é uma variável calculada no bloco `<script type="text/x-dc">` no fim do arquivo (função `renderVals()`); ali estão os dados de exemplo e os estados (abas, filtros, gavetas abertas).
 - `<sc-for list="{{itens}}" as="item">` = um `.map()`; `<sc-if value="{{cond}}">` = renderização condicional.

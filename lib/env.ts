@@ -7,7 +7,12 @@ export const publicEnvSchema = z.object({
   NEXT_PUBLIC_CONTACT_CHANNEL: z.enum(["instagram", "whatsapp"]).catch("instagram"),
   NEXT_PUBLIC_INSTAGRAM_USER: z.string().optional(),
   NEXT_PUBLIC_WHATSAPP_NUMBER: z.string().optional(),
-  NEXT_PUBLIC_FREE_SHIPPING_CENTS: z.coerce.number().int().nonnegative().optional().catch(undefined),
+  NEXT_PUBLIC_FREE_SHIPPING_CENTS: z.coerce
+    .number()
+    .int()
+    .nonnegative()
+    .optional()
+    .catch(undefined),
   NEXT_PUBLIC_PARALLAX_INTENSITY: z.coerce
     .number()
     .catch(1)
