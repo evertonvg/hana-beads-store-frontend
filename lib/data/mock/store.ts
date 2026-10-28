@@ -5,6 +5,9 @@ import { productFixtures } from "./fixtures";
 export type MockStore = {
   products: Product[];
   newsletter: { email: string; consentVersion: string }[];
+  /** userId -> favorite product ids, in the order they were added. */
+  favorites: Record<string, string[]>;
+  stockAlerts: { userId: string | null; email: string; productId: string; consentedAt: string }[];
   reset(): void;
 };
 
@@ -16,9 +19,13 @@ function createStore(): MockStore {
   const store: MockStore = {
     products: structuredClone([...productFixtures]),
     newsletter: [],
+    favorites: {},
+    stockAlerts: [],
     reset() {
       store.products = structuredClone([...productFixtures]);
       store.newsletter = [];
+      store.favorites = {};
+      store.stockAlerts = [];
     },
   };
   return store;

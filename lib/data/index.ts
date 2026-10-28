@@ -3,6 +3,7 @@ import "server-only";
 import { env } from "@/lib/env";
 
 import { createMockCatalog } from "./mock/catalog";
+import { createMockEngagement } from "./mock/engagement";
 import { createMockNewsletter } from "./mock/newsletter";
 import type { Ports } from "./ports";
 
@@ -12,6 +13,10 @@ export function getData(): Ports {
   if (env.DATA_SOURCE !== "mock") {
     throw new Error('Unsupported DATA_SOURCE (only "mock" is implemented)');
   }
-  ports ??= { catalog: createMockCatalog(), newsletter: createMockNewsletter() };
+  ports ??= {
+    catalog: createMockCatalog(),
+    newsletter: createMockNewsletter(),
+    engagement: createMockEngagement(),
+  };
   return ports;
 }

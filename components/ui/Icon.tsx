@@ -1,4 +1,5 @@
 import {
+  ArrowDownUp,
   Brush,
   Check,
   ChevronLeft,
@@ -6,6 +7,7 @@ import {
   Copy,
   Heart,
   House,
+  ListFilter,
   Lock,
   Menu,
   MessageCircle,
@@ -45,6 +47,8 @@ const ICONS = {
   truck: Truck,
   lock: Lock,
   upload: Upload,
+  filter: ListFilter,
+  sort: ArrowDownUp,
 } as const satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof ICONS;
