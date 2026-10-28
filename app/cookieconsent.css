@@ -1,0 +1,237 @@
+/* Pixel theme for vanilla-cookieconsent: tokens from globals.css, no radius, hard shadows only. */
+:root {
+  --cc-font-family: var(--font-mono);
+  --cc-z-index: 50;
+  --cc-modal-margin: 16px;
+  --cc-modal-border-radius: 0;
+  --cc-btn-border-radius: 0;
+  --cc-pm-toggle-border-radius: 0;
+  --cc-modal-transition-duration: 0s;
+  --cc-bg: var(--color-surface);
+  --cc-primary-color: var(--color-text);
+  --cc-secondary-color: var(--color-text-subtle);
+  --cc-link-color: var(--color-link);
+  --cc-btn-primary-bg: var(--color-text);
+  --cc-btn-primary-color: var(--color-bg);
+  --cc-btn-primary-border-color: var(--color-text);
+  --cc-btn-primary-hover-bg: var(--color-yellow);
+  --cc-btn-primary-hover-color: var(--color-bg);
+  --cc-btn-primary-hover-border-color: var(--color-yellow);
+  --cc-btn-secondary-bg: transparent;
+  --cc-btn-secondary-color: var(--color-text);
+  --cc-btn-secondary-border-color: var(--color-text);
+  --cc-btn-secondary-hover-bg: var(--color-surface-2);
+  --cc-btn-secondary-hover-color: var(--color-text);
+  --cc-btn-secondary-hover-border-color: var(--color-text);
+  --cc-separator-border-color: var(--color-border-soft);
+  --cc-toggle-on-bg: var(--color-accent);
+  --cc-toggle-off-bg: var(--color-bg);
+  --cc-toggle-on-knob-bg: var(--color-text);
+  --cc-toggle-off-knob-bg: var(--color-text);
+  --cc-toggle-readonly-bg: var(--color-border);
+  --cc-toggle-readonly-knob-bg: var(--color-text);
+  --cc-toggle-enabled-icon-color: var(--color-bg);
+  --cc-toggle-disabled-icon-color: var(--color-bg);
+  --cc-toggle-readonly-knob-icon-color: var(--color-bg);
+  --cc-overlay-bg: rgb(11 10 18 / 0.8);
+  --cc-cookie-category-block-bg: var(--color-deep);
+  --cc-cookie-category-block-border: var(--color-border-soft);
+  --cc-cookie-category-block-hover-bg: var(--color-surface-2);
+  --cc-cookie-category-block-hover-border: var(--color-border);
+  --cc-cookie-category-expanded-block-bg: var(--color-deep);
+  --cc-cookie-category-expanded-block-hover-bg: var(--color-surface-2);
+  --cc-footer-bg: var(--color-deep);
+  --cc-footer-color: var(--color-text-subtle);
+  --cc-footer-border-color: var(--color-border-soft);
+}
+
+#cc-main .cm,
+#cc-main .pm {
+  border: 4px solid var(--color-text);
+  box-shadow: 12px 12px 0 var(--color-accent);
+}
+
+#cc-main .cm.cm--bar {
+  box-sizing: border-box;
+  max-width: 1120px;
+  width: calc(100% - 2 * var(--cc-modal-margin));
+  margin: 0 auto var(--cc-modal-margin);
+  box-shadow: 8px 8px 0 var(--color-accent);
+}
+
+#cc-main .cm.cm--bar .cm__body {
+  max-width: none;
+  padding: 22px;
+  gap: 18px 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#cc-main .cm.cm--bar .cm__texts {
+  flex: 1 1 420px;
+  min-width: 0;
+  padding: 0;
+}
+
+/* Design order: REJEITAR, PERSONALIZAR, ACEITAR. */
+#cc-main .cm.cm--bar .cm__btns {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 10px;
+  max-width: none;
+  padding: 0;
+}
+
+#cc-main .cm.cm--bar .cm__btn-group {
+  display: contents;
+}
+
+#cc-main .cm.cm--bar .cm__btn {
+  margin: 0;
+  min-width: 0;
+}
+
+#cc-main .cm.cm--bar .cm__btn[data-role="necessary"] {
+  order: 1;
+}
+
+#cc-main .cm.cm--bar .cm__btn[data-role="show"] {
+  order: 2;
+}
+
+#cc-main .cm.cm--bar .cm__btn[data-role="all"] {
+  order: 3;
+}
+
+#cc-main .cm__title,
+#cc-main .pm__title {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-yellow);
+}
+
+#cc-main .cm__desc,
+#cc-main .pm__section-desc,
+#cc-main .section__desc {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+#cc-main .cm__desc {
+  color: var(--color-text-muted);
+}
+
+#cc-main .cm__btn,
+#cc-main .pm__btn {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  font-weight: 400;
+  line-height: 1.5;
+  min-height: 48px;
+  padding: 11px 14px;
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 0;
+}
+
+#cc-main .pm__section-title,
+#cc-main .section__title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+/* The library hides the badge on small screens. */
+#cc-main .pm .pm__badge {
+  display: flex !important;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--color-yellow);
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+}
+
+#cc-main .pm__section--toggle,
+#cc-main .pm__section {
+  border-radius: 0;
+}
+
+#cc-main .pm__section--expandable .pm__section-arrow,
+#cc-main .pm__section-arrow,
+#cc-main .toggle__icon,
+#cc-main .toggle__label,
+#cc-main .toggle__icon-circle {
+  border-radius: 0;
+}
+
+#cc-main a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+#cc-main button:focus-visible,
+#cc-main a:focus-visible,
+#cc-main input:focus-visible + .toggle__icon {
+  outline: 3px solid var(--color-cyan);
+  outline-offset: 4px;
+}
+
+#cc-main .cm.cm--bar .cm__title,
+#cc-main .cm.cm--bar .cm__desc {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#cc-main .cm.cm--bar .cm__desc {
+  padding-bottom: 0;
+  margin-top: 8px;
+}
+
+/* The library's own small-screen rules use !important, so these must too. */
+@media screen and (max-width: 640px) {
+  #cc-main .cm.cm--bar .cm__body {
+    flex-direction: row !important;
+    padding: 18px !important;
+  }
+
+  #cc-main .cm.cm--bar .cm__texts {
+    flex-basis: 100%;
+  }
+
+  #cc-main .cm.cm--bar .cm__title,
+  #cc-main .cm.cm--bar .cm__desc {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  #cc-main .cm.cm--bar .cm__btns {
+    flex: 1 1 100%;
+    flex-direction: row !important;
+    border-top: none !important;
+    padding: 0 !important;
+  }
+
+  #cc-main .cm.cm--bar .cm__btn-group {
+    display: contents !important;
+  }
+
+  #cc-main .cm.cm--bar .cm__btn,
+  #cc-main .cm.cm--bar .cm__btn + .cm__btn {
+    flex: 1 1 auto !important;
+    margin: 0 !important;
+  }
+}
+
+/* Below md the sticky TabBar (about 64px) owns the bottom edge: keep the banner above it. */
+@media (max-width: 767px) {
+  #cc-main .cm.cm--bar {
+    margin-bottom: calc(4rem + var(--cc-modal-margin) + env(safe-area-inset-bottom, 0px));
+  }
+}

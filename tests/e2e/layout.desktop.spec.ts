@@ -39,7 +39,7 @@ test.describe("shell desktop", () => {
       "href",
       "/trocas",
     );
-    await expect(footer.getByRole("button", { name: "Cookies" })).toBeDisabled();
+    await expect(footer.getByRole("button", { name: "Cookies" })).toBeEnabled();
     await expect(footer.getByText("[razão social]", { exact: false })).toBeVisible();
   });
 

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Press_Start_2P, Space_Mono } from "next/font/google";
 import { Suspense } from "react";
+import { ConsentScripts } from "@/components/layout/ConsentScripts";
+import { CookieConsentBanner } from "@/components/layout/CookieConsent";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { MobileTabBar, MobileTabBarFallback } from "@/components/layout/MobileTabBar";
@@ -47,6 +49,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <MobileTabBar />
           </Suspense>
         </Providers>
+        <CookieConsentBanner />
+        <ConsentScripts />
       </body>
     </html>
   );

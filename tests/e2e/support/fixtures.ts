@@ -24,8 +24,13 @@ async function snap(page: Page, name: string) {
   if (process.env.VISUAL !== "1") return;
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.evaluate(() => document.fonts.ready);
+  // The banner mounts after hydration, so wait briefly instead of testing visibility once.
   const reject = page.getByRole("button", { name: "REJEITAR OPCIONAIS" });
-  if (await reject.isVisible()) await reject.click();
+  try {
+    await reject.click({ timeout: 1500 });
+  } catch {
+    // No banner on this page (consent already stored): nothing to dismiss.
+  }
   await expect(page).toHaveScreenshot(`${name}.png`, {
     fullPage: true,
     animations: "disabled",
@@ -33,7 +38,53 @@ async function snap(page: Page, name: string) {
   });
 }
 
-export const test = base.extend<{ resetMock: void }>({
+export type ConsentState = "rejected" | "accepted" | "unset";
+
+/**
+ * Builds the pp_consent cookie exactly as vanilla-cookieconsent writes it for revision 1
+ * (JSON, URL-encoded). Keep `revision` in sync with lib/consent.ts.
+ */
+export function consentCookieValue(state: Exclude<ConsentState, "unset">): string {
+  const now = new Date();
+  const accepted = state === "accepted";
+  const iso = now.toISOString();
+  return encodeURIComponent(
+    JSON.stringify({
+      categories: accepted ? ["necessary", "performance", "marketing"] : ["necessary"],
+      revision: 1,
+      data: null,
+      consentTimestamp: iso,
+      consentId: crypto.randomUUID(),
+      services: {
+        necessary: [],
+        performance: [],
+        marketing: [],
+      },
+      languageCode: "pt-BR",
+      lastConsentTimestamp: iso,
+      expirationTime: now.getTime() + 180 * 24 * 60 * 60 * 1000,
+    }),
+  );
+}
+
+export const test = base.extend<{ resetMock: void; consent: ConsentState; seedConsent: void }>({
+  // Default "rejected" keeps the banner from covering the TabBar and CTAs in unrelated specs.
+  consent: ["rejected", { option: true }],
+  seedConsent: [
+    async ({ context, baseURL, consent }, use) => {
+      if (consent !== "unset") {
+        await context.addCookies([
+          {
+            name: "pp_consent",
+            value: consentCookieValue(consent),
+            url: baseURL ?? "http://localhost:3100",
+          },
+        ]);
+      }
+      await use();
+    },
+    { auto: true },
+  ],
   resetMock: [
     async ({ request }, use) => {
       await request.post("/api/__mock__/reset");

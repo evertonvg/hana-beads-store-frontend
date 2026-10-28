@@ -35,11 +35,10 @@ export function Footer() {
         <a href={channel.href()} target="_blank" rel="noopener" className={linkClass}>
           {channel.name}
         </a>
-        {/* Reopens the cookie preferences once the consent banner exists. */}
         <button
           type="button"
-          disabled
-          className="inline-flex min-h-11 cursor-not-allowed items-center text-accent underline opacity-60"
+          data-cc="show-preferencesModal"
+          className={cn(linkClass, "text-accent underline")}
         >
           Cookies
         </button>

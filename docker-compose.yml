@@ -15,7 +15,7 @@ services:
   # Optional analytics stack (Task 9): docker compose --profile analytics up -d
   umami:
     profiles: ["analytics"]
-    image: ghcr.io/umami-software/umami:postgresql-latest # pin the version tag in Task 9
+    image: ghcr.io/umami-software/umami:3.4.1
     ports:
       - "3001:3000"
     environment:
