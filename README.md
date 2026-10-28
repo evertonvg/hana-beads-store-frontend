@@ -38,3 +38,9 @@ npx playwright install chromium
   - `chore(deps): bump vitest`
 - **Testes visuais:** `npm run e2e:visual -- smoke` roda a suíte Playwright dentro do container oficial (`docker/playwright.sh` faz `npm ci` num volume nomeado, para não misturar binários Linux e Windows). Para gerar/atualizar baselines: `npm run e2e:visual -- --update-snapshots -g "<nome>"`. Fora do Docker os `snap()` não comparam nada.
 - **Docker travado:** se `docker info` não responder, rode `wsl --shutdown` e reinicie o Docker Desktop.
+
+## Dependências e segurança
+
+- `.npmrc` usa `min-release-age=14`: só se instalam versões publicadas há 14 dias ou mais (proteção de supply chain) e `save-exact=true`.
+- Um aviso de segurança tem prioridade sobre essa regra: fixe a primeira versão corrigida, instale uma única vez com `npm install --min-release-age=N` (N = idade em dias dessa versão; só na linha de comando, o `.npmrc` não muda) e registre o motivo no commit.
+- Verificação: `npm audit --omit=dev` deve terminar sem vulnerabilidades.
