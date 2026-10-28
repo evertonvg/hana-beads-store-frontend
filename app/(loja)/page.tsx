@@ -7,6 +7,8 @@ import { ParallaxCity } from "@/components/home/ParallaxCity";
 import { ParallaxRoot } from "@/components/home/ParallaxRoot";
 import { NewsletterForm } from "@/components/home/NewsletterForm";
 import { Ticker } from "@/components/home/Ticker";
+import { BlocksSection } from "@/components/home/BlocksSection";
+import { ParallaxShowcase } from "@/components/home/ParallaxShowcase";
 import { Container } from "@/components/ui/Container";
 
 export default function HomePage() {
@@ -14,9 +16,11 @@ export default function HomePage() {
     <>
       <Hero />
       <Ticker />
+      <BlocksSection />
       <Suspense fallback={<div aria-hidden="true" className="h-[520px]" />}>
         <Featured />
       </Suspense>
+      <ParallaxShowcase />
       <FinalCta />
       <HowItWorks />
       <section id="sobre" aria-labelledby="sobre-title" data-parallax="about">
@@ -33,7 +37,11 @@ export default function HomePage() {
         className="relative overflow-hidden md:bg-surface"
       >
         <ParallaxCity cityClassName="hidden md:block md:h-24" />
-        <div className="relative mx-auto flex w-full max-w-[1200px] flex-col items-center gap-3.5 px-4 py-8 text-center md:gap-7 md:px-6 md:pt-36 md:pb-32">
+        <div
+          data-layer="cta"
+          data-speed="-0.2"
+          className="relative mx-auto flex w-full max-w-[720px] flex-col items-center gap-3.5 px-4 py-8 text-center will-change-transform md:gap-7 md:bg-surface md:px-6 md:pt-36 md:pb-32"
+        >
           <h2
             id="newsletter-title"
             className="font-pixel text-base md:text-[28px] md:leading-normal"

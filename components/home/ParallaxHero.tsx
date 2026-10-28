@@ -1,9 +1,6 @@
-"use client";
-
 import Image from "next/image";
 import { seededRandom } from "@/lib/motion";
 
-// Client component only because lib/motion also exports a hook; stars are deterministic (seed 7).
 /** 40 stars with the design's seed, computed once at module load (server). */
 const STARS = (() => {
   const rnd = seededRandom(7);
@@ -64,9 +61,9 @@ export function ParallaxHero() {
         data-speed="0.15"
         className="absolute inset-x-0 -top-40 -bottom-40 will-change-transform"
       >
-        {STARS.map((s) => (
+        {STARS.map((s, i) => (
           <span
-            key={`${s.x}-${s.y}`}
+            key={i}
             className={`absolute ${s.color}`}
             style={{ left: s.x, top: s.y, width: s.size, height: s.size }}
           />

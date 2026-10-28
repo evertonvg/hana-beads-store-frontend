@@ -1,4 +1,7 @@
 import { PixelGrid } from "@/components/pixel/PixelGrid";
+import { ParallaxRoot } from "./ParallaxRoot";
+
+const STEPS = ["Desenho em pixel", "Montagem com pinça", "Ferro e acabamento"];
 
 const FORMS = {
   I: ["####"],
@@ -125,24 +128,52 @@ const PIECES: readonly Piece[] = [
   },
 ];
 
-/** Decorative falling and spinning pieces behind the "Como funciona" board. */
+/** "Conta por conta": the product-making story, over ten decorative spinning pieces. */
 export function BlocksSection() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden md:block">
-      {PIECES.map((p, i) => (
-        <div
-          key={i}
-          data-layer={`peca-${i + 1}`}
-          data-speed={p.speed}
-          data-range="140"
-          data-rot={p.rot}
-          data-spin={p.spin}
-          className="absolute will-change-transform"
-          style={{ left: p.x, top: p.y }}
+    <ParallaxRoot
+      aria-labelledby="conta-title"
+      data-parallax="blocks"
+      className="relative overflow-hidden bg-bg px-4 py-12 md:px-6 md:py-[140px]"
+    >
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden md:block">
+        {PIECES.map((p, i) => (
+          <div
+            key={i}
+            data-layer={`peca-${i + 1}`}
+            data-speed={p.speed}
+            data-rot={p.rot}
+            data-spin={p.spin}
+            className="absolute will-change-transform"
+            style={{ left: p.x, top: p.y }}
+          >
+            <PixelGrid rows={[...FORMS[p.form]]} palette={{ "#": p.color }} cell={p.cell} bevel />
+          </div>
+        ))}
+      </div>
+      <div className="relative z-10 mx-auto flex max-w-[760px] flex-col gap-5 border-[3px] border-text bg-bg p-6 shadow-[8px_8px_0_var(--color-yellow)] md:gap-6 md:border-4 md:p-12 md:shadow-[12px_12px_0_var(--color-yellow)]">
+        <p className="font-pixel text-[10px] text-yellow">COMO NASCE UM CHAVEIRO</p>
+        <h2
+          id="conta-title"
+          className="font-pixel text-[20px] leading-normal md:text-[26px] md:leading-normal"
         >
-          <PixelGrid rows={[...FORMS[p.form]]} palette={{ "#": p.color }} cell={p.cell} bevel />
-        </div>
-      ))}
-    </div>
+          CONTA POR <span className="text-accent">CONTA</span>
+        </h2>
+        <p className="text-[15px] leading-[1.7] text-text-muted md:text-[17px]">
+          Cada peça começa num desenho em pixel. Depois, as continhas são encaixadas uma a uma na
+          base, passadas a ferro e finalizadas com a argola. Nenhuma sai igual à outra.
+        </p>
+        <ol className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3 p-0">
+          {STEPS.map((step, i) => (
+            <li key={step} className="flex flex-col gap-2 border-[3px] border-border p-4">
+              <span className="font-pixel text-[9px] text-yellow">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="text-sm">{step}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </ParallaxRoot>
   );
 }

@@ -2,8 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { BeadArt } from "@/components/pixel/BeadArt";
 import { focusRing } from "@/components/ui/focus";
-import { ParallaxRoot } from "./ParallaxRoot";
-import { ParallaxShowcase } from "./ParallaxShowcase";
 import { cn } from "@/lib/cn";
 import { getData } from "@/lib/data";
 import type { Product, Rarity } from "@/lib/data/types";
@@ -97,40 +95,37 @@ function FeaturedCard({ product }: { product: Product }) {
 export async function Featured() {
   const products = await getData().catalog.featured(3);
   return (
-    <ParallaxRoot
+    <section
       id="loja"
       aria-labelledby="loja-title"
       data-parallax="featured"
-      className="relative mx-auto w-full max-w-none overflow-hidden"
+      className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 py-10 pl-4 md:gap-10 md:px-6 md:py-24"
     >
-      <ParallaxShowcase />
-      <div className="relative mx-auto flex w-full max-w-[1200px] flex-col gap-4 py-10 pl-4 md:gap-10 md:px-6 md:py-24">
-        <div className="flex items-center justify-between gap-4 pr-4 md:items-end md:pr-0">
-          <h2
-            id="loja-title"
-            className="font-pixel text-sm leading-normal text-text md:text-2xl md:leading-normal"
-          >
-            SELECIONE <br className="md:hidden" />
-            SEU ITEM
-          </h2>
-          <Link
-            href="/loja"
-            className={cn(
-              "inline-flex min-h-11 items-center font-pixel text-[9px] text-link underline-offset-4 hover:text-yellow hover:underline md:bg-yellow md:px-3.5 md:text-bg md:no-underline md:hover:text-bg",
-              focusRing,
-            )}
-          >
-            VER TODOS ›
-          </Link>
-        </div>
-        <ul className="m-0 -ml-2 flex snap-x snap-mandatory scroll-pl-2 [scrollbar-width:none] list-none gap-3.5 overflow-x-auto pt-2 pr-4 pb-3 pl-2 md:ml-0 md:grid md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] md:gap-7 md:overflow-visible md:p-0 [&::-webkit-scrollbar]:hidden">
-          {products.map((product) => (
-            <li key={product.id} className="w-[240px] flex-none snap-start md:w-auto">
-              <FeaturedCard product={product} />
-            </li>
-          ))}
-        </ul>
+      <div className="flex items-center justify-between gap-4 pr-4 md:items-end md:pr-0">
+        <h2
+          id="loja-title"
+          className="font-pixel text-sm leading-normal text-text md:text-2xl md:leading-normal"
+        >
+          SELECIONE <br className="md:hidden" />
+          SEU ITEM
+        </h2>
+        <Link
+          href="/loja"
+          className={cn(
+            "inline-flex min-h-11 items-center font-pixel text-[9px] text-link underline-offset-4 hover:text-yellow hover:underline md:bg-yellow md:px-3.5 md:text-bg md:no-underline md:hover:text-bg",
+            focusRing,
+          )}
+        >
+          VER TODOS ›
+        </Link>
       </div>
-    </ParallaxRoot>
+      <ul className="m-0 -ml-2 flex snap-x snap-mandatory scroll-pl-2 [scrollbar-width:none] list-none gap-3.5 overflow-x-auto pt-2 pr-4 pb-3 pl-2 md:ml-0 md:grid md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] md:gap-7 md:overflow-visible md:p-0 [&::-webkit-scrollbar]:hidden">
+        {products.map((product) => (
+          <li key={product.id} className="w-[240px] flex-none snap-start md:w-auto">
+            <FeaturedCard product={product} />
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

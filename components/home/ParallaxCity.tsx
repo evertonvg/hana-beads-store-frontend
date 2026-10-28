@@ -22,7 +22,6 @@ export function ParallaxCity({ cityClassName }: { readonly cityClassName?: strin
             key={i}
             data-layer={`nuvem-${i + 1}`}
             data-speed={c.speed}
-            data-range="120"
             className="absolute will-change-transform max-md:hidden"
             style={{ left: c.x, top: c.y }}
           >
