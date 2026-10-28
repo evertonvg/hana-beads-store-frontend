@@ -7,7 +7,7 @@
 **Architecture:** App Router com Server Components por padrão; Client Components só onde há interação. Toda leitura/escrita de dados passa por *ports* (interfaces TypeScript em `lib/data/ports.ts`) resolvidos por `getData()` em `lib/data/index.ts`; neste plano só existe o adaptador `mock` (estado em memória no servidor + fixtures). Supabase, Mercado Pago, Melhor Envio, ViaCEP e Resend entram num plano futuro implementando os mesmos ports — nenhuma tela muda.
 
 **Tech Stack:**
-- **Base:** Next.js 16.4 (App Router, Turbopack) · React 19 · TypeScript (versão instalada pelo `create-next-app`) · Tailwind CSS 4.3 (tokens via `@theme`) · pnpm 11 · Node 24.
+- **Base:** Next.js 16.4 (App Router, Turbopack) · React 19 · TypeScript (versão instalada pelo `create-next-app`) · Tailwind CSS 4.3 (tokens via `@theme`) · **npm 11** (o que vem com o Node 24) · Node 24.
 - **UI:** Headless UI 2 (Dialog, Switch, Tab, RadioGroup, Disclosure, Checkbox, Field) · `class-variance-authority` + `clsx` + `tailwind-merge` (variantes/`cn`) · `lucide-react` (ícones) · `sonner` (toasts) · `qrcode.react` (QR do Pix) · GSAP 3.15 + `@gsap/react` (parallax).
 - **Estado e dados no cliente:** TanStack Query 5 (cotação de frete, preço do carrinho, polling do Pix) · Zustand 5 + `persist` (carrinho no `localStorage`) · `nuqs` 2 (filtros da loja na URL).
 - **Formulários:** React Hook Form 7 + `@hookform/resolvers` + Zod 4 · `react-imask` (máscaras CEP/CPF/celular/cartão) · `@brazilian-utils/brazilian-utils` (validação CPF/CEP/telefone) · `date-fns` 4 + `ptBR` · `react-dropzone` (fotos de troca).
@@ -74,7 +74,7 @@ Observação: nesta máquina o Docker às vezes precisa de `wsl --shutdown` e re
 
 - Interface 100% pt-BR; código, identificadores e commits em inglês. Commits seguem **Conventional Commits** (validados pelo commitlint no hook `commit-msg` a partir da Task 2). Nunca usar `--no-verify`.
 - **Preferir biblioteca de mercado a código próprio.** Código próprio só para regra de domínio (catálogo, carrinho, status de pedido) e visuais específicos do design (pixel art). Cada lib nova fora do Tech Stack → perguntar antes.
-- Instalação de pacotes: `pnpm-workspace.yaml` com `minimumReleaseAge: 20160` (só aceita versões publicadas há ≥ 14 dias, proteção de supply chain) e versões exatas (`save-exact`).
+- Gerenciador de pacotes: **npm** (nunca pnpm/yarn); lockfile `package-lock.json` commitado. `.npmrc` com `min-release-age=14` (só instala versões publicadas há 14+ dias, proteção de supply chain) e `save-exact=true`.
 - **Nunca inventar** preço, prazo, dado da empresa, texto jurídico. Placeholders do design ficam como placeholder: preço ausente = `[PREÇO]`, valor/total ausente = `[VALOR]`, datas `[00/00/0000]`, rastreio `[AA000000000BR]`, usuário Instagram `[usuario]` quando env vazia.
 - Fixtures mock: `priceCents: null` para todos os produtos (o design não tem preço real). Só testes de unidade usam números.
 - Tokens de cor exatamente do briefing §3: `bg #14121F`, `surface #1E1B2E`, `surface-2 #2C2840`, `deep #191626`, `deep-2 #0B0A12`, `border #4A4566`, `border-soft #2C2840`, `text #EDE9FF`, `text-muted #C9C4E3`, `text-subtle #A9A3C9`, `accent #FF5FAE`, `link #FF8CC4`, `yellow #FFD23F`, `cyan #4FD1FF`, `green #7CFF6B`, `contact #D62976` (texto `#FFFFFF`), `whatsapp #3DDC84` (texto `#0B2E17`), `danger #FF6B6B`, `danger-text #FF8A8A`, `purple #9B5CFF`. Cores de produto extra do design: `bead-red #E8302A`, `bead-orange #FF9A3D`, `bead-green #2FBF71`, `bead-black #3A3650`, `phase-off-text #8D88AD`.
@@ -171,7 +171,7 @@ tests/
 .husky/                              # pre-commit, commit-msg, pre-push
 .vscode/                             # settings.json, extensions.json
 commitlint.config.mjs, eslint.config.mjs, .prettierrc.json, .prettierignore, .editorconfig, .gitattributes
-pnpm-workspace.yaml                  # minimumReleaseAge
+.npmrc                               # min-release-age=14, save-exact=true
 docker-compose.yml                   # playwright (visual), umami + umami-db (perfil analytics)
 ```
 
@@ -179,8 +179,8 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 
 ## Ferramentas de teste (definidas na Task 1, usadas por todas)
 
-- `pnpm test` → Vitest (jsdom para `*.test.tsx`, node para `*.test.ts`).
-- `pnpm e2e` → Playwright local (funcional + a11y). `pnpm e2e:visual` → `docker compose run --rm playwright` (mesma suíte com `VISUAL=1`; baselines nascem e são comparados só ali). `webServer`: `pnpm build && pnpm start -p 3100` com `DATA_SOURCE=mock`, `SESSION_SECRET=e2e-secret-e2e-secret-e2e-secret-00`, `NEXT_PUBLIC_INSTAGRAM_USER=pixelperfect.teste`, `NEXT_PUBLIC_ANALYTICS_SRC=/__analytics-test.js` (envs `NEXT_PUBLIC_*` são embutidas no build, por isso ficam fixas aqui). `reuseExistingServer: !process.env.CI`.
+- `npm test` → Vitest (jsdom para `*.test.tsx`, node para `*.test.ts`).
+- `npm run e2e` → Playwright local (funcional + a11y). `npm run e2e:visual` → `docker compose run --rm playwright` (mesma suíte com `VISUAL=1`; baselines nascem e são comparados só ali). `webServer`: `npm run build && npm run start -- -p 3100` com `DATA_SOURCE=mock`, `SESSION_SECRET=e2e-secret-e2e-secret-e2e-secret-00`, `NEXT_PUBLIC_INSTAGRAM_USER=pixelperfect.teste`, `NEXT_PUBLIC_ANALYTICS_SRC=/__analytics-test.js` (envs `NEXT_PUBLIC_*` são embutidas no build, por isso ficam fixas aqui). `reuseExistingServer: !process.env.CI`.
 - Projetos Playwright: `desktop` (Chromium, 1280×800) e `mobile` (Chromium, 390×844, `isMobile`, `hasTouch`, `deviceScaleFactor: 3`). Spec com sufixo `.desktop.spec.ts` só roda no `desktop`; `.mobile.spec.ts` só no `mobile`; demais rodam nos dois.
 - `tests/e2e/support/fixtures.ts` exporta `test` com:
   - `resetMock` (auto, antes de cada teste): `POST /api/__mock__/reset`, limpa `localStorage` e cookies.
@@ -188,7 +188,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
   - `expectA11y(page)`: `new AxeBuilder({ page }).withTags(["wcag2a","wcag2aa","wcag21aa"]).analyze()` → `expect(violations).toEqual([])`.
   - `snap(page, name)`: **só compara quando `process.env.VISUAL === "1"`** (dentro do container Playwright); fora dele vira no-op, para os testes funcionais rodarem no Windows sem diffs de fonte/SO. Faz `emulateMedia({ reducedMotion: "reduce" })`, `await page.evaluate(() => document.fonts.ready)`, fecha o banner de cookies clicando `REJEITAR OPCIONAIS` se estiver visível (para não poluir a imagem), `expect(page).toHaveScreenshot(`${name}.png`, { fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.01 })`.
 - Usuários da fixture: `ana@teste.dev` / `Senha@123` (tem pedidos #0001–#0005 do design, 1 endereço, Google conectado) e `bruno@teste.dev` / `Senha@123` (sem pedidos). Card de teste recusado: `4000 0000 0000 0002`; qualquer outro número válido em Luhn aprova.
-- **Etapa "Revisão visual" (toda task com tela):** com o Playwright MCP, abrir a rota em 1280 e 390, tirar screenshot, abrir o `.dc.html` correspondente (`file:///…/docs/design/...`, as variáveis `{{…}}` aparecem cruas — comparar layout, espaçamentos, cores, tipografia e textos com o source do arquivo) e listar divergências. Só gerar/atualizar baseline (`pnpm e2e:visual --update-snapshots -g "<nome>"`, roda no Docker) depois de corrigidas. Anotar no commit "visual: reviewed vs <Arquivo>.dc.html".
+- **Etapa "Revisão visual" (toda task com tela):** com o Playwright MCP, abrir a rota em 1280 e 390, tirar screenshot, abrir o `.dc.html` correspondente (`file:///…/docs/design/...`, as variáveis `{{…}}` aparecem cruas — comparar layout, espaçamentos, cores, tipografia e textos com o source do arquivo) e listar divergências. Só gerar/atualizar baseline (`npm run e2e:visual -- --update-snapshots -g "<nome>"`, roda no Docker) depois de corrigidas. Anotar no commit "visual: reviewed vs <Arquivo>.dc.html".
 
 ---
 
@@ -197,8 +197,8 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 **Files:**
 - Move: `pixel-perfect-briefing/pixel-perfect/CLAUDE.md` → `CLAUDE.md`; `pixel-perfect-briefing/pixel-perfect/docs/` → `docs/`; remover `pixel-perfect-briefing/` e `briefing.md` da raiz (idêntico a `docs/briefing.md`, conferido com `diff`).
 - Copy: `docs/design/img/*.webp` → `public/img/produtos/`
-- Create: scaffold `create-next-app` (TS, App Router, Tailwind, ESLint, sem `src/`, alias `@/*`), `app/globals.css`, `app/layout.tsx`, `app/page.tsx` (placeholder temporário), `lib/env.ts`, `.env.example`, `vitest.config.ts`, `playwright.config.ts`, `tests/e2e/support/fixtures.ts`, `tests/e2e/smoke.spec.ts`, `tests/unit/env.test.ts`, `pnpm-workspace.yaml`, `.npmrc` (`save-exact=true`), `README.md` (comandos).
-- Modify: `package.json` scripts: `dev`, `build`, `start`, `lint` (`eslint .`), `typecheck` (`tsc --noEmit`), `test` (`vitest run`), `e2e` (`playwright test`), `check` (`pnpm lint && pnpm typecheck && pnpm test`).
+- Create: scaffold `create-next-app` (TS, App Router, Tailwind, ESLint, sem `src/`, alias `@/*`), `app/globals.css`, `app/layout.tsx`, `app/page.tsx` (placeholder temporário), `lib/env.ts`, `.env.example`, `vitest.config.ts`, `playwright.config.ts`, `tests/e2e/support/fixtures.ts`, `tests/e2e/smoke.spec.ts`, `tests/unit/env.test.ts`, `.npmrc` (`min-release-age=14`, `save-exact=true`), `README.md` (comandos).
+- Modify: `package.json` scripts: `dev`, `build`, `start`, `lint` (`eslint .`), `typecheck` (`tsc --noEmit`), `test` (`vitest run`), `e2e` (`playwright test`), `check` (`npm run lint && npm run typecheck && npm test`).
 
 **Interfaces:**
 - Produces: classes Tailwind de todos os tokens (`bg-bg`, `bg-surface`, `text-text-muted`, `bg-accent`, `shadow-hard`…), `font-pixel`, `font-mono`; `env` de `lib/env.ts`:
@@ -206,11 +206,11 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 - Produces: fixtures Playwright `test`, `expect`, `resetMock`, `login`, `expectA11y`, `snap` (contratos acima).
 
 - [ ] **Step 1:** Reorganizar pastas (move/copy acima), `git add -A && git commit -m "chore: import briefing and design references"`.
-- [ ] **Step 2:** `pnpm create next-app@16.4.3 . --ts --app --tailwind --eslint --no-src-dir --import-alias "@/*" --use-pnpm` (aceitar diretório não vazio). Criar `pnpm-workspace.yaml` (`minimumReleaseAge: 20160`) e `.npmrc` antes de qualquer `pnpm add`. Dev deps: `vitest @vitejs/plugin-react jsdom @testing-library/react @testing-library/user-event @testing-library/jest-dom @playwright/test @axe-core/playwright`; deps: `zod @t3-oss/env-nextjs`. `pnpm exec playwright install chromium`.
+- [ ] **Step 2:** `npx create-next-app@16.4.3 . --ts --app --tailwind --eslint --no-src-dir --import-alias "@/*" --use-npm` (aceitar diretório não vazio). Criar o `.npmrc` antes de qualquer `npm install`. Dev deps: `vitest @vitejs/plugin-react jsdom @testing-library/react @testing-library/user-event @testing-library/jest-dom @playwright/test @axe-core/playwright`; deps: `zod @t3-oss/env-nextjs`. `npx playwright install chromium`.
 - [ ] **Step 3: Testes que falham.** `tests/unit/env.test.ts` (sobre `toPublicEnv(publicEnvSchema.parse(raw))`): `{}` → `contactChannel === "instagram"`, `parallaxIntensity === 1`, `freeShippingCents === null`, `authApple === false`; `{ NEXT_PUBLIC_PARALLAX_INTENSITY: "9" }` → `parallaxIntensity === 2` (clamp 0–2 no schema); `{ NEXT_PUBLIC_CONTACT_CHANNEL: "telegram" }` → `"instagram"` (`.catch("instagram")`). `tests/e2e/smoke.spec.ts`: `"home responde e aplica tokens"` → `page.goto("/")`, status 200, `getComputedStyle(document.body).backgroundColor === "rgb(20, 18, 31)"`, `html[lang="pt-BR"]`, fonte de `h1` contém `"Press Start 2P"` (via `__Press_Start_2P` ou var).
-- [ ] **Step 4:** Rodar `pnpm test` e `pnpm e2e smoke` → FAIL.
+- [ ] **Step 4:** Rodar `npm test` e `npm run e2e -- smoke` → FAIL.
 - [ ] **Step 5:** Implementar `lib/env.ts` (`createEnv`, `publicEnvSchema`, `toPublicEnv`, `publicEnv`); `globals.css` com `@theme` (todas as cores do Global Constraints como `--color-*`, `--font-pixel`, `--font-mono`, `--shadow-*`), `--radius-*: 0` e `body { background: var(--color-bg); color: var(--color-text); }`; `layout.tsx` com fontes e `lang="pt-BR"`; `app/page.tsx` com `<h1 className="font-pixel">PIXEL PERFECT</h1>` provisório.
-- [ ] **Step 6:** `pnpm typecheck && pnpm test && pnpm e2e smoke` → PASS nos dois projetos.
+- [ ] **Step 6:** `npm run typecheck && npm test && npm run e2e -- smoke` → PASS nos dois projetos.
 - [ ] **Step 7:** Commit `chore: scaffold next 16 app with design tokens and test tooling`.
 
 ---
@@ -222,23 +222,23 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 - Modify: `package.json` (scripts `prepare`, `lint`, `lint:fix`, `format`, `format:check`, `check`, `e2e:visual` e bloco `lint-staged`), `README.md`
 
 **Interfaces (regras que todas as tasks seguintes cumprem):**
-- **Prettier** (`.prettierrc.json`): `{ "semi": true, "singleQuote": false, "trailingComma": "all", "printWidth": 100, "endOfLine": "lf", "plugins": ["prettier-plugin-tailwindcss"], "tailwindStylesheet": "./app/globals.css", "tailwindFunctions": ["cn", "cva"] }`. O plugin ordena as classes Tailwind. `.prettierignore`: `docs/design/`, `pnpm-lock.yaml`, `tests/e2e/__screenshots__/`.
+- **Prettier** (`.prettierrc.json`): `{ "semi": true, "singleQuote": false, "trailingComma": "all", "printWidth": 100, "endOfLine": "lf", "plugins": ["prettier-plugin-tailwindcss"], "tailwindStylesheet": "./app/globals.css", "tailwindFunctions": ["cn", "cva"] }`. O plugin ordena as classes Tailwind. `.prettierignore`: `docs/design/`, `package-lock.json`, `tests/e2e/__screenshots__/`.
 - **ESLint** (flat config): `eslint-config-next` (core-web-vitals + typescript; já inclui `jsx-a11y` e `react-hooks`), `typescript-eslint` `recommendedTypeChecked` em `**/*.{ts,tsx}`, `eslint-plugin-playwright` `flat/recommended` em `tests/e2e/**`, `@vitest/eslint-plugin` em `tests/unit/**`, e `eslint-config-prettier` **por último**. Regras extras: `no-console: ["warn", { allow: ["warn", "error"] }]`, `@typescript-eslint/consistent-type-imports: "error"`, `@typescript-eslint/no-floating-promises: "error"`. Ignorar `.next/`, `storybook-static/`, `playwright-report/`, `test-results/`, `docs/design/**`.
-- **Husky:** `pre-commit` → `pnpm exec lint-staged`; `commit-msg` → `pnpm exec commitlint --edit "$1"`; `pre-push` → `pnpm typecheck && pnpm test`.
+- **Husky:** `pre-commit` → `npx lint-staged`; `commit-msg` → `npx commitlint --edit "$1"`; `pre-push` → `npm run typecheck && npm test`.
 - **lint-staged:** `"*.{ts,tsx,js,mjs}": ["eslint --fix --max-warnings=0", "prettier --write"]`, `"*.{css,json,md,mdx,yml,yaml}": "prettier --write"`.
 - **commitlint:** `extends: ["@commitlint/config-conventional"]`; `scope-enum` como aviso (nível 1) com `ui, layout, home, shop, product, cart, auth, checkout, payment, account, orders, custom-orders, legal, returns, lgpd, data, deps, tooling, e2e`.
 - **VS Code** (`.vscode/settings.json`): `editor.formatOnSave: true`, `editor.defaultFormatter: "esbenp.prettier-vscode"`, `editor.codeActionsOnSave: { "source.fixAll.eslint": "explicit" }`, `files.eol: "\n"`, `tailwindCSS.classFunctions: ["cn", "cva"]`, `typescript.tsdk: "node_modules/typescript/lib"`. `extensions.json` recomenda `dbaeumer.vscode-eslint`, `esbenp.prettier-vscode`, `bradlc.vscode-tailwindcss`, `ms-playwright.playwright`, `vitest.explorer`, `editorconfig.editorconfig`.
 - **`.gitattributes`:** `* text=auto eol=lf` e `*.webp binary`, `*.png binary` (sem isso o Windows grava CRLF e o Prettier acusa o arquivo inteiro).
 - **Docker** (`docker-compose.yml`):
-  - serviço `playwright`: `image: mcr.microsoft.com/playwright:v1.64.1-noble`, `working_dir: /app`, volume do repo em `/app` + **volume nomeado** `pp_node_modules:/app/node_modules` (binários Linux separados dos do Windows), `ipc: host`, env `CI=1`, `VISUAL=1`; comando `docker/playwright.sh`, que roda `corepack enable && pnpm install --frozen-lockfile && pnpm exec playwright test "$@"`.
+  - serviço `playwright`: `image: mcr.microsoft.com/playwright:v1.64.1-noble`, `working_dir: /app`, volume do repo em `/app` + **volume nomeado** `pp_node_modules:/app/node_modules` (binários Linux separados dos do Windows), `ipc: host`, env `CI=1`, `VISUAL=1`; comando `docker/playwright.sh`, que roda `npm ci && npx playwright test "$@"`.
   - perfil `analytics` (opcional, usado na Task 9): `umami` (imagem oficial `ghcr.io/umami-software/umami`, tag de versão fixa escolhida na Task 9) + `umami-db` (`postgres:17-alpine`), porta `3001`; credenciais só em `.env.local`.
-- **Scripts:** `"lint": "eslint . --max-warnings=0"`, `"lint:fix": "eslint . --fix"`, `"format": "prettier --write ."`, `"format:check": "prettier --check ."`, `"check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test"`, `"e2e:visual": "docker compose run --rm playwright"`.
+- **Scripts:** `"lint": "eslint . --max-warnings=0"`, `"lint:fix": "eslint . --fix"`, `"format": "prettier --write ."`, `"format:check": "prettier --check ."`, `"check": "npm run lint && npm run format:check && npm run typecheck && npm test"`, `"e2e:visual": "docker compose run --rm playwright"`.
 
-- [ ] **Step 1:** `pnpm add -D husky lint-staged @commitlint/cli @commitlint/config-conventional prettier prettier-plugin-tailwindcss eslint-config-prettier eslint-plugin-playwright @vitest/eslint-plugin typescript-eslint` (manter `eslint` e `eslint-config-next` nas versões que o `create-next-app` instalou). Depois `pnpm exec husky init`.
+- [ ] **Step 1:** `npm install -D husky lint-staged @commitlint/cli @commitlint/config-conventional prettier prettier-plugin-tailwindcss eslint-config-prettier eslint-plugin-playwright @vitest/eslint-plugin typescript-eslint` (manter `eslint` e `eslint-config-next` nas versões que o `create-next-app` instalou). Depois `npx husky init`.
 - [ ] **Step 2: Teste que falha** (`tests/unit/tooling.test.ts`): (a) `@commitlint/lint` com a config do projeto rejeita `"ajustes"` e `"Feat: X"` e aceita `"feat(cart): add undo"`; (b) `prettier.check` de `<div className="p-4 flex" />` com a config do projeto retorna `false` (classes fora de ordem), e de `<div className="flex p-4" />` retorna `true`.
-- [ ] **Step 3:** `pnpm test tooling` → FAIL. **Step 4:** Criar os arquivos de config acima. **Step 5:** `pnpm test tooling` → PASS.
-- [ ] **Step 6:** `pnpm format && pnpm lint` com zero avisos. Conferir os hooks: `git commit --allow-empty -m "ajustes"` é **rejeitado** pelo commitlint; um `.tsx` em stage com classes fora de ordem e um `console.log` é formatado pelo commit, que então falha por causa do `no-console` (`--max-warnings=0`).
-- [ ] **Step 7:** `pnpm e2e:visual smoke` roda dentro do container → PASS. Se o Docker não responder, rodar `wsl --shutdown`, reiniciar o Docker Desktop e anotar o procedimento no README.
+- [ ] **Step 3:** `npm test -- tooling` → FAIL. **Step 4:** Criar os arquivos de config acima. **Step 5:** `npm test -- tooling` → PASS.
+- [ ] **Step 6:** `npm run format && npm run lint` com zero avisos. Conferir os hooks: `git commit --allow-empty -m "ajustes"` é **rejeitado** pelo commitlint; um `.tsx` em stage com classes fora de ordem e um `console.log` é formatado pelo commit, que então falha por causa do `no-console` (`--max-warnings=0`).
+- [ ] **Step 7:** `npm run e2e:visual -- smoke` roda dentro do container → PASS. Se o Docker não responder, rodar `wsl --shutdown`, reiniciar o Docker Desktop e anotar o procedimento no README.
 - [ ] **Step 8:** README, seção "Padrões de código": formatar ao salvar, extensões recomendadas, formato de commit com exemplos, como rodar os testes visuais. Commit `chore(tooling): add eslint, prettier, husky, commitlint and docker playwright`.
 
 ---
@@ -259,11 +259,11 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
   `getContact(env = publicEnv): ContactChannel`; `contactLabel(kind: "chamar" | "encomendar" | "falar" | "ver", c = getContact()): string` → instagram: `"CHAMAR NO DIRECT"`, `"ENCOMENDAR PELO DIRECT"`, `"FALAR NO DIRECT"`, `"VER NO DIRECT"`; whatsapp troca `DIRECT` por `WHATSAPP`.
   Instagram: `href()` = `https://ig.me/m/${user}`, `acceptsPrefill=false`; sem usuário → `https://ig.me/m/[usuario]`. WhatsApp: `https://wa.me/${numero}?text=${encodeURIComponent(msg ?? "")}`, `acceptsPrefill=true`.
 
-- [ ] **Step 0:** `pnpm add @brazilian-utils/brazilian-utils date-fns`.
+- [ ] **Step 0:** `npm install @brazilian-utils/brazilian-utils date-fns`.
 - [ ] **Step 1: Testes que falham** com os valores acima (`formatCep("01001000") === "01001-000"`, `formatPhone("11987654321") === "(11) 98765-4321"`, `formatDate("2026-10-28T12:00:00Z") === "28/10/2026"`), incluindo `isValidCpf("111.111.111-11") === false`, `isValidCpf("529.982.247-25") === true`, e `getContact({ ...env, contactChannel: "whatsapp", whatsappNumber: "5511999999999" }).href("Oi! Quero")` === `"https://wa.me/5511999999999?text=Oi!%20Quero"`. `no-hardcoded-channel.test.ts`: varre `app/**` e `components/**` (`.tsx`/`.ts`) e falha se encontrar `/Instagram|WhatsApp|\bDIRECT\b|Direct do/` fora de `lib/contact.ts`.
-- [ ] **Step 2:** `pnpm test` → FAIL.
+- [ ] **Step 2:** `npm test` → FAIL.
 - [ ] **Step 3:** Implementar `lib/format.ts` e `lib/contact.ts` (os componentes de contato ficam na Task 4, pois dependem de `CopyButton`).
-- [ ] **Step 4:** `pnpm test` → PASS.
+- [ ] **Step 4:** `npm test` → PASS.
 - [ ] **Step 5:** Commit `feat: add formatters and configurable contact channel`.
 
 ---
@@ -293,9 +293,9 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 - `PixQr({ value: string, label: string, size?: number })` = `QRCodeSVG` do **qrcode.react** (`level="M"`, `marginSize={2}`, `bgColor="#FFFFFF"`, `fgColor="#14121F"`), dentro do quadro pixel do design; `role="img"` + `aria-label`. Gera QR real a partir do "copia e cola" (o mesmo que o Mercado Pago vai devolver).
 
 - [ ] **Step 1: Testes de componente que falham:** `PillTabs` marca `aria-selected="true"` na aba ativa e `PillRadioGroup` muda com a seta → (`aria-checked`); `PillToggle` alterna `aria-pressed`; `PixQr` renderiza um `svg` com `aria-label`; `Switch` alterna `aria-checked` e chama `onCheckedChange(true)`; `QuantityStepper` não desce de 1 nem passa de 99; `CopyButton` mostra `"COPIADO ✓"` após clique e volta a `"COPIAR"` após 2500ms (fake timers); `Drawer` fecha com `Escape` e devolve foco ao botão que abriu; `OrderProgress step={2}` pinta 2 segmentos com a cor e 2 com `#2C2840`; `ContactButton kind="encomendar"` renderiza `ENCOMENDAR PELO DIRECT` com `href` `https://ig.me/m/<user>`; `SuggestedMessage` não renderiza quando o canal é whatsapp.
-- [ ] **Step 2:** `pnpm add @headlessui/react class-variance-authority clsx tailwind-merge lucide-react sonner qrcode.react react-imask`; `pnpm test` → FAIL. **Step 3:** Implementar componentes. **Step 4:** `pnpm test` → PASS.
-- [ ] **Step 5:** Storybook: `pnpm dlx storybook@10 init --type nextjs-vite --no-dev` (com o `minimumReleaseAge` valendo), adicionar `@storybook/addon-a11y` com `parameters.a11y.test = "error"`; `.storybook/preview.tsx` importa `app/globals.css`, aplica as fontes e o fundo `bg`; viewports `desktop 1280` e `celular 390`. Uma story por componente e estado (selecionado, desabilitado, erro, aberto). Scripts `storybook` e `build-storybook`; `storybook-static/` no `.gitignore`.
-- [ ] **Step 6:** `pnpm build-storybook` sem erro; no painel de a11y, zero violações em todas as stories. Revisão visual das stories contra botões/pílulas/switch de `Loja.dc.html`, `Perfil.dc.html`, `Produto.dc.html` (Playwright MCP em `localhost:6006`).
+- [ ] **Step 2:** `npm install @headlessui/react class-variance-authority clsx tailwind-merge lucide-react sonner qrcode.react react-imask`; `npm test` → FAIL. **Step 3:** Implementar componentes. **Step 4:** `npm test` → PASS.
+- [ ] **Step 5:** Storybook: `npx storybook@10 init --type nextjs-vite --no-dev` (com o `min-release-age` valendo), adicionar `@storybook/addon-a11y` com `parameters.a11y.test = "error"`; `.storybook/preview.tsx` importa `app/globals.css`, aplica as fontes e o fundo `bg`; viewports `desktop 1280` e `celular 390`. Uma story por componente e estado (selecionado, desabilitado, erro, aberto). Scripts `storybook` e `build-storybook`; `storybook-static/` no `.gitignore`.
+- [ ] **Step 6:** `npm run build-storybook` sem erro; no painel de a11y, zero violações em todas as stories. Revisão visual das stories contra botões/pílulas/switch de `Loja.dc.html`, `Perfil.dc.html`, `Produto.dc.html` (Playwright MCP em `localhost:6006`).
 - [ ] **Step 7:** Commit `feat(ui): add pixel UI kit on headless ui with storybook`.
 
 ---
@@ -303,7 +303,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 ### Task 5: Shell de layout (Header, menu celular, TabBar, Footer) + 404
 
 **Files:**
-- Create: `components/layout/Header.tsx`, `MobileHeader.tsx`, `MobileMenu.tsx`, `MobileTabBar.tsx`, `Footer.tsx`, `components/pixel/PixelNumber404.tsx`, `app/not-found.tsx`, `app/providers.tsx` (`QueryClientProvider` com `staleTime: 30_000`, `NuqsAdapter` de `nuqs/adapters/next/app`, `<Toaster />`; `pnpm add @tanstack/react-query nuqs` e `-D @tanstack/react-query-devtools`, devtools só em dev)
+- Create: `components/layout/Header.tsx`, `MobileHeader.tsx`, `MobileMenu.tsx`, `MobileTabBar.tsx`, `Footer.tsx`, `components/pixel/PixelNumber404.tsx`, `app/not-found.tsx`, `app/providers.tsx` (`QueryClientProvider` com `staleTime: 30_000`, `NuqsAdapter` de `nuqs/adapters/next/app`, `<Toaster />`; `npm install @tanstack/react-query nuqs` e `npm install -D @tanstack/react-query-devtools`, devtools só em dev)
 - Modify: `app/layout.tsx`
 - Test: `tests/e2e/layout.spec.ts`, `tests/e2e/layout.mobile.spec.ts`, `tests/e2e/not-found.spec.ts`
 
@@ -314,7 +314,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 - 404: `FASE NÃO ENCONTRADA`, `PixelNumber404` (máscaras Q/Z do design, cores accent/yellow/cyan por coluna, bloco tracejado que "cai" com `@keyframes` 1x; `motion-reduce:animate-none`), `CONTINUE? ▶ SIM` → `/`, `NÃO` → `/loja`, busca (form GET `/loja?q=`) e atalhos.
 
 - [ ] **Step 1: Testes que falham:** desktop — nav `Principal` tem links LOJA→`/loja`, ENCOMENDAS→`/encomendas`, ENTRAR→`/entrar`, `CARRINHO [0]`→`/carrinho`; skip-link "Pular para o conteúdo" é o primeiro foco. mobile — botão `aria-label="Abrir menu"` abre `MobileMenu` (dialog), `Escape` fecha; TabBar tem 4 links e `aria-current` em "Início" na home; nenhum overflow horizontal (`document.documentElement.scrollWidth <= 390`). 404 — `/rota-que-nao-existe` retorna status 404, mostra `FASE NÃO ENCONTRADA`, `SIM` leva a `/`, `NÃO` a `/loja`, busca "estrela" leva a `/loja?q=estrela`; `expectA11y`; `snap("404")`.
-- [ ] **Step 2:** `pnpm e2e layout not-found` → FAIL. **Step 3:** Implementar. **Step 4:** Revisão visual contra cabeçalhos de `Main.dc.html`/`CelHome.dc.html`, `CelMenu.dc.html`, `NaoEncontrada.dc.html`, `Cel404.dc.html`; baseline. **Step 5:** PASS.
+- [ ] **Step 2:** `npm run e2e -- layout not-found` → FAIL. **Step 3:** Implementar. **Step 4:** Revisão visual contra cabeçalhos de `Main.dc.html`/`CelHome.dc.html`, `CelMenu.dc.html`, `NaoEncontrada.dc.html`, `Cel404.dc.html`; baseline. **Step 5:** PASS.
 - [ ] **Step 6:** Commit `feat(layout): add header, mobile menu, tab bar, footer and 404`.
 
 ---
@@ -345,7 +345,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
   (Tipos de pedido, endereço, usuário e devolução são adicionados nas tasks que os usam, no mesmo arquivo.)
 - Produces (`ports.ts`): `interface CatalogPort { list(q: ShopQuery): Promise<{ items: Product[]; total: number; page: number; pageCount: number }>; bySlug(slug: string): Promise<Product | null>; related(productId: string, limit: number): Promise<Product[]>; featured(limit: number): Promise<Product[]>; byIds(ids: string[]): Promise<Product[]> }` e `type Ports = { catalog: CatalogPort; /* demais adicionados por task */ }`.
 - Produces (`index.ts`): `import "server-only"`; `export function getData(): Ports`.
-- Produces (`shop-query.ts`, com **nuqs**; `pnpm add nuqs` se ainda não instalado):
+- Produces (`shop-query.ts`, com **nuqs**; `npm install nuqs` se ainda não instalado):
   `type ShopQuery = { categoria: CategoryId | "todos"; q: string; cores: ColorId[]; disponivel: boolean; ordem: "destaque" | "novo" | "menor" | "maior"; pagina: number }`;
   `shopParsers` = `{ categoria: parseAsStringLiteral(["todos", ...CATEGORY_IDS]).withDefault("todos"), q: parseAsSearch.withDefault(""), cores: parseAsArrayOf(parseAsStringLiteral(COLOR_IDS), ",").withDefault([]), disponivel: parseAsBoolean.withDefault(false), ordem: parseAsStringLiteral(["destaque","novo","menor","maior"]).withDefault("destaque"), pagina: parseAsPage.withDefault(1) }` e `shopUrlKeys = { cores: "cor" }`. `parseAsSearch` e `parseAsPage` são `createParser` (apara e corta `q` em 80 chars; `pagina` inteiro ≥ 1, senão `null` → default). Valores inválidos viram o default (os parsers do nuqs retornam `null`);
   `loadShopQuery = createLoader(shopParsers, { urlKeys: shopUrlKeys })` (uso no servidor: `await loadShopQuery(props.searchParams)`), `serializeShopQuery = createSerializer(shopParsers, { urlKeys: shopUrlKeys })` (links; omite defaults);
@@ -369,7 +369,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 
 **Interfaces:**
 - Consumes: `getData().catalog.featured(3)`, UI kit, `ContactButton`.
-- Produces: `NewsletterPort { subscribe(input: { email: string; consent: true; consentVersion: string }): Promise<{ status: "ok" | "already" }> }` (adicionar em `Ports`); form em React Hook Form + `zodResolver(newsletterSchema)` (`pnpm add react-hook-form @hookform/resolvers`) que chama a server action `subscribeNewsletter(input: NewsletterInput): Promise<FormState>`, que revalida com o mesmo schema; com `type FormState = { status: "idle" | "ok" | "error"; message?: string; fieldErrors?: Record<string, string> }` (tipo compartilhado em `lib/validation/form-state.ts`, reusado por todas as actions).
+- Produces: `NewsletterPort { subscribe(input: { email: string; consent: true; consentVersion: string }): Promise<{ status: "ok" | "already" }> }` (adicionar em `Ports`); form em React Hook Form + `zodResolver(newsletterSchema)` (`npm install react-hook-form @hookform/resolvers`) que chama a server action `subscribeNewsletter(input: NewsletterInput): Promise<FormState>`, que revalida com o mesmo schema; com `type FormState = { status: "idle" | "ok" | "error"; message?: string; fieldErrors?: Record<string, string> }` (tipo compartilhado em `lib/validation/form-state.ts`, reusado por todas as actions).
 - Conteúdo: hero `1 PLAYER · FEITO À MÃO`, título do design, CTAs `INSERT COIN ›` → `/loja` e `ENCOMENDAR` → `/encomendas`; ticker rosa; vitrine `SELECIONE SEU ITEM` com 3 destaques (barra de raridade 90%/60%/60% do design) e `VER TODOS` → `/loja` (carrossel horizontal com scroll-snap no celular, conforme `CelHome.dc.html`); "Como funciona a encomenda" com as 3 fases do `CelHome` (`01 CHAMA NO ${getContact().short.toUpperCase()}`, `02 CONTA POR CONTA`, `03 ITEM COLETADO!`, descrições do design), botão `contactLabel("encomendar")`; newsletter "CONTINUE? 9 … YES!" com e-mail + checkbox de consentimento **desmarcado e obrigatório para enviar**, só e-mail.
 - `id="sobre"` numa seção curta com texto placeholder `[texto "Sobre"]`.
 
@@ -392,7 +392,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 - Implementação: `useGSAP` + `ScrollTrigger` com `scrub: true`, transformando só `transform` (camadas `will-change: transform`, `aria-hidden="true"`). Com `prefers-reduced-motion: reduce` **nenhum** ScrollTrigger é criado e as camadas ficam em `transform: none`. `gsap.registerPlugin` só no cliente.
 
 - [ ] **Step 1: Testes que falham:** unit `parallaxOffset(1, 0.7, 1) === -182`, `parallaxOffset(5, 1, 1) === -390` (clamp), `parallaxOffset(1, 1, 0) === 0`; `seededRandom(7)()` primeiro valor ≈ `0.4904` (`(7*9301+49297) % 233280 / 233280`, mesmo LCG). E2E desktop: com `reducedMotion: "no-preference"`, rolar 600px muda o `transform` de `[data-layer="montanha-frente"]`; com `reducedMotion: "reduce"`, após rolar continua `none`; nenhum erro no console; conteúdo textual do hero continua visível e lido pelo axe (`expectA11y`).
-- [ ] **Step 2:** FAIL. **Step 3:** `pnpm add gsap@3.15.0 @gsap/react@2.1.2`; implementar. **Step 4:** Revisão visual vs `Parallax.dc.html` (rolar e capturar 4 pontos). Atualizar `snap("home")` (reduced motion = estático). **Step 5:** PASS.
+- [ ] **Step 2:** FAIL. **Step 3:** `npm install gsap@3.15.0 @gsap/react@2.1.2`; implementar. **Step 4:** Revisão visual vs `Parallax.dc.html` (rolar e capturar 4 pontos). Atualizar `snap("home")` (reduced motion = estático). **Step 5:** PASS.
 - [ ] **Step 6:** Commit `feat(home): add GSAP parallax sections with reduced-motion fallback`.
 
 ---
@@ -415,7 +415,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 - `ConsentScripts`: o script de métricas (`publicEnv.analyticsSrc`) entra como `<script type="text/plain" data-category="performance" src=…>`. A própria lib ativa o script só após o aceite e o remove se o consentimento for revogado. Sem `analyticsSrc`, nada é renderizado.
 - Tema (`app/cookieconsent.css`, importado depois de `vanilla-cookieconsent/dist/cookieconsent.css`): mapear `--cc-bg`, `--cc-primary-color`, `--cc-secondary-color`, `--cc-btn-primary-bg`, `--cc-btn-primary-color`, `--cc-btn-secondary-bg`, `--cc-toggle-on-bg`, `--cc-separator-border-color`… para os tokens; `--cc-btn-border-radius: 0`, `--cc-modal-border-radius: 0`, `--cc-pm-toggle-border-radius: 0`, fontes `font-pixel` em títulos/botões e `font-mono` no texto; borda `4px solid var(--color-text)` e sombra dura `12px 12px 0 var(--color-accent)` no painel. **Se a revisão visual mostrar que o tema não chega ao design, parar e reportar ao dono antes de qualquer banner próprio.**
 
-- [ ] **Step 1:** `pnpm add vanilla-cookieconsent`.
+- [ ] **Step 1:** `npm install vanilla-cookieconsent`.
 - [ ] **Step 2: Testes que falham.** Unit (`consent-config.test.ts`): `consentConfig.categories.performance.enabled` não é `true`; `necessary.readOnly === true`; `guiOptions.consentModal.equalWeightButtons === true`; textos dos botões são os do design. E2E (`cookies.spec.ts`):
   - na primeira visita o banner aparece;
   - `REJEITAR OPCIONAIS` e `ACEITAR TODOS` têm a mesma altura (`boundingBox().height`), a mesma `background-color` e o mesmo `font-size`;
@@ -424,7 +424,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
   - com `NEXT_PUBLIC_ANALYTICS_SRC=/__analytics-test.js` (requisição observada com `page.on("request")`): nenhuma requisição antes do aceite e uma depois de `ACEITAR TODOS`;
   - no mobile, o banner não cobre a TabBar (os `boundingBox` não se cruzam) e dá para rolar;
   - `expectA11y` com o banner aberto e com as preferências abertas.
-- [ ] **Step 3:** `pnpm test consent && pnpm e2e cookies` → FAIL. **Step 4:** Implementar. **Step 5:** Revisão visual contra o bloco de cookies no final de `Main.dc.html` (banner e preferências, 1280 e 390). **Step 6:** PASS.
+- [ ] **Step 3:** `npm test -- consent && npm run e2e -- cookies` → FAIL. **Step 4:** Implementar. **Step 5:** Revisão visual contra o bloco de cookies no final de `Main.dc.html` (banner e preferências, 1280 e 390). **Step 6:** PASS.
 - [ ] **Step 7 (opcional, Umami real):** `docker compose --profile analytics up -d`; criar o site no painel do Umami (`localhost:3001`); apontar `NEXT_PUBLIC_ANALYTICS_SRC` para `http://localhost:3001/script.js` + `data-website-id` num `.env.local`; conferir manualmente no painel que nenhuma visita é registrada antes do aceite e que ela aparece depois.
 - [ ] **Step 8:** Commit `feat(lgpd): add cookie consent with vanilla-cookieconsent and gated analytics`.
 
@@ -473,7 +473,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
   - `CartCount` (client) chama `useCartStore.persist.rehydrate()` no primeiro `useEffect` (evita divergência de hidratação no SSR) e escuta o evento `storage` da janela para rehidratar quando outra aba mudar o carrinho.
   - JSON corrompido no `localStorage`: o `createJSONStorage` falha no parse → o store começa vazio, sem tela branca (coberto por teste).
 
-- [ ] **Step 1:** `pnpm add zustand`.
+- [ ] **Step 1:** `npm install zustand`.
 - [ ] **Step 2: Testes que falham.**
   - `sanitizeCart("lixo")` → `{ lines: [] }`; `qty: 0` → 1; `qty: 999` → 99.
   - `mergeCarts` de `{garota,mosquetao,2}` com `{garota,mosquetao,98}` → 99.
@@ -533,7 +533,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 - Test: `tests/unit/auth-schema.test.ts`, `tests/unit/session.test.ts`, `tests/e2e/auth.spec.ts`, `tests/e2e/auth.mobile.spec.ts`
 
 **Interfaces:**
-- Produces: `type SessionUser = { id: string; name: string; email: string }`; `lib/session.ts` com **iron-session** (`pnpm add iron-session`): `getIronSession<{ userId?: string; expiresAt?: number }>(await cookies(), { cookieName: "pp_session", password: env.SESSION_SECRET, cookieOptions: { httpOnly: true, sameSite: "lax", secure: production } })`; `ttl` de 30 dias com "manter conectado", senão cookie de sessão; `createSession(userId, remember)`, `getSession(): Promise<SessionUser | null>` (checa `expiresAt`), `destroySession()`.
+- Produces: `type SessionUser = { id: string; name: string; email: string }`; `lib/session.ts` com **iron-session** (`npm install iron-session`): `getIronSession<{ userId?: string; expiresAt?: number }>(await cookies(), { cookieName: "pp_session", password: env.SESSION_SECRET, cookieOptions: { httpOnly: true, sameSite: "lax", secure: production } })`; `ttl` de 30 dias com "manter conectado", senão cookie de sessão; `createSession(userId, remember)`, `getSession(): Promise<SessionUser | null>` (checa `expiresAt`), `destroySession()`.
 - Produces: `AuthPort { signIn(email, password): Promise<SessionUser | null>; signUp(i: { name; email; phone; password; acceptTerms: true; marketingEmail: boolean; termsVersion: string }): Promise<SessionUser | { error: "email_em_uso" }>; signInWithProvider(p: "google" | "facebook" | "apple"): Promise<SessionUser>; requestPasswordReset(email: string): Promise<void>; savedCart(userId): Promise<CartState | null>; saveCart(userId, s: CartState): Promise<void> }` (mock: provider loga como `ana`).
 - `lib/validation/auth.ts`: `passwordRules = [{ id: "len", label: "8+ caracteres", test }, { id: "upper", label: "1 maiúscula" }, { id: "digit", label: "1 número" }, { id: "symbol", label: "1 símbolo" }]`; `signupSchema`, `loginSchema`.
 - Formulários `LoginForm`/`SignupForm` em React Hook Form + `zodResolver`; `PasswordRules` lê `watch("password")`; erros do servidor entram via `setError`.
@@ -653,7 +653,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 - Índice com âncoras (`<nav aria-label="Nesta página">`), headings com `id` estável (slug), `scroll-margin-top` para o header.
 
 - [ ] **Step 1: Testes que falham:** `/privacidade` tem índice com ≥ 1 link e clicar move o foco/scroll para a seção (`#direitos` visível); texto contém `[razão social]`; o nome do canal aparece via `<Canal/>` ("Instagram"); `/termos` tem `REGRAS DO JOGO`; `expectA11y` nas duas; `snap("privacidade")`, `snap("termos")`.
-- [ ] **Step 2:** FAIL. **Step 3:** `pnpm add @next/mdx@16.4.3 @mdx-js/loader @mdx-js/react @types/mdx`; implementar. **Step 4:** Revisão visual vs `Privacidade.dc.html`, `Termos.dc.html`. **Step 5:** PASS (o teste `no-hardcoded-channel` ignora `content/**` só para `<Canal/>` — confirmar que continua verde).
+- [ ] **Step 2:** FAIL. **Step 3:** `npm install @next/mdx@16.4.3 @mdx-js/loader @mdx-js/react @types/mdx`; implementar. **Step 4:** Revisão visual vs `Privacidade.dc.html`, `Termos.dc.html`. **Step 5:** PASS (o teste `no-hardcoded-channel` ignora `content/**` só para `<Canal/>` — confirmar que continua verde).
 - [ ] **Step 6:** Commit `feat(legal): add MDX privacy policy and terms pages`.
 
 ---
@@ -667,7 +667,7 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 **Interfaces:**
 - Produces: `ReturnsPort { create(userId: string, i: { orderId: string; reason: "arrependimento"|"defeito"|"diferente"|"outro"; description: string; preference: "troca"|"reembolso"|"conserto"; photos: File[] }): Promise<{ protocol: string }> }` — protocolo `T-` + 4 dígitos sequenciais (formato do design `[T-0000]`); valida que o pedido é do usuário (senão erro "Pedido não encontrado").
 - `returnSchema`: `description` 10–1000 chars; fotos 0–4, cada uma `image/jpeg|png|webp` ≤ **5 MB** (limite proposto — confirmar com o dono; constante `MAX_RETURN_PHOTO_BYTES`); `reason="arrependimento"` só se pedido entregue há ≤ 7 dias (mock usa `events`), senão mensagem citando CDC art. 49.
-- Página (`Trocas.dc.html`): destaques (7 dias arrependimento — CDC art. 49; 90 dias defeito; frete de volta por conta da loja), política (MDX `trocas.mdx`), formulário: deslogado mostra "Entre para solicitar" + `ENTRAR` (`next=/trocas`); logado: select de pedido (`?pedido=` pré-seleciona), motivos (`PillRadioGroup` com os 4 do design), descrição, fotos via **react-dropzone** (`pnpm add react-dropzone`; `useDropzone({ accept: { "image/jpeg": [], "image/png": [], "image/webp": [] }, maxSize: MAX_RETURN_PHOTO_BYTES, maxFiles: 4 })`, com preview, remover e erros de `fileRejections` traduzidos), preferência `TROCA · REEMBOLSO · CONSERTO`, `ENVIAR` → estado enviado com protocolo e `NOVA SOLICITAÇÃO`.
+- Página (`Trocas.dc.html`): destaques (7 dias arrependimento — CDC art. 49; 90 dias defeito; frete de volta por conta da loja), política (MDX `trocas.mdx`), formulário: deslogado mostra "Entre para solicitar" + `ENTRAR` (`next=/trocas`); logado: select de pedido (`?pedido=` pré-seleciona), motivos (`PillRadioGroup` com os 4 do design), descrição, fotos via **react-dropzone** (`npm install react-dropzone`; `useDropzone({ accept: { "image/jpeg": [], "image/png": [], "image/webp": [] }, maxSize: MAX_RETURN_PHOTO_BYTES, maxFiles: 4 })`, com preview, remover e erros de `fileRejections` traduzidos), preferência `TROCA · REEMBOLSO · CONSERTO`, `ENVIAR` → estado enviado com protocolo e `NOVA SOLICITAÇÃO`.
 
 - [ ] **Step 1: Testes que falham:** unit — foto `image/gif` rejeitada; 5 fotos rejeitadas; 6 MB rejeitada. E2E — deslogado vê CTA de login; ana com `?pedido=<0002>` pré-selecionado, motivo `Chegou com defeito`, descrição, 1 foto (`setInputFiles` com webp de fixture) → protocolo `T-0001`; GIF mostra erro no campo; `expectA11y`; `snap("trocas")`, `snap("trocas-enviado")`.
 - [ ] **Step 2:** FAIL. **Step 3:** Implementar. **Step 4:** Revisão visual vs `Trocas.dc.html` (formulário e enviado). **Step 5:** PASS.
@@ -685,11 +685,11 @@ docker-compose.yml                   # playwright (visual), umami + umami-db (pe
 - Consumes: todas as rotas. Lista canônica de rotas em `tests/e2e/support/routes.ts`: `/`, `/loja`, `/produto/garota-pixel`, `/produto/planeta-pixel`, `/encomendas`, `/carrinho`, `/entrar`, `/cadastro`, `/privacidade`, `/termos`, `/trocas`, `/rota-inexistente`, e (logado) `/conta`, `/conta/pedidos`, `/checkout`.
 
 - [ ] **Step 1:** `a11y-sweep.spec.ts`: para cada rota × projeto → `expectA11y`, todos os alvos interativos visíveis ≥ 44×44 (exceto links em texto corrido `p a`), nenhum `border-radius` fora de `.bead`, sem overflow horizontal no mobile, nenhum erro no console. Rodar → corrigir o que falhar → PASS.
-- [ ] **Step 2:** `visual-sweep.spec.ts` reaproveita `snap` para a lista inteira; rodar `pnpm e2e:visual --repeat-each=3` sem diffs (estabilidade).
+- [ ] **Step 2:** `visual-sweep.spec.ts` reaproveita `snap` para a lista inteira; rodar `npm run e2e:visual -- --repeat-each=3` sem diffs (estabilidade).
 - [ ] **Step 3:** Lighthouse mobile (chrome-devtools MCP `lighthouse_audit`, build de produção) em `/`, `/loja`, `/produto/garota-pixel`, `/checkout`: **Performance ≥ 90 e Acessibilidade ≥ 90**. Otimizar (imagens `next/image` com `sizes`, GSAP carregado só na home via `dynamic`, fontes `preload`) até atingir; registrar notas no README.
 - [ ] **Step 4:** `docs/PENDENCIAS.md`: todos os placeholders/decisões que ficaram (preços, prazos, frete grátis, CNPJ/razão social, encarregado, usuário Instagram, texto "Sobre", fotos extras/medidas, parcelas, limite de fotos de troca 5 MB, faixa de preço da loja oculta, favoritos sem página, Apple login, logo, revisão jurídica) + lista de ports a implementar no plano de backend (Supabase/MP/Melhor Envio/ViaCEP/Resend/Umami) com assinaturas de `lib/data/ports.ts`.
-- [ ] **Step 5:** README: setup (`pnpm i`, `.env.local` a partir de `.env.example`), scripts, como atualizar baselines (`pnpm e2e --update-snapshots`, só após revisão visual), baselines nascem e são comparados só no container (`pnpm e2e:visual`), o mesmo que um CI usará.
-- [ ] **Step 6:** `pnpm check && pnpm build-storybook && pnpm e2e && pnpm e2e:visual` → tudo verde. Commit `chore: add quality sweeps, lighthouse pass and handoff docs`.
+- [ ] **Step 5:** README: setup (`npm install`, `.env.local` a partir de `.env.example`), scripts, como atualizar baselines (`npm run e2e:visual -- --update-snapshots`, só após revisão visual), baselines nascem e são comparados só no container (`npm run e2e:visual`), o mesmo que um CI usará.
+- [ ] **Step 6:** `npm run check && npm run build-storybook && npm run e2e && npm run e2e:visual` → tudo verde. Commit `chore: add quality sweeps, lighthouse pass and handoff docs`.
 
 ---
 
