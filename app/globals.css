@@ -47,6 +47,31 @@
   /* Zero radius: wipe the scale; only rounded-full stays for beads/dots */
   --radius-*: initial;
   --radius-full: 9999px;
+
+  /* Animations (404): the loose block falls once, the cursor blinks */
+  --animate-cai: cai 1.6s ease-in-out 1;
+  --animate-pisca: pisca 1s steps(1) infinite;
+
+  @keyframes cai {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(calc(var(--cell) * 0.7));
+    }
+  }
+
+  @keyframes pisca {
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
 }
 
 body {
