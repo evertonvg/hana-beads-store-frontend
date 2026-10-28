@@ -12,3 +12,10 @@ test("home responde e aplica tokens", async ({ page }) => {
   const h1Font = await page.locator("h1").evaluate((el) => getComputedStyle(el).fontFamily);
   expect(h1Font).toContain("Press Start 2P");
 });
+
+test("localStorage persiste após reload", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => window.localStorage.setItem("pp-test", "1"));
+  await page.reload();
+  expect(await page.evaluate(() => window.localStorage.getItem("pp-test"))).toBe("1");
+});

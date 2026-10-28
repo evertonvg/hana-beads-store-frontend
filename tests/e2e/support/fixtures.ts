@@ -35,16 +35,9 @@ async function snap(page: Page, name: string) {
 
 export const test = base.extend<{ resetMock: void }>({
   resetMock: [
-    async ({ page, request }, use) => {
+    async ({ request }, use) => {
       await request.post("/api/__mock__/reset");
-      await page.context().clearCookies();
-      await page.addInitScript(() => {
-        try {
-          window.localStorage.clear();
-        } catch {
-          /* storage unavailable */
-        }
-      });
+      // localStorage and cookies need no clearing: each test gets a fresh browser context.
       await use();
     },
     { auto: true },
