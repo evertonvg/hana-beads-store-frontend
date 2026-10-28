@@ -14,7 +14,16 @@ export interface CatalogPort {
   byIds(ids: string[]): Promise<Product[]>;
 }
 
+export interface NewsletterPort {
+  subscribe(input: {
+    email: string;
+    consent: true;
+    consentVersion: string;
+  }): Promise<{ status: "ok" | "already" }>;
+}
+
 export type Ports = {
   catalog: CatalogPort;
+  newsletter: NewsletterPort;
   // other ports are added by the tasks that use them
 };

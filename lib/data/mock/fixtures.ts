@@ -109,7 +109,7 @@ export const productFixtures: readonly Product[] = [
     name: "ESTRELA Nº",
     // placeholder: derived from design alt text (no product copy in the design)
     description: "Chaveiro de estrela vermelha com o número 13.",
-    rarity: null,
+    rarity: "raro",
     isNew: false,
     stock: 5,
     categories: ["estrelas", "iniciais"],
@@ -132,7 +132,7 @@ export const productFixtures: readonly Product[] = [
     name: "ESTRELA INICIAL",
     // placeholder: derived from design alt text (no product copy in the design)
     description: "Chaveiro de estrela vermelha e rosa com a letra R.",
-    rarity: null,
+    rarity: "raro",
     isNew: false,
     stock: 5,
     categories: ["estrelas", "iniciais"],

@@ -4,6 +4,7 @@ import { productFixtures } from "./fixtures";
 
 export type MockStore = {
   products: Product[];
+  newsletter: { email: string; consentVersion: string }[];
   reset(): void;
 };
 
@@ -14,8 +15,10 @@ declare global {
 function createStore(): MockStore {
   const store: MockStore = {
     products: structuredClone([...productFixtures]),
+    newsletter: [],
     reset() {
       store.products = structuredClone([...productFixtures]);
+      store.newsletter = [];
     },
   };
   return store;
