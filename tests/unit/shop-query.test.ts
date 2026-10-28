@@ -35,6 +35,19 @@ describe("loadShopQuery", () => {
     expect(loadShopQuery("?cor=rosa,roxo").cores).toEqual(["rosa", "roxo"]);
   });
 
+  it("pins how a partially invalid cor list is handled", () => {
+    // nuqs array parser drops only the invalid items and keeps the valid ones
+    expect(loadShopQuery("?cor=rosa,azul").cores).toEqual(["rosa"]);
+  });
+
+  it.each(["?pagina=0", "?pagina=1.5"])("falls back to page 1 for %s", (qs) => {
+    expect(loadShopQuery(qs).pagina).toBe(1);
+  });
+
+  it("turns whitespace-only q into empty string", () => {
+    expect(loadShopQuery("?q=%20%20%20").q).toBe("");
+  });
+
   it("truncates q to 80 chars", () => {
     expect(loadShopQuery(`?q=${"a".repeat(500)}`).q).toHaveLength(80);
   });

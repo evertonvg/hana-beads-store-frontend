@@ -14,6 +14,8 @@ export type BeadArtSpec = {
   rows: string[];
   palette: Record<string, string>;
   letter?: string;
+  /** Accessible label (illustrative products have no photo alt). */
+  alt: string;
 };
 
 export type Product = {

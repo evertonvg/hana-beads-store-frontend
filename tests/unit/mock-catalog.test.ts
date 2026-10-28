@@ -26,6 +26,32 @@ describe("fixtures", () => {
   });
 });
 
+describe("fixture invariants", () => {
+  it("illustrative <=> no images, with art and alt", () => {
+    const rows = productFixtures.map((p) => ({
+      slug: p.slug,
+      illustrative: p.illustrative,
+      noImages: p.images.length === 0,
+      artAlt: p.art?.alt.length ?? 0,
+      emptyUrls: p.images.filter((i) => i.url === "").length,
+    }));
+    for (const r of rows) {
+      expect(r.illustrative).toBe(r.noImages);
+      expect(r.emptyUrls).toBe(0);
+    }
+    expect(rows.filter((r) => r.illustrative && r.artAlt === 0)).toEqual([]);
+  });
+
+  it("does not share arrays between products after reset", () => {
+    const store = getMockStore();
+    store.reset();
+    store.products[0]?.options.push({ type: "argola", value: "estrela", priceDeltaCents: 1 });
+    expect(store.products[1]?.options).toEqual([]);
+    store.reset();
+    expect(store.products[0]?.options).toEqual([]);
+  });
+});
+
 describe("catalog.list", () => {
   it("returns all fixtures on a single page", async () => {
     const r = await catalog.list(defaults);

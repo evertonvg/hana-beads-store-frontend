@@ -60,29 +60,31 @@ const MASKS = {
 } as const;
 
 // The design has no real prices or dimensions: never invent them.
-const base: Pick<Product, "priceCents" | "sizeCm" | "beadCount" | "cuteness" | "options"> = {
+const base = (): Pick<Product, "priceCents" | "sizeCm" | "beadCount" | "cuteness" | "options"> => ({
   priceCents: null,
   sizeCm: null,
   beadCount: null,
   cuteness: "MAX",
   options: [],
-};
+});
 
 function art(
   mask: keyof typeof MASKS,
   palette: Record<string, string>,
+  alt: string,
   letter?: string,
 ): BeadArtSpec {
-  return { rows: [...MASKS[mask]], palette, ...(letter ? { letter } : {}) };
+  return { rows: [...MASKS[mask]], palette, alt, ...(letter ? { letter } : {}) };
 }
 
 /** Pristine catalog; the mock store deep-copies this on every reset. */
 export const productFixtures: readonly Product[] = [
   {
-    ...base,
+    ...base(),
     id: "garota",
     slug: "garota-pixel",
     name: "GAROTA PIXEL",
+    // placeholder: derived from design alt text (no product copy in the design)
     description: "Chaveiro de personagem em pixel art com cabelo rosa.",
     rarity: "epico",
     isNew: false,
@@ -101,10 +103,11 @@ export const productFixtures: readonly Product[] = [
     featuredRank: 1,
   },
   {
-    ...base,
+    ...base(),
     id: "e13",
     slug: "estrela-numero",
     name: "ESTRELA Nº",
+    // placeholder: derived from design alt text (no product copy in the design)
     description: "Chaveiro de estrela vermelha com o número 13.",
     rarity: null,
     isNew: false,
@@ -123,10 +126,11 @@ export const productFixtures: readonly Product[] = [
     featuredRank: 2,
   },
   {
-    ...base,
+    ...base(),
     id: "er",
     slug: "estrela-inicial",
     name: "ESTRELA INICIAL",
+    // placeholder: derived from design alt text (no product copy in the design)
     description: "Chaveiro de estrela vermelha e rosa com a letra R.",
     rarity: null,
     isNew: false,
@@ -145,10 +149,11 @@ export const productFixtures: readonly Product[] = [
     featuredRank: 3,
   },
   {
-    ...base,
+    ...base(),
     id: "sorvete",
     slug: "sorvete-pixel",
     name: "SORVETE PIXEL",
+    // placeholder: derived from design alt text (no product copy in the design)
     description: "Ilustração de chaveiro de sorvete em pixel.",
     rarity: null,
     isNew: true,
@@ -156,16 +161,21 @@ export const productFixtures: readonly Product[] = [
     categories: ["icones"],
     categoryLabel: "Mini ícones",
     colors: ["rosa"],
-    images: [{ url: "", alt: "Ilustração de chaveiro de sorvete em pixel" }],
-    art: art("sorvete", { "#": "#FF8CC4", y: "#F2B661" }),
+    images: [],
+    art: art(
+      "sorvete",
+      { "#": "#FF8CC4", y: "#F2B661" },
+      "Ilustração de chaveiro de sorvete em pixel",
+    ),
     illustrative: true,
     featuredRank: 4,
   },
   {
-    ...base,
+    ...base(),
     id: "gato",
     slug: "gatinho-pixel",
     name: "GATINHO PIXEL",
+    // placeholder: derived from design alt text (no product copy in the design)
     description: "Ilustração de chaveiro de gatinho em pixel.",
     rarity: null,
     isNew: true,
@@ -173,16 +183,21 @@ export const productFixtures: readonly Product[] = [
     categories: ["bichinhos"],
     categoryLabel: "Bichinhos",
     colors: ["laranja"],
-    images: [{ url: "", alt: "Ilustração de chaveiro de gatinho em pixel" }],
-    art: art("gato", { "#": "#FF9A3D", k: "#14121F" }),
+    images: [],
+    art: art(
+      "gato",
+      { "#": "#FF9A3D", k: "#14121F" },
+      "Ilustração de chaveiro de gatinho em pixel",
+    ),
     illustrative: true,
     featuredRank: 5,
   },
   {
-    ...base,
+    ...base(),
     id: "coracao",
     slug: "coracao-pixel",
     name: "CORAÇÃO PIXEL",
+    // placeholder: derived from design alt text (no product copy in the design)
     description: "Ilustração de chaveiro de coração em pixel.",
     rarity: null,
     isNew: false,
@@ -190,16 +205,17 @@ export const productFixtures: readonly Product[] = [
     categories: ["icones"],
     categoryLabel: "Mini ícones",
     colors: ["rosa"],
-    images: [{ url: "", alt: "Ilustração de chaveiro de coração em pixel" }],
-    art: art("coracao", { "#": "#FF5FAE" }),
+    images: [],
+    art: art("coracao", { "#": "#FF5FAE" }, "Ilustração de chaveiro de coração em pixel"),
     illustrative: true,
     featuredRank: 6,
   },
   {
-    ...base,
+    ...base(),
     id: "planeta",
     slug: "planeta-pixel",
     name: "PLANETA PIXEL",
+    // placeholder: derived from design alt text (no product copy in the design)
     description: "Ilustração de chaveiro de planeta em pixel.",
     rarity: null,
     isNew: false,
@@ -207,16 +223,21 @@ export const productFixtures: readonly Product[] = [
     categories: ["icones"],
     categoryLabel: "Mini ícones",
     colors: ["roxo"],
-    images: [{ url: "", alt: "Ilustração de chaveiro de planeta em pixel" }],
-    art: art("planeta", { "#": "#9B5CFF", y: "#FFD23F" }),
+    images: [],
+    art: art(
+      "planeta",
+      { "#": "#9B5CFF", y: "#FFD23F" },
+      "Ilustração de chaveiro de planeta em pixel",
+    ),
     illustrative: true,
     featuredRank: 7,
   },
   {
-    ...base,
+    ...base(),
     id: "cacto",
     slug: "cacto-pixel",
     name: "CACTO PIXEL",
+    // placeholder: derived from design alt text (no product copy in the design)
     description: "Ilustração de chaveiro de cacto em pixel.",
     rarity: null,
     isNew: false,
@@ -224,16 +245,17 @@ export const productFixtures: readonly Product[] = [
     categories: ["icones"],
     categoryLabel: "Mini ícones",
     colors: ["verde"],
-    images: [{ url: "", alt: "Ilustração de chaveiro de cacto em pixel" }],
-    art: art("cacto", { "#": "#2FBF71", y: "#C8693C" }),
+    images: [],
+    art: art("cacto", { "#": "#2FBF71", y: "#C8693C" }, "Ilustração de chaveiro de cacto em pixel"),
     illustrative: true,
     featuredRank: 8,
   },
   {
-    ...base,
+    ...base(),
     id: "coracaoA",
     slug: "coracao-inicial",
     name: "CORAÇÃO INICIAL",
+    // placeholder: derived from design alt text (no product copy in the design)
     description: "Ilustração de chaveiro de coração vermelho com a letra A.",
     rarity: null,
     isNew: false,
@@ -241,13 +263,13 @@ export const productFixtures: readonly Product[] = [
     categories: ["iniciais", "icones"],
     categoryLabel: "Iniciais · Mini ícones",
     colors: ["vermelho"],
-    images: [
-      {
-        url: "",
-        alt: "Ilustração de chaveiro de coração vermelho com a letra A",
-      },
-    ],
-    art: art("coracao", { "#": "#E8302A" }, "A"),
+    images: [],
+    art: art(
+      "coracao",
+      { "#": "#E8302A" },
+      "Ilustração de chaveiro de coração vermelho com a letra A",
+      "A",
+    ),
     illustrative: true,
     featuredRank: 9,
   },
