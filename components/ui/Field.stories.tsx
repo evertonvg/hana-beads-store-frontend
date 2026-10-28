@@ -109,3 +109,7 @@ export const CheckboxStates: Story = {
     </div>
   ),
 };
+
+export const CheckboxWithError: Story = {
+  render: () => <Checkbox label="Li e aceito os termos" error="Aceite os termos para continuar." />,
+};

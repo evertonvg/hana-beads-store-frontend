@@ -3,11 +3,17 @@
 import { Description, Field as HeadlessField, Label } from "@headlessui/react";
 import { createContext, use, type ReactNode } from "react";
 
-const InvalidContext = createContext(false);
+// null = not inside a kit Field
+const FieldStateContext = createContext<{ invalid: boolean } | null>(null);
 
 /** True when the surrounding `Field` has an error (drives `aria-invalid` on controls). */
 export function useFieldInvalid(): boolean {
-  return use(InvalidContext);
+  return use(FieldStateContext)?.invalid ?? false;
+}
+
+/** True when rendered inside a kit `Field` (which already provides the Headless Field context). */
+export function useInKitField(): boolean {
+  return use(FieldStateContext) !== null;
 }
 
 type Props = {
@@ -25,7 +31,7 @@ export function Field({ label, error, hint, children }: Props) {
   return (
     <HeadlessField className="flex flex-col gap-2">
       <Label className="font-pixel text-[10px] text-text-muted">{label}</Label>
-      <InvalidContext value={Boolean(error)}>{children}</InvalidContext>
+      <FieldStateContext value={{ invalid: Boolean(error) }}>{children}</FieldStateContext>
       {hint ? <Description className="text-xs text-text-subtle">{hint}</Description> : null}
       {error ? (
         <Description role="alert" className="text-xs text-danger-text">

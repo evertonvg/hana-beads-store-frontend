@@ -48,6 +48,35 @@ describe("QuantityStepper", () => {
     expect(screen.getByRole("spinbutton", { name: "Quantidade" })).toHaveValue(1);
   });
 
+  it("keeps the bound buttons focusable (aria-disabled, not disabled)", async () => {
+    const user = userEvent.setup();
+    render(<Harness initial={1} />);
+    const minus = screen.getByRole("button", { name: "Diminuir quantidade" });
+    expect(minus).toHaveAttribute("aria-disabled", "true");
+    expect(minus).toBeEnabled();
+    await user.tab();
+    expect(minus).toHaveFocus();
+  });
+
+  it("does not submit a surrounding form on Enter", async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn((e: React.FormEvent) => e.preventDefault());
+    function InForm() {
+      const [v, setV] = useState(5);
+      return (
+        <form onSubmit={onSubmit}>
+          <QuantityStepper value={v} onChange={setV} label="Quantidade" />
+        </form>
+      );
+    }
+    render(<InForm />);
+    const input = screen.getByRole("spinbutton", { name: "Quantidade" });
+    await user.clear(input);
+    await user.type(input, "7{Enter}");
+    expect(input).toHaveValue(7);
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
   it("does not go above 99", async () => {
     const user = userEvent.setup();
     render(<Harness initial={99} />);

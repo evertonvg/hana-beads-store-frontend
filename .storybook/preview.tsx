@@ -31,6 +31,7 @@ const preview: Preview = {
   ],
   parameters: {
     layout: "fullscreen",
+    // Reporting only: the enforced gate is `npm run test:a11y-stories`.
     a11y: { test: "error" },
     backgrounds: { disabled: true },
     viewport: {
