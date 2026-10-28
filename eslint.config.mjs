@@ -27,6 +27,14 @@ const eslintConfig = defineConfig([
   {
     files: ["tests/e2e/**"],
     ...playwright.configs["flat/recommended"],
+    rules: {
+      ...playwright.configs["flat/recommended"].rules,
+      // Project assertion helpers count as assertions.
+      "playwright/expect-expect": [
+        "warn",
+        { assertFunctionNames: ["expect", "expectA11y", "expectTouchTargets"] },
+      ],
+    },
   },
   {
     files: ["tests/unit/**"],

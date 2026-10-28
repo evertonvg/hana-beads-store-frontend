@@ -3,7 +3,7 @@ import { Press_Start_2P, Space_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { MobileTabBar } from "@/components/layout/MobileTabBar";
+import { MobileTabBar, MobileTabBarFallback } from "@/components/layout/MobileTabBar";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -43,7 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </main>
           <Footer />
-          <Suspense fallback={null}>
+          <Suspense fallback={<MobileTabBarFallback />}>
             <MobileTabBar />
           </Suspense>
         </Providers>

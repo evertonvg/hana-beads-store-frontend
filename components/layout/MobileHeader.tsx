@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { focusRing } from "@/components/ui/focus";
 import { Icon } from "@/components/ui/Icon";
+import { cn } from "@/lib/cn";
 import { CartLink } from "./CartLink";
 import { MobileMenu, type MobileMenuContact } from "./MobileMenu";
 
@@ -21,13 +23,19 @@ export function MobileHeader({ session, contact }: Props) {
         type="button"
         aria-label="Abrir menu"
         onClick={() => setOpen(true)}
-        className="flex size-12 cursor-pointer items-center justify-center border-[3px] border-border text-text outline-offset-4 outline-cyan focus-visible:outline-[3px]"
+        className={cn(
+          "flex size-12 cursor-pointer items-center justify-center border-[3px] border-border text-text",
+          focusRing,
+        )}
       >
         <Icon name="menu" size={22} />
       </button>
       <Link
         href="/"
-        className="text-center font-pixel text-xs leading-normal text-text outline-offset-4 outline-cyan focus-visible:outline-[3px]"
+        className={cn(
+          "inline-flex min-h-11 flex-col items-center justify-center text-center font-pixel text-xs leading-normal text-text",
+          focusRing,
+        )}
       >
         PIXEL PERFECT
         <br />

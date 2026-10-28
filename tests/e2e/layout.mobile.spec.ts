@@ -1,4 +1,5 @@
 import { expect, expectA11y, test } from "./support/fixtures";
+import { expectTouchTargets } from "./support/touch-targets";
 
 test.describe("shell celular", () => {
   test("botao Abrir menu abre o dialog e Escape fecha", async ({ page }) => {
@@ -36,5 +37,46 @@ test.describe("shell celular", () => {
     await page.goto("/");
     await expect(page.getByRole("main")).toBeVisible();
     await expectA11y(page);
+  });
+
+  test("alvos de toque do menu aberto tem pelo menos 44px", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Abrir menu" }).click();
+    await expectTouchTargets(page.getByRole("dialog", { name: "Menu" }));
+  });
+
+  test("tab bar gruda no rodape da tela sem cobrir o conteudo", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 500 });
+    await page.goto("/rota-que-nao-existe");
+    const bar = page.getByRole("navigation", { name: "Atalhos" });
+    await expect(bar).toBeVisible();
+
+    const scrollHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+    expect(scrollHeight).toBeGreaterThan(1000);
+
+    await page.evaluate(() =>
+      window.scrollTo(0, Math.floor(document.documentElement.scrollHeight / 2)),
+    );
+    const mid = await bar.boundingBox();
+    expect(mid && mid.y + mid.height).toBeGreaterThanOrEqual(499);
+    expect(mid && mid.y + mid.height).toBeLessThanOrEqual(501);
+
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    const end = await bar.boundingBox();
+    const last = await page.getByRole("contentinfo").locator("p").boundingBox();
+    expect(end && end.y + end.height).toBeGreaterThanOrEqual(499);
+    expect(last && last.y + last.height).toBeLessThanOrEqual((end?.y ?? 0) + 1);
+  });
+
+  for (const path of ["/carrinho", "/checkout", "/produto/x", "/pedido/x/pagamento"]) {
+    test(`tab bar some em ${path}`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.getByRole("navigation", { name: "Atalhos" })).toHaveCount(0);
+    });
+  }
+
+  test("tab bar existe numa rota comum (controle)", async ({ page }) => {
+    await page.goto("/rota-que-nao-existe");
+    await expect(page.getByRole("navigation", { name: "Atalhos" })).toHaveCount(1);
   });
 });

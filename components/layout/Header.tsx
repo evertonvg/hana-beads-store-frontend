@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { focusRing } from "@/components/ui/focus";
 import { PixelGrid } from "@/components/pixel/PixelGrid";
+import { cn } from "@/lib/cn";
 import { getContact } from "@/lib/contact";
 import { CartLink } from "./CartLink";
 import { MobileHeader } from "./MobileHeader";
@@ -13,7 +15,7 @@ const LOGO_PALETTE = {
   t: "var(--color-text)",
 };
 
-const focus = "outline-offset-4 outline-cyan focus-visible:outline-[3px]";
+const navLink = cn("inline-flex min-h-11 items-center", focusRing);
 
 /** Site header: desktop bar from `md`, compact bar with menu button below it. */
 export function Header({ session }: { session: HeaderSession }) {
@@ -22,7 +24,7 @@ export function Header({ session }: { session: HeaderSession }) {
     <>
       <header className="hidden border-b-4 border-border-soft md:block">
         <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-center justify-between gap-4 px-6 py-5">
-          <Link href="/" className={`flex items-center gap-3 text-text ${focus}`}>
+          <Link href="/" className={cn("flex min-h-11 items-center gap-3 text-text", focusRing)}>
             <PixelGrid rows={LOGO_ROWS} palette={LOGO_PALETTE} cell={10} gap={2} />
             <span className="font-pixel text-sm leading-normal">
               PIXEL PERFECT
@@ -34,21 +36,21 @@ export function Header({ session }: { session: HeaderSession }) {
             aria-label="Principal"
             className="flex flex-wrap gap-6 font-pixel text-[10px] text-text"
           >
-            <Link href="/loja" className={`py-3 ${focus}`}>
+            <Link href="/loja" className={navLink}>
               LOJA
             </Link>
-            <Link href="/encomendas" className={`py-3 ${focus}`}>
+            <Link href="/encomendas" className={navLink}>
               ENCOMENDAS
             </Link>
-            <Link href="/#sobre" className={`py-3 ${focus}`}>
+            <Link href="/#sobre" className={navLink}>
               SOBRE
             </Link>
             {session ? (
-              <Link href="/conta" className={`py-3 ${focus}`}>
+              <Link href="/conta" className={navLink}>
                 MINHA CONTA
               </Link>
             ) : (
-              <Link href="/entrar" className={`py-3 ${focus}`}>
+              <Link href="/entrar" className={navLink}>
                 ENTRAR
               </Link>
             )}

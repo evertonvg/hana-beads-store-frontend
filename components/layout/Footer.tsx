@@ -1,7 +1,12 @@
 import Link from "next/link";
+import { focusRing } from "@/components/ui/focus";
+import { cn } from "@/lib/cn";
 import { getContact } from "@/lib/contact";
 
-const linkClass = "py-3 text-link underline-offset-4 hover:text-yellow hover:underline";
+const linkClass = cn(
+  "inline-flex min-h-11 items-center text-link underline-offset-4 hover:text-yellow hover:underline",
+  focusRing,
+);
 
 /** Site footer. Company data are placeholders until the owner provides them. */
 export function Footer() {
@@ -34,7 +39,7 @@ export function Footer() {
         <button
           type="button"
           disabled
-          className="min-h-11 cursor-not-allowed py-3 text-accent underline opacity-60"
+          className="inline-flex min-h-11 cursor-not-allowed items-center text-accent underline opacity-60"
         >
           Cookies
         </button>

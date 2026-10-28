@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PixelNumber404 } from "@/components/pixel/PixelNumber404";
+import { Button } from "@/components/ui/Button";
+import { Field } from "@/components/ui/Field";
+import { focusRing } from "@/components/ui/focus";
+import { TextInput } from "@/components/ui/TextInput";
+import { cn } from "@/lib/cn";
 import { getContact } from "@/lib/contact";
 
 export const metadata: Metadata = { title: "Fase não encontrada" };
 
-const focus = "outline-offset-4 outline-cyan focus-visible:outline-[3px]";
+const shortcutClass = cn("inline-flex min-h-11 items-center text-link underline", focusRing);
 
 const SHORTCUTS = [
   { href: "/encomendas", label: "Encomendas" },
@@ -38,63 +43,54 @@ export default function NotFound() {
           CONTINUE?
         </h2>
         <div className="flex flex-col gap-2.5 text-left">
-          <Link
+          <Button
             href="/"
-            className={`flex min-h-11 items-center gap-3 bg-accent p-4 font-pixel text-[10px] text-bg md:gap-3.5 md:px-[18px] md:text-[11px] ${focus}`}
+            variant="primary"
+            className="justify-start gap-3 px-4 py-4 text-[10px] shadow-none md:gap-3.5 md:px-[18px] md:text-[11px]"
           >
             <span aria-hidden className="animate-pisca motion-reduce:animate-none">
               ▶
             </span>
             SIM · VOLTAR AO INÍCIO
-          </Link>
-          <Link
+          </Button>
+          <Button
             href="/loja"
-            className={`flex min-h-11 items-center gap-3 border-[3px] border-text px-4 py-[13px] font-pixel text-[10px] text-text md:gap-3.5 md:px-[18px] md:text-[11px] ${focus}`}
+            variant="secondary"
+            className="justify-start gap-3 px-4 py-[13px] text-[10px] md:gap-3.5 md:px-[18px] md:text-[11px]"
           >
             <span aria-hidden className="w-2.5 md:w-[11px]" />
             NÃO · IR DIRETO PRA LOJA
-          </Link>
+          </Button>
         </div>
       </section>
 
-      <form
-        role="search"
-        action="/loja"
-        method="get"
-        className="flex w-full max-w-[520px] flex-col gap-2 text-left"
-      >
-        <label htmlFor="busca-404" className="text-sm text-text-muted">
-          Ou procure o que você queria
-        </label>
-        <div className="flex">
-          <input
-            id="busca-404"
-            name="q"
-            type="search"
-            placeholder="estrela, gatinho, coração..."
-            className="min-h-[52px] min-w-0 flex-1 border-[3px] border-r-0 border-text bg-surface p-3 font-mono text-base text-text placeholder:text-text-subtle focus-visible:outline-[3px] focus-visible:outline-cyan"
-          />
-          <button
-            type="submit"
-            className="flex min-h-[52px] cursor-pointer items-center bg-text px-[18px] font-pixel text-[9px] text-bg outline-offset-2 outline-cyan focus-visible:outline-[3px]"
-          >
-            BUSCAR
-          </button>
-        </div>
+      <form role="search" action="/loja" method="get" className="w-full max-w-[520px] text-left">
+        <Field label="Ou procure o que você queria">
+          <div className="flex">
+            <TextInput
+              name="q"
+              type="search"
+              placeholder="estrela, gatinho, coração..."
+              className="min-h-[52px] min-w-0 flex-1 border-r-0 bg-surface"
+            />
+            <Button
+              type="submit"
+              variant="primary"
+              className="bg-text px-[18px] py-0 text-[9px] shadow-none"
+            >
+              BUSCAR
+            </Button>
+          </div>
+        </Field>
       </form>
 
-      <div className="flex flex-wrap justify-center gap-x-5 text-sm md:mt-0">
+      <div className="flex flex-wrap justify-center gap-x-5">
         {SHORTCUTS.map((s) => (
-          <Link key={s.href} href={s.href} className={`py-3 text-link underline ${focus}`}>
+          <Link key={s.href} href={s.href} className={shortcutClass}>
             {s.label}
           </Link>
         ))}
-        <a
-          href={channel.href()}
-          target="_blank"
-          rel="noopener"
-          className={`py-3 text-link underline ${focus}`}
-        >
+        <a href={channel.href()} target="_blank" rel="noopener" className={shortcutClass}>
           Falar no {channel.name}
         </a>
       </div>

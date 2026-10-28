@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { focusRing } from "@/components/ui/focus";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 
@@ -14,6 +15,11 @@ const TABS: { href: string; label: string; icon: IconName }[] = [
 
 /** Routes with their own fixed buy bar: the tab bar steps aside. */
 const HIDDEN_ON = ["/produto/", "/carrinho", "/checkout", "/pedido/"];
+
+const navClass =
+  "sticky bottom-0 z-10 grid grid-cols-4 border-t-[3px] border-text bg-surface md:hidden";
+const itemClass =
+  "flex min-h-11 flex-col items-center gap-1.5 px-1 pt-2.5 pb-3 font-pixel text-[7px]";
 
 function isActive(pathname: string, href: string): boolean {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
@@ -28,10 +34,7 @@ export function MobileTabBar() {
   if (HIDDEN_ON.some((prefix) => pathname.startsWith(prefix))) return null;
 
   return (
-    <nav
-      aria-label="Atalhos"
-      className="sticky bottom-0 z-10 grid grid-cols-4 border-t-[3px] border-text bg-surface md:hidden"
-    >
+    <nav aria-label="Atalhos" className={navClass}>
       {TABS.map((tab) => {
         const active = isActive(pathname, tab.href);
         return (
@@ -40,7 +43,9 @@ export function MobileTabBar() {
             href={tab.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex min-h-11 flex-col items-center gap-1.5 px-1 pt-2.5 pb-3 font-pixel text-[7px] outline-offset-[-4px] outline-cyan focus-visible:outline-[3px]",
+              itemClass,
+              focusRing,
+              "outline-offset-[-4px]",
               active ? "text-accent" : "text-text",
             )}
           >
@@ -50,5 +55,19 @@ export function MobileTabBar() {
         );
       })}
     </nav>
+  );
+}
+
+/** Suspense fallback: same box and look as the tab bar, but inert and with no active tab. */
+export function MobileTabBarFallback() {
+  return (
+    <div aria-hidden className={navClass}>
+      {TABS.map((tab) => (
+        <span key={tab.href} className={cn(itemClass, "text-text")}>
+          <Icon name={tab.icon} size={22} />
+          {tab.label}
+        </span>
+      ))}
+    </div>
   );
 }

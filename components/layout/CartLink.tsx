@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { focusRing } from "@/components/ui/focus";
 import { Icon } from "@/components/ui/Icon";
+import { cn } from "@/lib/cn";
 
 /** Cart item count. Placeholder until the cart store lands (replaced by the real store). */
 function useCartCount(): number {
@@ -18,7 +20,10 @@ export function CartLink({ variant }: Props) {
     return (
       <Link
         href="/carrinho"
-        className="inline-flex min-h-11 items-center bg-yellow px-4 py-3.5 font-pixel text-[10px] text-bg shadow-hard-sm outline-offset-4 outline-cyan focus-visible:outline-[3px]"
+        className={cn(
+          "inline-flex min-h-11 items-center bg-yellow px-4 py-3.5 font-pixel text-[10px] text-bg shadow-hard-sm",
+          focusRing,
+        )}
       >
         CARRINHO [{count}]
       </Link>
@@ -29,7 +34,10 @@ export function CartLink({ variant }: Props) {
     <Link
       href="/carrinho"
       aria-label={`Carrinho, ${count} ${count === 1 ? "item" : "itens"}`}
-      className="relative flex size-12 items-center justify-center bg-yellow text-bg shadow-[3px_3px_0_var(--color-accent)] outline-offset-4 outline-cyan focus-visible:outline-[3px]"
+      className={cn(
+        "relative flex size-12 items-center justify-center bg-yellow text-bg shadow-[3px_3px_0_var(--color-accent)]",
+        focusRing,
+      )}
     >
       <Icon name="cart" size={22} />
       <span

@@ -1,11 +1,19 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { useState, type ReactNode } from "react";
+import { lazy, Suspense, useState, type ReactNode } from "react";
 import { Toaster } from "sonner";
 import { toastOptions } from "@/components/ui/toast";
+
+// Devtools is a devDependency: the import must be dead code in production builds, so the
+// NODE_ENV check sits right around `import()` and the bundler drops the whole branch.
+const Devtools =
+  process.env.NODE_ENV === "development"
+    ? lazy(() =>
+        import("@tanstack/react-query-devtools").then((m) => ({ default: m.ReactQueryDevtools })),
+      )
+    : null;
 
 /** Client-side providers: server-state cache, URL state adapter and toasts. */
 export function Providers({ children }: { children: ReactNode }) {
@@ -18,7 +26,11 @@ export function Providers({ children }: { children: ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <NuqsAdapter>{children}</NuqsAdapter>
       <Toaster toastOptions={toastOptions} />
-      {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />}
+      {Devtools && (
+        <Suspense fallback={null}>
+          <Devtools initialIsOpen={false} />
+        </Suspense>
+      )}
     </QueryClientProvider>
   );
 }
