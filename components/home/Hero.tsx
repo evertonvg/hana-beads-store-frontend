@@ -2,14 +2,25 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { getContact } from "@/lib/contact";
+import { ParallaxHero } from "./ParallaxHero";
+import { ParallaxRoot } from "./ParallaxRoot";
 
 /** First screen: pitch, calls to action and the featured character photo. */
 export function Hero() {
   const channel = getContact();
   return (
-    <section aria-labelledby="hero-title" data-parallax="hero">
-      <Container className="grid gap-5 py-7 md:grid-cols-2 md:gap-x-14 md:gap-y-7 md:py-20">
-        <div className="flex min-w-0 flex-col gap-5 md:gap-7">
+    <ParallaxRoot
+      aria-labelledby="hero-title"
+      data-parallax="hero"
+      className="relative overflow-hidden"
+    >
+      <ParallaxHero />
+      <Container className="relative z-10 grid gap-5 py-7 md:grid-cols-2 md:gap-x-14 md:gap-y-7 md:py-20">
+        <div
+          data-layer="titulo"
+          data-speed="-0.25"
+          className="flex min-w-0 flex-col gap-5 will-change-transform md:gap-7"
+        >
           <p className="font-pixel text-[9px] text-yellow md:text-[11px]">1 PLAYER · FEITO À MÃO</p>
           <h1
             id="hero-title"
@@ -68,6 +79,6 @@ export function Hero() {
           </Button>
         </div>
       </Container>
-    </section>
+    </ParallaxRoot>
   );
 }

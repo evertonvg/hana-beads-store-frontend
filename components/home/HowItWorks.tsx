@@ -2,6 +2,8 @@ import { ContactButton } from "@/components/contact/ContactButton";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { getContact } from "@/lib/contact";
+import { BlocksSection } from "./BlocksSection";
+import { ParallaxRoot } from "./ParallaxRoot";
 
 /** "Como funciona a encomenda": the three phases. */
 export function HowItWorks() {
@@ -20,13 +22,14 @@ export function HowItWorks() {
     },
   ];
   return (
-    <section
+    <ParallaxRoot
       id="fases"
       aria-labelledby="fases-title"
       data-parallax="phases"
-      className="md:border-y-4 md:border-border-soft md:bg-surface"
+      className="relative overflow-hidden md:border-y-4 md:border-border-soft md:bg-surface"
     >
-      <Container className="flex flex-col gap-4 pt-12 pb-6 md:gap-12 md:py-24">
+      <BlocksSection />
+      <Container className="relative z-10 flex flex-col gap-4 pt-12 pb-6 md:gap-12 md:bg-surface md:py-24">
         <h2 id="fases-title" className="font-pixel text-sm leading-normal md:text-2xl">
           COMO FUNCIONA
           <span className="hidden md:inline">
@@ -70,6 +73,6 @@ export function HowItWorks() {
           </Button>
         </div>
       </Container>
-    </section>
+    </ParallaxRoot>
   );
 }
