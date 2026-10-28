@@ -1,0 +1,8 @@
+docs/design/
+package-lock.json
+tests/e2e/__screenshots__/
+.next/
+storybook-static/
+playwright-report/
+test-results/
+.superpowers/
