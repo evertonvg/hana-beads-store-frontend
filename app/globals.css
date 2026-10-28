@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Fonts: next/font injects --font-pixel-face / --font-mono-face on <html> */
+  --font-pixel: var(--font-pixel-face), monospace;
+  --font-mono: var(--font-mono-face), monospace;
+}
+
+@theme {
+  /* Colors (briefing section 3) */
+  --color-bg: #14121f;
+  --color-surface: #1e1b2e;
+  --color-surface-2: #2c2840;
+  --color-deep: #191626;
+  --color-deep-2: #0b0a12;
+  --color-border: #4a4566;
+  --color-border-soft: #2c2840;
+  --color-text: #ede9ff;
+  --color-text-muted: #c9c4e3;
+  --color-text-subtle: #a9a3c9;
+  --color-accent: #ff5fae;
+  --color-link: #ff8cc4;
+  --color-yellow: #ffd23f;
+  --color-cyan: #4fd1ff;
+  --color-green: #7cff6b;
+  --color-contact: #d62976;
+  --color-contact-text: #ffffff;
+  --color-whatsapp: #3ddc84;
+  --color-whatsapp-text: #0b2e17;
+  --color-danger: #ff6b6b;
+  --color-danger-text: #ff8a8a;
+  --color-purple: #9b5cff;
+
+  /* Product colors from the design */
+  --color-bead-red: #e8302a;
+  --color-bead-orange: #ff9a3d;
+  --color-bead-green: #2fbf71;
+  --color-bead-black: #3a3650;
+  --color-phase-off-text: #8d88ad;
+
+  /* Hard pixel shadows: never blurred */
+  --shadow-hard: 6px 6px 0 var(--color-yellow);
+  --shadow-hard-sm: 4px 4px 0 var(--color-accent);
+  --shadow-hard-lg: 12px 12px 0 var(--color-accent);
+  --shadow-bevel:
+    inset 4px 4px 0 rgba(255, 255, 255, 0.38), inset -4px -4px 0 rgba(0, 0, 0, 0.32);
+
+  /* Zero radius: wipe the scale; only rounded-full stays for beads/dots */
+  --radius-*: initial;
+  --radius-full: 9999px;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+}
