@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import {
   formatCep,
   formatCpf,
@@ -16,7 +16,7 @@ import {
 describe("formatPrice", () => {
   it("formats cents as BRL with a normal space", () => {
     expect(formatPrice(1990)).toBe("R$ 19,90");
-    expect(formatPrice(1990)).not.toContain(" ");
+    expect(formatPrice(1990)).not.toContain("\u00a0");
   });
 
   it("uses the placeholder when there is no price", () => {
@@ -79,6 +79,26 @@ describe("formatDate", () => {
 
   it("uses the date placeholder when there is no date", () => {
     expect(formatDate(null)).toBe("[00/00/0000]");
+  });
+
+  describe("timezone independence", () => {
+    const originalTz = process.env.TZ;
+
+    afterEach(() => {
+      if (originalTz === undefined) delete process.env.TZ;
+      else process.env.TZ = originalTz;
+    });
+
+    // Node re-reads process.env.TZ on assignment, so each zone really changes the runtime clock.
+    it.each(["Pacific/Auckland", "UTC", "America/Los_Angeles", "Asia/Tokyo"])(
+      "renders in São Paulo time when the machine is in %s",
+      (zone) => {
+        process.env.TZ = zone;
+        expect(formatDate("2026-10-28T12:00:00Z")).toBe("28/10/2026");
+        expect(formatDate("2026-10-29T02:30:00Z")).toBe("28/10/2026");
+        expect(formatDate("2026-10-29T03:30:00Z")).toBe("29/10/2026");
+      },
+    );
   });
 });
 

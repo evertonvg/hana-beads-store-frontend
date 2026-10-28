@@ -25,6 +25,15 @@ describe("getContact", () => {
     expect(getContact({ ...env, instagramUser: null }).href()).toBe("https://ig.me/m/[usuario]");
   });
 
+  it("strips formatting from the WhatsApp number", () => {
+    const c = getContact({
+      ...env,
+      contactChannel: "whatsapp",
+      whatsappNumber: "+55 11 99999-9999",
+    });
+    expect(c.href("Oi! Quero")).toBe("https://wa.me/5511999999999?text=Oi!%20Quero");
+  });
+
   it("builds the WhatsApp link with an encoded prefilled message", () => {
     const c = getContact({
       ...env,

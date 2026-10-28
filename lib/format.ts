@@ -1,4 +1,5 @@
 import { formatPhone as formatBrPhone } from "@brazilian-utils/brazilian-utils";
+import { tz } from "@date-fns/tz";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 
@@ -28,7 +29,7 @@ export function onlyDigits(value: string): string {
 /** Formats cents as BRL, or the `[PREÇO]` placeholder when there is no price. */
 export function formatPrice(cents: number | null): string {
   if (cents === null) return "[PREÇO]";
-  return brl.format(cents / 100).replaceAll(" ", " ");
+  return brl.format(cents / 100).replaceAll(/[\u00a0\u202f]/g, " ");
 }
 
 /** Formats cents as BRL, or the `[VALOR]` placeholder when there is no total. */
@@ -37,10 +38,13 @@ export function formatTotal(cents: number | null): string {
   return formatPrice(cents);
 }
 
+/** Store timezone. Dates are always shown in Brazil, never in the machine or browser timezone. */
+const SAO_PAULO = "America/Sao_Paulo";
+
 /** Formats an ISO date in pt-BR, or the `[00/00/0000]` placeholder when there is no date. */
 export function formatDate(iso: string | null, pattern = "dd/MM/yyyy"): string {
   if (iso === null) return "[00/00/0000]";
-  return format(parseISO(iso), pattern, { locale: ptBR });
+  return format(parseISO(iso), pattern, { in: tz(SAO_PAULO), locale: ptBR });
 }
 
 /** Formats an order number for display, e.g. `"0005"` becomes `"#0005"`. */

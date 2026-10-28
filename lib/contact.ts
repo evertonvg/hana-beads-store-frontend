@@ -1,3 +1,4 @@
+import { onlyDigits } from "@/lib/format";
 import { publicEnv, type PublicEnv } from "@/lib/env";
 
 export type ContactChannel = {
@@ -27,7 +28,7 @@ const CHANNELS: Record<PublicEnv["contactChannel"], (env: PublicEnv) => ContactC
     color: "whatsapp",
     icon: "chat",
     href: (msg = "") =>
-      `https://wa.me/${env.whatsappNumber ?? "[numero]"}?text=${encodeURIComponent(msg)}`,
+      `https://wa.me/${env.whatsappNumber === null ? "[numero]" : onlyDigits(env.whatsappNumber)}?text=${encodeURIComponent(msg)}`,
     acceptsPrefill: true,
   }),
 };
