@@ -5,7 +5,9 @@ const PORT = 3100;
 export default defineConfig({
   testDir: "tests/e2e",
   snapshotPathTemplate: "{testDir}/__screenshots__/{projectName}/{testFilePath}/{arg}{ext}",
-  fullyParallel: true,
+  // The in-memory mock store and the global resetMock are shared: run serially.
+  fullyParallel: false,
+  workers: 1,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
