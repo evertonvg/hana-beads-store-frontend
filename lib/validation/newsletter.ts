@@ -7,6 +7,7 @@ export const newsletterSchema = z.object({
   email: z
     .string()
     .trim()
+    .max(254, { error: "Informe um e-mail válido." })
     .pipe(z.email({ error: "Informe um e-mail válido." })),
   consent: z
     .boolean({ error: "Marque a caixa para continuar." })

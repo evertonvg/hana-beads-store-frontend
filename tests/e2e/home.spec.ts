@@ -88,9 +88,35 @@ test.describe("newsletter", () => {
     expect(sent).toEqual([]);
   });
 
-  test("e-mail valido com consentimento confirma", async ({ page }, testInfo) => {
+  test("e-mail repetido recebe a mesma confirmação neutra", async ({ page }) => {
     await page.goto("/");
-    await page.getByLabel("Seu e-mail").fill(`${testInfo.project.name}@teste.dev`);
+    const mensagens: string[] = [];
+    for (let i = 0; i < 2; i++) {
+      await page.getByLabel("Seu e-mail").fill("repetido@teste.dev");
+      await page.getByRole("checkbox", { name: /novidades/i }).click();
+      await page.getByRole("button", { name: "YES!" }).click();
+      await expect(page.getByRole("status")).toContainText("YES!");
+      mensagens.push((await page.getByRole("status").textContent()) ?? "");
+    }
+    expect(mensagens[1]).toBe(mensagens[0]);
+  });
+
+  test("falha do servidor mostra erro e a pagina continua", async ({ page }) => {
+    await page.goto("/");
+    await page.getByLabel("Seu e-mail").fill("falha@teste.dev");
+    await page.getByRole("checkbox", { name: /novidades/i }).click();
+    await page.getByRole("button", { name: "YES!" }).click();
+    await expect(page.getByRole("status")).toContainText("Não foi possível agora");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // A later successful submit clears the previous error.
+    await page.getByLabel("Seu e-mail").fill("ok@teste.dev");
+    await page.getByRole("button", { name: "YES!" }).click();
+    await expect(page.getByRole("status")).toContainText("YES!");
+  });
+
+  test("e-mail valido com consentimento confirma", async ({ page }) => {
+    await page.goto("/");
+    await page.getByLabel("Seu e-mail").fill(`novidades@teste.dev`);
     await page.getByRole("checkbox", { name: /novidades/i }).click();
     await page.getByRole("button", { name: "YES!" }).click();
     await expect(page.getByRole("status")).toContainText("YES!");

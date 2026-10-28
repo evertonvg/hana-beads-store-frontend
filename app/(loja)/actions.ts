@@ -18,16 +18,19 @@ export async function subscribeNewsletter(input: NewsletterInput): Promise<FormS
       fieldErrors: fieldErrorsFrom(parsed.error),
     };
   }
-  const { status } = await getData().newsletter.subscribe({
-    email: parsed.data.email,
-    consent: true,
-    consentVersion: NEWSLETTER_CONSENT_VERSION,
-  });
+  try {
+    await getData().newsletter.subscribe({
+      email: parsed.data.email,
+      consent: true,
+      consentVersion: NEWSLETTER_CONSENT_VERSION,
+    });
+  } catch (error) {
+    console.error("subscribeNewsletter failed", error);
+    return { status: "error", message: "Não foi possível agora. Tente de novo." };
+  }
+  // One neutral message for new and already-subscribed e-mails: do not reveal membership.
   return {
     status: "ok",
-    message:
-      status === "already"
-        ? "Esse e-mail já está na lista."
-        : "YES! Você entrou na lista. Em breve chegam os novos personagens.",
+    message: "YES! Confira sua caixa de entrada em breve: os novos personagens chegam por lá.",
   };
 }

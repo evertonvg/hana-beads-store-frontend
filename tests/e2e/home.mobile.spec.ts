@@ -13,8 +13,12 @@ test("carrossel rola na horizontal e todos os cards são alcançáveis pelo tecl
 }) => {
   await page.goto("/");
   const lista = page.locator("#loja ul");
-  expect(await lista.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true);
+  await expect.poll(() => lista.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true);
   const cards = page.locator("#loja").getByRole("article");
-  await cards.nth(2).getByRole("link").focus();
+  await page.getByRole("link", { name: "VER TODOS ›" }).focus();
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
+  await expect(cards.nth(2).getByRole("link")).toBeFocused();
   await expect(cards.nth(2)).toBeInViewport();
 });

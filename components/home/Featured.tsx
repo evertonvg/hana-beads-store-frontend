@@ -47,7 +47,6 @@ function FeaturedCard({ product }: { product: Product }) {
     <article className="h-full border-[3px] border-border bg-surface">
       <Link
         href={`/produto/${product.slug}`}
-        aria-label={`Ver item ${product.name}`}
         className={cn("flex h-full flex-col text-text no-underline", focusRing)}
       >
         <span className="relative block h-[240px] md:h-[300px]">
@@ -120,7 +119,7 @@ export async function Featured() {
           VER TODOS ›
         </Link>
       </div>
-      <ul className="m-0 flex snap-x snap-mandatory [scrollbar-width:none] list-none gap-3.5 overflow-x-auto p-0 pr-4 pb-3 md:grid md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] md:gap-7 md:overflow-visible md:p-0 [&::-webkit-scrollbar]:hidden">
+      <ul className="m-0 -ml-2 flex snap-x snap-mandatory scroll-pl-2 [scrollbar-width:none] list-none gap-3.5 overflow-x-auto pt-2 pr-4 pb-3 pl-2 md:ml-0 md:grid md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] md:gap-7 md:overflow-visible md:p-0 [&::-webkit-scrollbar]:hidden">
         {products.map((product) => (
           <li key={product.id} className="w-[240px] flex-none snap-start md:w-auto">
             <FeaturedCard product={product} />

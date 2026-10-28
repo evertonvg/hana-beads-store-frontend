@@ -34,8 +34,14 @@ export function NewsletterForm() {
   });
 
   const onSubmit = (values: NewsletterInput) => {
+    setResult({ status: "idle" });
     startTransition(async () => {
-      const state = await subscribeNewsletter(values);
+      let state: FormState;
+      try {
+        state = await subscribeNewsletter(values);
+      } catch {
+        state = { status: "error", message: "Não foi possível agora. Tente de novo." };
+      }
       setResult(state);
       if (state.status === "ok") {
         reset();
@@ -69,6 +75,7 @@ export function NewsletterForm() {
           type="submit"
           variant="yellow"
           disabled={pending}
+          aria-busy={pending}
           className="min-h-[52px] w-full shadow-none md:min-h-11 md:w-auto"
         >
           YES!
@@ -83,20 +90,25 @@ export function NewsletterForm() {
             checked={field.value}
             onChange={field.onChange}
             onBlur={field.onBlur}
-            label="Quero receber novidades por e-mail."
+            // Wording and consent version are pending owner/legal review (the design has no consent text).
+            label={
+              <>
+                Quero receber novidades por e-mail.{" "}
+                <Link
+                  href="/privacidade"
+                  className={cn(
+                    "inline-flex min-h-11 items-center text-link underline underline-offset-4 hover:text-yellow",
+                    focusRing,
+                  )}
+                >
+                  Política de Privacidade
+                </Link>
+              </>
+            }
             error={errors.consent?.message}
           />
         )}
       />
-      <Link
-        href="/privacidade"
-        className={cn(
-          "inline-flex min-h-11 items-center self-start text-xs text-link underline underline-offset-4 hover:text-yellow",
-          focusRing,
-        )}
-      >
-        Política de Privacidade
-      </Link>
       <p
         role="status"
         className={cn(
