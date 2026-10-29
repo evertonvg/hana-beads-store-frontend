@@ -1,14 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useCartCount } from "@/components/cart/CartCount";
 import { focusRing } from "@/components/ui/focus";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
-
-/** Cart item count. Placeholder until the cart store lands (replaced by the real store). */
-function useCartCount(): number {
-  return 0;
-}
 
 type Props = { variant: "desktop" | "mobile" };
 
