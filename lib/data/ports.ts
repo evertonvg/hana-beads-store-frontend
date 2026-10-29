@@ -34,9 +34,38 @@ export interface EngagementPort {
   }): Promise<void>;
 }
 
+export type ShippingQuote = {
+  id: string;
+  service: string;
+  carrier: string;
+  /** null = price not defined yet (shown as the `[VALOR]` placeholder). */
+  priceCents: number | null;
+  /** Delivery deadline text, `"[X] dias"` while the real one is not defined. */
+  days: string;
+};
+
+export type ShippingError = { error: "cep_invalido" | "cep_nao_atendido" };
+
+export interface ShippingPort {
+  quote(i: {
+    cep: string;
+    items: { productId: string; qty: number }[];
+  }): Promise<ShippingQuote[] | ShippingError>;
+}
+
+export type CouponResult =
+  | { ok: true; code: string; discountCents: number | null; label: string }
+  | { ok: false; reason: "invalido" | "expirado" };
+
+export interface CouponPort {
+  validate(code: string, subtotalCents: number | null): Promise<CouponResult>;
+}
+
 export type Ports = {
   catalog: CatalogPort;
   newsletter: NewsletterPort;
   engagement: EngagementPort;
+  shipping: ShippingPort;
+  coupons: CouponPort;
   // other ports are added by the tasks that use them
 };

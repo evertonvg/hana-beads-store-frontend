@@ -6,7 +6,7 @@ const KEY = "pp_cart_v1";
 
 /** Routes that later tasks build; their prefetches 404 until then and are unrelated to the cart. */
 const NOT_BUILT_YET =
-  /^\/(carrinho|checkout|entrar|encomendas|conta|cadastro|trocas|privacidade|termos)(\/|$)/;
+  /^\/(checkout|entrar|encomendas|conta|cadastro|trocas|privacidade|termos)(\/|$)/;
 
 /** Header cart link: yellow button on desktop, icon with badge on mobile. */
 function cartLink(page: Page, isMobile: boolean, n: number) {

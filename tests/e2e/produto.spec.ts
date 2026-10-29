@@ -128,7 +128,9 @@ test("a gaveta lista todas as linhas do carrinho com o subtotal", async ({ page 
   await expect(dialog.getByText("[VALOR]").last()).toBeVisible();
 });
 
-test("linha de outro produto aparece com placeholder e subtotal [VALOR]", async ({ page }) => {
+test("linha de outro produto mostra nome real e preço [VALOR] enquanto o preço é placeholder", async ({
+  page,
+}) => {
   await page.addInitScript(() =>
     localStorage.setItem(
       "pp_cart_v1",
@@ -143,7 +145,7 @@ test("linha de outro produto aparece com placeholder e subtotal [VALOR]", async 
   const dialog = page.getByRole("dialog", { name: "ITEM COLETADO!" });
   const items = dialog.getByRole("listitem");
   await expect(items).toHaveCount(2);
-  await expect(items.nth(0)).toContainText("[e13]");
+  await expect(items.nth(0)).toContainText("ESTRELA Nº");
   await expect(items.nth(0)).toContainText("[VALOR]");
   await expect(dialog.getByText("SUBTOTAL · 2 ITENS")).toBeVisible();
 });

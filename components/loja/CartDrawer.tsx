@@ -8,6 +8,7 @@ import { FreeShippingBar } from "@/components/cart/FreeShippingBar";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Drawer } from "@/components/ui/Drawer";
 import { Button, buttonVariants } from "@/components/ui/Button";
+import { useCartPrices } from "@/components/cart/use-cart-prices";
 import { useCartStore } from "@/lib/cart/store";
 import { unitCents } from "@/lib/cart/price";
 import { computeTotals, type PricedLine } from "@/lib/cart/totals";
@@ -86,25 +87,24 @@ export function CartDrawer({ open, onClose, lastAdded }: Props) {
   const { product, ring, qty } = lastAdded;
   const addedKey = lineKey({ productId: product.id, ring });
 
-  // Only this page's product is loaded: any other line has an unknown price, so the subtotal is too.
+  // The product of this page is known at once; the others come from the shared cart price query.
+  const { priced } = useCartPrices();
   const rows = lines.map((l) => {
-    const known = l.productId === product.id;
-    const unit = known ? unitCents(product, l.ring) : null;
-    return { line: l, known, lineCents: unit === null ? null : unit * l.qty, unit };
+    const other = priced.find((p) => lineKey(p) === lineKey(l));
+    const known = l.productId === product.id ? product : (other?.product ?? null);
+    const unit = known ? unitCents(known, l.ring) : null;
+    return { line: l, product: known, lineCents: unit === null ? null : unit * l.qty, unit };
   });
-  const allKnown = rows.every((r) => r.known);
-  const priced: PricedLine[] = rows.map((r) => ({
-    ...r.line,
-    product,
-    unitCents: r.unit,
-    lineCents: r.lineCents,
-  }));
-  const subtotal = allKnown ? computeTotals(priced, 0, 0).subtotalCents : null;
+  const allKnown = rows.every((r) => r.product !== null);
+  const pricedLines: PricedLine[] = rows.flatMap((r) =>
+    r.product ? [{ ...r.line, product: r.product, unitCents: r.unit, lineCents: r.lineCents }] : [],
+  );
+  const subtotal = allKnown ? computeTotals(pricedLines, 0, 0).subtotalCents : null;
 
   const body = (
     <div className={cn("flex min-h-full flex-col gap-4", !armed && "pointer-events-none")}>
       <ul aria-label="Itens no carrinho" className="m-0 flex list-none flex-col gap-3 p-0">
-        {rows.map(({ line, known, lineCents }) => {
+        {rows.map(({ line, product: lineProduct, lineCents }) => {
           const highlight = lineKey(line) === addedKey;
           return (
             <li
@@ -114,10 +114,10 @@ export function CartDrawer({ open, onClose, lastAdded }: Props) {
                 highlight ? "border-accent bg-surface-2" : "border-border",
               )}
             >
-              <Thumb product={known ? product : null} highlight={highlight} />
+              <Thumb product={lineProduct} highlight={highlight} />
               <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                 <span className="font-pixel text-[9px] leading-normal break-words md:text-[10px]">
-                  {known ? product.name : `[${line.productId}]`}
+                  {lineProduct ? lineProduct.name : `[${line.productId}]`}
                 </span>
                 <span className="text-xs text-text-muted">
                   Argola: {RING_NAME[line.ring]} · <span>×{line.qty}</span>
