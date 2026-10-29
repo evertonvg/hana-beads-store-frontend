@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { focusRing } from "@/components/ui/focus";
 import { PixelGrid } from "@/components/pixel/PixelGrid";
 import { cn } from "@/lib/cn";
@@ -7,6 +8,17 @@ import { CartLink } from "./CartLink";
 import { MobileHeader } from "./MobileHeader";
 
 export type HeaderSession = { name: string } | null;
+
+const accountLink = (signedIn: boolean) => (
+  <Link href={signedIn ? "/conta" : "/entrar"} className={navLink}>
+    {signedIn ? "MINHA CONTA" : "ENTRAR"}
+  </Link>
+);
+
+/** Account link of the desktop nav: waits for the session, so it sits inside Suspense. */
+async function AccountLink({ session }: { session: Promise<HeaderSession> }) {
+  return accountLink((await session) !== null);
+}
 
 const LOGO_ROWS = ["aya", "yty", "aya"];
 const LOGO_PALETTE = {
@@ -17,8 +29,12 @@ const LOGO_PALETTE = {
 
 const navLink = cn("inline-flex min-h-11 items-center", focusRing);
 
-/** Site header: desktop bar from `md`, compact bar with menu button below it. */
-export function Header({ session }: { session: HeaderSession }) {
+/**
+ * Site header: desktop bar from `md`, compact bar with menu button below it.
+ * `session` is a promise on purpose: the static shell shows the signed-out state and only the
+ * account bits wait for it (cookies are request-time data).
+ */
+export function Header({ session }: { session: Promise<HeaderSession> }) {
   const channel = getContact();
   return (
     <>
@@ -45,15 +61,9 @@ export function Header({ session }: { session: HeaderSession }) {
             <Link href="/#sobre" className={navLink}>
               SOBRE
             </Link>
-            {session ? (
-              <Link href="/conta" className={navLink}>
-                MINHA CONTA
-              </Link>
-            ) : (
-              <Link href="/entrar" className={navLink}>
-                ENTRAR
-              </Link>
-            )}
+            <Suspense fallback={accountLink(false)}>
+              <AccountLink session={session} />
+            </Suspense>
           </nav>
           <CartLink variant="desktop" />
         </div>

@@ -2,6 +2,7 @@ import "server-only";
 
 import { env } from "@/lib/env";
 
+import { createMockAuth } from "./mock/auth";
 import { createMockCatalog } from "./mock/catalog";
 import { createMockCoupons } from "./mock/coupons";
 import { createMockEngagement } from "./mock/engagement";
@@ -21,6 +22,7 @@ export function getData(): Ports {
     engagement: createMockEngagement(),
     shipping: createMockShipping(),
     coupons: createMockCoupons(),
+    auth: createMockAuth(),
   };
   return ports;
 }

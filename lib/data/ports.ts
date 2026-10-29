@@ -1,3 +1,4 @@
+import type { CartData } from "@/lib/cart/types";
 import type { Product } from "@/lib/data/types";
 import type { ShopQuery } from "@/lib/shop-query";
 
@@ -61,11 +62,40 @@ export interface CouponPort {
   validate(code: string, subtotalCents: number | null): Promise<CouponResult>;
 }
 
+export type AuthUser = { id: string; name: string; email: string };
+
+export type SignUpInput = {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  acceptTerms: true;
+  marketingEmail: boolean;
+  /** Version of the Terms/Privacy text the user accepted. */
+  termsVersion: string;
+};
+
+export type AuthProvider = "google" | "facebook" | "apple";
+
+export interface AuthPort {
+  /** null = wrong e-mail or password (the caller must not tell which). */
+  signIn(email: string, password: string): Promise<AuthUser | null>;
+  signUp(i: SignUpInput): Promise<AuthUser | { error: "email_em_uso" }>;
+  signInWithProvider(p: AuthProvider): Promise<AuthUser>;
+  /** Resolves the same way whether or not the e-mail has an account. */
+  requestPasswordReset(email: string): Promise<void>;
+  /** Turns a session cookie into a user; null if the account is gone. */
+  userById(id: string): Promise<AuthUser | null>;
+  savedCart(userId: string): Promise<CartData | null>;
+  saveCart(userId: string, cart: CartData): Promise<void>;
+}
+
 export type Ports = {
   catalog: CatalogPort;
   newsletter: NewsletterPort;
   engagement: EngagementPort;
   shipping: ShippingPort;
   coupons: CouponPort;
+  auth: AuthPort;
   // other ports are added by the tasks that use them
 };

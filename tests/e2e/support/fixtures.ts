@@ -1,11 +1,12 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test as base, type Page } from "@playwright/test";
+import { gotoHydrated } from "./hydration";
 
 type FixtureUser = "ana" | "bruno";
 
-/** Signs in through the /entrar form with a fixture user. */
+/** Signs in through the /entrar form with a fixture user (waits for hydration so the click submits via React). */
 async function login(page: Page, user: FixtureUser = "ana") {
-  await page.goto("/entrar");
+  await gotoHydrated(page, "/entrar");
   await page.getByLabel("E-mail").fill(`${user}@teste.dev`);
   await page.getByLabel("Senha").fill("Senha@123");
   await page.getByRole("button", { name: "ENTRAR" }).click();

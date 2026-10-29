@@ -22,6 +22,8 @@ type Props = {
   hint?: string;
   /** Keeps the label for assistive tech but hides it visually. */
   hideLabel?: boolean;
+  /** Body-text label (14px mono) instead of the small pixel-font one. */
+  plainLabel?: boolean;
   children: ReactNode;
 };
 
@@ -29,10 +31,18 @@ type Props = {
  * Label + control + hint/error. Headless UI wires `id`, `for` and `aria-describedby`
  * between the label, the description(s) and the control placed in `children`.
  */
-export function Field({ label, error, hint, hideLabel, children }: Props) {
+export function Field({ label, error, hint, hideLabel, plainLabel, children }: Props) {
   return (
     <HeadlessField className="flex flex-col gap-2">
-      <Label className={hideLabel ? "sr-only" : "font-pixel text-[10px] text-text-muted"}>
+      <Label
+        className={
+          hideLabel
+            ? "sr-only"
+            : plainLabel
+              ? "text-sm text-text"
+              : "font-pixel text-[10px] text-text-muted"
+        }
+      >
         {label}
       </Label>
       <FieldStateContext value={{ invalid: Boolean(error) }}>{children}</FieldStateContext>

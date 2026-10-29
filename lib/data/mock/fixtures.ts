@@ -1,4 +1,36 @@
+import type { CartData } from "@/lib/cart/types";
 import type { BeadArtSpec, Product } from "@/lib/data/types";
+
+/** Mock accounts. Plain-text passwords exist only because this is an in-memory mock. */
+export type MockUser = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+};
+
+export const userFixtures: readonly MockUser[] = [
+  {
+    id: "ana",
+    name: "Ana Souza",
+    email: "ana@teste.dev",
+    phone: "(11) 91234-5678",
+    password: "Senha@123",
+  },
+  {
+    id: "bruno",
+    name: "Bruno Lima",
+    email: "bruno@teste.dev",
+    phone: "(21) 98765-4321",
+    password: "Senha@123",
+  },
+];
+
+/** Ana already has one item saved on the server (merge-at-login scenario). */
+export const savedCartFixtures: Record<string, CartData> = {
+  ana: { lines: [{ productId: "e13", ring: "mosquetao", qty: 1 }] },
+};
 
 // Masks and palettes copied from docs/design/desktop/Loja.dc.html.
 const MASKS = {

@@ -9,7 +9,7 @@ import { CartLink } from "./CartLink";
 import { MobileMenu, type MobileMenuContact } from "./MobileMenu";
 
 type Props = {
-  session: { name: string } | null;
+  session: Promise<{ name: string } | null>;
   contact: MobileMenuContact;
 };
 
