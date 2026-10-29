@@ -213,6 +213,31 @@ test.describe("entrar", () => {
     expect(JSON.parse(stored ?? "{}")).toMatchObject({ state: { owner: "ana" } });
   });
 
+  test("item adicionado logado fica salvo: sessão perdida, storage limpo, novo login traz tudo sem dobrar", async ({
+    page,
+    context,
+    isMobile,
+  }) => {
+    await login(page);
+    await expect(page).toHaveURL(/\/conta$/);
+    await expect(cartLink(page, isMobile, 1)).toBeVisible();
+    await gotoHydrated(page, "/produto/garota-pixel");
+    await page.getByRole("button", { name: "+ PEGAR ITEM" }).click();
+    await expect(cartLink(page, isMobile, 2)).toBeVisible();
+    // The save is debounced (600 ms) and other actions (cart pricing) also post the lines, so there
+    // is no single request to wait for: let the timer and the action finish.
+    // eslint-disable-next-line playwright/no-wait-for-timeout -- fixed debounce window
+    await page.waitForTimeout(2000);
+    await context.clearCookies({ name: "pp_session" });
+    await page.evaluate(() => localStorage.clear());
+    await login(page);
+    await expect(page).toHaveURL(/\/conta$/);
+    await expect(cartLink(page, isMobile, 2)).toBeVisible();
+    await context.clearCookies({ name: "pp_session" });
+    await login(page);
+    await expect(cartLink(page, isMobile, 2)).toBeVisible();
+  });
+
   test("passa na acessibilidade e nos alvos de toque", async ({ page }) => {
     await gotoHydrated(page, "/entrar");
     await expectA11y(page);

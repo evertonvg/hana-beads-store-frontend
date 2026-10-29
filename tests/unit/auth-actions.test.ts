@@ -1,15 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { createSession, getSession } = vi.hoisted(() => ({
+const { createSession, getSession, destroySession } = vi.hoisted(() => ({
   createSession: vi.fn(),
   getSession: vi.fn(),
+  destroySession: vi.fn(),
 }));
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/lib/session", () => ({ createSession, getSession, destroySession: vi.fn() }));
+vi.mock("@/lib/session", () => ({ createSession, getSession, destroySession }));
 
 import {
   loginAction,
+  logoutAction,
+  saveCartAction,
   recoverAction,
   signupAction,
   socialAction,
@@ -151,11 +154,43 @@ describe("syncCartAction", () => {
     expect(getMockStore().savedCarts.ana).toEqual({ lines });
   });
 
-  it("does not double the lines when the same user logs in again", async () => {
+  it("keeps the local lines (edits made while signed in) when the same user logs in again", async () => {
     getSession.mockResolvedValue(ana);
-    const again = await syncCartAction([{ productId: "e13", ring: "mosquetao", qty: 1 }], "ana");
-    const lines = [{ productId: "e13", ring: "mosquetao", qty: 1 }];
+    const lines = [
+      { productId: "e13", ring: "mosquetao", qty: 1 },
+      { productId: "garota", ring: "estrela", qty: 2 },
+    ];
+    const again = await syncCartAction(lines, "ana");
     expect(again).toEqual({ lines, owner: "ana" });
     expect(getMockStore().savedCarts.ana).toEqual({ lines });
+  });
+});
+
+describe("saveCartAction", () => {
+  it("is a no-op without a session", async () => {
+    await saveCartAction([{ productId: "e13", ring: "mosquetao", qty: 5 }]);
+    expect(getMockStore().savedCarts.ana).toEqual({
+      lines: [{ productId: "e13", ring: "mosquetao", qty: 1 }],
+    });
+  });
+
+  it("saves under the session user, sanitized, and drops unknown products", async () => {
+    getSession.mockResolvedValue(ana);
+    await saveCartAction([
+      { productId: "e13", ring: "mosquetao", qty: 500 },
+      { productId: "nao-existe", ring: "estrela", qty: 1 },
+      { bad: true },
+    ]);
+    expect(getMockStore().savedCarts.ana).toEqual({
+      lines: [{ productId: "e13", ring: "mosquetao", qty: 99 }],
+    });
+    expect(Object.keys(getMockStore().savedCarts)).toEqual(["ana"]);
+  });
+});
+
+describe("logoutAction", () => {
+  it("destroys the session", async () => {
+    await logoutAction();
+    expect(destroySession).toHaveBeenCalledOnce();
   });
 });

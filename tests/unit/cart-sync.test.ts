@@ -21,7 +21,7 @@ describe("planCartSync", () => {
     expect(planCartSync(local, "bruno", "ana", saved).lines[0]?.qty).toBe(2);
   });
 
-  it("takes the saved cart as is when the same user logs in again (no doubling)", () => {
-    expect(planCartSync(local, "ana", "ana", saved)).toEqual(saved);
+  it("keeps the local cart as is when the same user logs in again (no doubling, edits kept)", () => {
+    expect(planCartSync(local, "ana", "ana", saved)).toEqual(local);
   });
 });

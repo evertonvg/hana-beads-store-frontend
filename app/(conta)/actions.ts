@@ -117,10 +117,18 @@ export async function recoverAction(input: unknown): Promise<FormState> {
   return { status: "ok", message: RECOVER_SENT };
 }
 
+/** Drops lines whose product no longer exists in the catalog. */
+async function knownLines(lines: CartData["lines"]): Promise<CartData> {
+  const ids = [...new Set(lines.map((l) => l.productId))];
+  const known = new Set((await getData().catalog.byIds(ids)).map((p) => p.id));
+  return { lines: lines.filter((l) => known.has(l.productId)) };
+}
+
 /**
  * Right after sign-in: reconciles the local cart with the one saved on the server (`planCartSync`:
- * summed for a guest cart or another user's, the saved one when `owner` is this same user), saves
- * the result and returns it, with the user id to mark as owner, so the client can replace its store. Null without a session.
+ * summed for a guest cart or another user's, the local one when `owner` is this same user), saves
+ * the result and returns it, with the user id to mark as owner, so the client can replace its
+ * store. Null without a session.
  */
 export async function syncCartAction(
   lines: unknown,
@@ -128,15 +136,23 @@ export async function syncCartAction(
 ): Promise<(CartData & { owner: string }) | null> {
   const session = await getSession();
   if (!session) return null;
-  const { auth, catalog } = getData();
-  const guest = sanitizeCart({ lines });
+  const { auth } = getData();
+  const local = sanitizeCart({ lines });
   const saved = (await auth.savedCart(session.id)) ?? { lines: [] };
-  const merged = planCartSync(guest, typeof owner === "string" ? owner : null, session.id, saved);
-  const ids = [...new Set(merged.lines.map((l) => l.productId))];
-  const known = new Set((await catalog.byIds(ids)).map((p) => p.id));
-  const result: CartData = { lines: merged.lines.filter((l) => known.has(l.productId)) };
+  const planned = planCartSync(local, typeof owner === "string" ? owner : null, session.id, saved);
+  const result = await knownLines(planned.lines);
   await auth.saveCart(session.id, result);
   return { ...result, owner: session.id };
+}
+
+/**
+ * Saves the cart edits made while signed in. The user comes only from the session (never from the
+ * client); without a session the call does nothing.
+ */
+export async function saveCartAction(lines: unknown): Promise<void> {
+  const session = await getSession();
+  if (!session) return;
+  await getData().auth.saveCart(session.id, await knownLines(sanitizeCart({ lines }).lines));
 }
 
 /** Sign-out: ends the session. The client also releases its cart (`useCartStore.release`). */

@@ -5,6 +5,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { lazy, Suspense, useState, type ReactNode } from "react";
 import { Toaster } from "sonner";
 import { CartHydrator } from "@/components/cart/CartHydrator";
+import { CartSaver } from "@/components/cart/CartSaver";
 import { toastOptions } from "@/components/ui/toast";
 
 // Devtools is a devDependency: the import must be dead code in production builds, so the
@@ -26,6 +27,7 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <CartHydrator />
+      <CartSaver />
       <NuqsAdapter>{children}</NuqsAdapter>
       <Toaster toastOptions={toastOptions} />
       {Devtools && (
