@@ -5,19 +5,26 @@ import { syncCartAction } from "@/app/(conta)/actions";
 import { useCartStore } from "@/lib/cart/store";
 
 /**
- * After a successful sign-in/sign-up: sends the guest cart to the server, which merges it with the
- * saved one; the merged cart replaces the local one and then the user is taken to `redirectTo`
- * (already sanitized by the action). A failed sync keeps the local cart and still navigates.
+ * After a successful sign-in/sign-up: sends the local cart and its owner to the server, which
+ * reconciles it with the saved one; the result replaces the local cart, which is marked as this
+ * user's, and then the user is taken to `redirectTo` (already sanitized by the action). A failed
+ * sync keeps the local cart and still navigates.
  */
 export function useFinishAuth() {
   const router = useRouter();
   return async (redirectTo: string) => {
     try {
-      const merged = await syncCartAction(useCartStore.getState().lines);
-      if (merged) useCartStore.getState().replace(merged);
+      const { lines, owner } = useCartStore.getState();
+      const synced = await syncCartAction(lines, owner);
+      if (synced) {
+        useCartStore.getState().replace({ lines: synced.lines });
+        useCartStore.getState().setOwner(synced.owner);
+      }
     } catch {
-      // Offline or server error: the guest cart stays as it is.
+      // Offline or server error: the local cart stays as it is.
     }
+    // The session cookie just changed: push goes to the page, refresh re-reads the layout (header).
     router.push(redirectTo);
+    router.refresh();
   };
 }

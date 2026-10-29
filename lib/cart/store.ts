@@ -4,6 +4,8 @@ import { sanitizeCart } from "./merge";
 import { clampQty, lineKey, type CartData, type CartLine } from "./types";
 
 export type CartStore = CartData & {
+  /** User id the lines were last synced with; null = guest cart. */
+  owner: string | null;
   lastRemoved: { line: CartLine; index: number } | null;
   count(): number;
   add(line: CartLine): void;
@@ -12,6 +14,9 @@ export type CartStore = CartData & {
   undo(): void;
   clear(): void;
   replace(d: CartData): void;
+  setOwner(owner: string | null): void;
+  /** Sign-out: forgets the owner and empties the cart so the next person on the device starts clean. */
+  release(): void;
   pruneUnknown(ids: string[]): void;
 };
 
@@ -61,10 +66,17 @@ const safeStorage: StateStorage = {
   },
 };
 
+/** Untrusted stored value: anything but a non-empty string is "no owner". */
+function ownerOf(raw: unknown): string | null {
+  const owner = typeof raw === "object" && raw !== null ? (raw as { owner?: unknown }).owner : null;
+  return typeof owner === "string" && owner !== "" ? owner : null;
+}
+
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       lines: [],
+      owner: null,
       lastRemoved: null,
       count: () => get().lines.reduce((n, l) => n + l.qty, 0),
       add: (line) =>
@@ -101,19 +113,22 @@ export const useCartStore = create<CartStore>()(
         }),
       clear: () => set({ lines: [], lastRemoved: null }),
       replace: (d) => set({ lines: sanitizeCart(d).lines, lastRemoved: null }),
+      setOwner: (owner) => set({ owner }),
+      release: () => set({ owner: null, lines: [], lastRemoved: null }),
       pruneUnknown: (ids) =>
         set((s) => ({ lines: s.lines.filter((l) => ids.includes(l.productId)) })),
     }),
     {
       name: CART_STORAGE_KEY,
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => safeStorage),
-      partialize: (s) => ({ lines: s.lines }),
-      migrate: (old) => sanitizeCart(old),
+      partialize: (s) => ({ lines: s.lines, owner: s.owner }),
+      // v1 had no owner: its cart counts as a guest cart.
+      migrate: (old) => ({ ...sanitizeCart(old), owner: ownerOf(old) }),
       merge: (persisted, current) =>
         persisted === undefined && (readFailed || writeFailed)
           ? current
-          : { ...current, ...sanitizeCart(persisted) },
+          : { ...current, ...sanitizeCart(persisted), owner: ownerOf(persisted) },
       skipHydration: true,
     },
   ),

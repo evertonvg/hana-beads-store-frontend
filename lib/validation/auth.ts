@@ -30,30 +30,36 @@ export const loginSchema = z.object({
 
 export const recoverSchema = z.object({ email: emailField });
 
-export const signupSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, { error: "Informe seu nome completo." })
-    .max(100, { error: "Nome muito longo." }),
-  email: emailField,
-  phone: z
-    .string()
-    .trim()
-    .refine((v) => [10, 11].includes(v.replace(/\D/g, "").length), {
-      error: "Informe o celular com DDD.",
-    }),
-  password: z
-    .string()
-    .max(200)
-    .refine((p) => passwordRules.every((r) => r.test(p)), {
-      error: "A senha precisa cumprir todas as regras.",
-    }),
-  acceptTerms: z
-    .boolean({ error: "Aceite os Termos e a Política para continuar." })
-    .refine((v): v is true => v, { error: "Aceite os Termos e a Política para continuar." }),
-  marketingEmail: z.boolean(),
-});
+export const signupSchema = z
+  .object({
+    name: z
+      .string()
+      .trim()
+      .min(2, { error: "Informe seu nome completo." })
+      .max(100, { error: "Nome muito longo." }),
+    email: emailField,
+    phone: z
+      .string()
+      .trim()
+      .refine((v) => [10, 11].includes(v.replace(/\D/g, "").length), {
+        error: "Informe o celular com DDD.",
+      }),
+    password: z
+      .string()
+      .max(200)
+      .refine((p) => passwordRules.every((r) => r.test(p)), {
+        error: "A senha precisa cumprir todas as regras.",
+      }),
+    confirmPassword: z.string().max(200),
+    acceptTerms: z
+      .boolean({ error: "Aceite os Termos e a Política para continuar." })
+      .refine((v): v is true => v, { error: "Aceite os Termos e a Política para continuar." }),
+    marketingEmail: z.boolean(),
+  })
+  .refine((v) => v.password === v.confirmPassword, {
+    path: ["confirmPassword"],
+    error: "As senhas não conferem.",
+  });
 
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RecoverInput = z.infer<typeof recoverSchema>;

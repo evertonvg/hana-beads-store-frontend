@@ -21,7 +21,7 @@ import { useFinishAuth } from "./use-finish-auth";
 type SignupFormInput = z.input<typeof signupSchema>;
 
 const GENERIC_ERROR = "Não foi possível agora. Tente de novo.";
-const FIELDS = ["name", "email", "phone", "password", "acceptTerms"] as const;
+const FIELDS = ["name", "email", "phone", "password", "confirmPassword", "acceptTerms"] as const;
 
 type Props = { next: string; authApple: boolean; className?: string };
 
@@ -45,6 +45,7 @@ export function SignupForm({ next, authApple, className }: Props) {
       email: "",
       phone: "",
       password: "",
+      confirmPassword: "",
       acceptTerms: false,
       marketingEmail: false,
     },
@@ -135,14 +136,24 @@ export function SignupForm({ next, authApple, className }: Props) {
           )}
         />
       </Field>
-      <Field label="Senha" plainLabel error={errors.password?.message}>
-        <TextInput
-          type="password"
-          autoComplete="new-password"
-          className={authInput}
-          {...register("password")}
-        />
-      </Field>
+      <div className="grid gap-4 sm:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] md:gap-5">
+        <Field label="Senha" plainLabel error={errors.password?.message}>
+          <TextInput
+            type="password"
+            autoComplete="new-password"
+            className={authInput}
+            {...register("password")}
+          />
+        </Field>
+        <Field label="Confirmar senha" plainLabel error={errors.confirmPassword?.message}>
+          <TextInput
+            type="password"
+            autoComplete="new-password"
+            className={authInput}
+            {...register("confirmPassword")}
+          />
+        </Field>
+      </div>
       <PasswordRules password={password} />
 
       <div className="flex flex-col gap-3 border-t-[3px] border-dashed border-border pt-4 md:pt-5">

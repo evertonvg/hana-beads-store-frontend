@@ -32,7 +32,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   // Not awaited here: only the small account bits inside Suspense wait for it, so the header
   // itself stays in the static shell and hydrates with the page.
-  const session = getSession().then((user) => (user ? { name: user.name } : null));
+  // A failed lookup counts as signed out: a rejection would break every page that reads it.
+  const session = getSession()
+    .then((user) => (user ? { name: user.name } : null))
+    .catch(() => null);
   return (
     <html lang="pt-BR" className={`${pixel.variable} ${mono.variable}`}>
       <body className="flex min-h-screen flex-col">

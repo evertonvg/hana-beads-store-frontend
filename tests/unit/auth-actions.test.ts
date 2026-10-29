@@ -29,6 +29,7 @@ const signup = (over: object = {}) => ({
   email: "nova@teste.dev",
   phone: "(11) 91234-5678",
   password: "Senha@123",
+  confirmPassword: "Senha@123",
   acceptTerms: true,
   marketingEmail: false,
   ...over,
@@ -92,6 +93,8 @@ describe("signupAction", () => {
     const weak = await signupAction(signup({ password: "abc" }));
     expect(weak.status).toBe("error");
     expect(weak.fieldErrors).toHaveProperty("password");
+    const mismatch = await signupAction(signup({ confirmPassword: "Outra@1234" }));
+    expect(mismatch.fieldErrors).toEqual({ confirmPassword: "As senhas não conferem." });
     const terms = await signupAction(signup({ acceptTerms: false }));
     expect(terms.fieldErrors).toHaveProperty("acceptTerms");
     expect(createSession).not.toHaveBeenCalled();
@@ -126,23 +129,33 @@ describe("socialAction", () => {
 
 describe("syncCartAction", () => {
   it("needs a session", async () => {
-    expect(await syncCartAction([])).toBeNull();
+    expect(await syncCartAction([], null)).toBeNull();
   });
 
   it("merges the local cart with the saved one, drops unknown products and saves", async () => {
     getSession.mockResolvedValue(ana);
-    const merged = await syncCartAction([
-      { productId: "garota", ring: "mosquetao", qty: 1 },
-      { productId: "e13", ring: "mosquetao", qty: 2 },
-      { productId: "nao-existe", ring: "estrela", qty: 1 },
-      { bad: true },
-    ]);
-    expect(merged).toEqual({
-      lines: [
-        { productId: "e13", ring: "mosquetao", qty: 3 },
+    const merged = await syncCartAction(
+      [
         { productId: "garota", ring: "mosquetao", qty: 1 },
+        { productId: "e13", ring: "mosquetao", qty: 2 },
+        { productId: "nao-existe", ring: "estrela", qty: 1 },
+        { bad: true },
       ],
-    });
-    expect(getMockStore().savedCarts.ana).toEqual(merged);
+      null,
+    );
+    const lines = [
+      { productId: "e13", ring: "mosquetao", qty: 3 },
+      { productId: "garota", ring: "mosquetao", qty: 1 },
+    ];
+    expect(merged).toEqual({ lines, owner: "ana" });
+    expect(getMockStore().savedCarts.ana).toEqual({ lines });
+  });
+
+  it("does not double the lines when the same user logs in again", async () => {
+    getSession.mockResolvedValue(ana);
+    const again = await syncCartAction([{ productId: "e13", ring: "mosquetao", qty: 1 }], "ana");
+    const lines = [{ productId: "e13", ring: "mosquetao", qty: 1 }];
+    expect(again).toEqual({ lines, owner: "ana" });
+    expect(getMockStore().savedCarts.ana).toEqual({ lines });
   });
 });

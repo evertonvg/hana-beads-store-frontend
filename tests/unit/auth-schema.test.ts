@@ -16,6 +16,7 @@ const validSignup = {
   email: "nova@teste.dev",
   phone: "(11) 91234-5678",
   password: "Senha@123",
+  confirmPassword: "Senha@123",
   acceptTerms: true,
   marketingEmail: false,
 };
@@ -53,6 +54,14 @@ describe("signupSchema", () => {
     const out = signupSchema.parse({ ...validSignup, name: "  Ana Souza ", email: " a@b.co " });
     expect(out.name).toBe("Ana Souza");
     expect(out.email).toBe("a@b.co");
+  });
+
+  it("requires the confirmation to match the password", () => {
+    const r = signupSchema.safeParse({ ...validSignup, confirmPassword: "Outra@1234" });
+    expect(r.success).toBe(false);
+    expect(r.error?.issues).toEqual([
+      expect.objectContaining({ path: ["confirmPassword"], message: "As senhas não conferem." }),
+    ]);
   });
 
   it("requires the terms to be accepted", () => {

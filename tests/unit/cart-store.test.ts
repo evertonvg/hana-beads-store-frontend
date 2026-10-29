@@ -142,3 +142,30 @@ describe("cart store persistence wiring", () => {
     expect(useCartStore.getState().lines).toEqual([a, b]);
   });
 });
+
+describe("cart owner", () => {
+  it("starts without an owner and setOwner/release work", () => {
+    useCartStore.setState({ owner: null, lines: [a] });
+    useCartStore.getState().setOwner("ana");
+    expect(useCartStore.getState().owner).toBe("ana");
+    useCartStore.getState().release();
+    expect(useCartStore.getState().owner).toBeNull();
+    expect(useCartStore.getState().lines).toEqual([]);
+  });
+
+  it("persists the owner and migrates v1 data to no owner", async () => {
+    const raw = (version: number, owner?: unknown) =>
+      JSON.stringify({ state: { lines: [a], owner }, version });
+    vi.stubGlobal("localStorage", fakeStorage({ pp_cart_v1: raw(2, "ana") }));
+    await useCartStore.persist.rehydrate();
+    expect(useCartStore.getState().owner).toBe("ana");
+    vi.stubGlobal("localStorage", fakeStorage({ pp_cart_v1: raw(1) }));
+    await useCartStore.persist.rehydrate();
+    expect(useCartStore.getState().owner).toBeNull();
+    expect(useCartStore.getState().lines).toEqual([a]);
+    vi.stubGlobal("localStorage", fakeStorage({ pp_cart_v1: raw(2, 42) }));
+    await useCartStore.persist.rehydrate();
+    expect(useCartStore.getState().owner).toBeNull();
+    vi.unstubAllGlobals();
+  });
+});

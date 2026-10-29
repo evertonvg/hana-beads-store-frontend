@@ -28,11 +28,15 @@ async function expectSignedInHeader(page: Page, isMobile: boolean) {
   }
 }
 
-async function fillSignup(page: Page, over: { email?: string; password?: string } = {}) {
+async function fillSignup(
+  page: Page,
+  over: { email?: string; password?: string; confirm?: string } = {},
+) {
   await page.getByLabel("Nome completo").fill("Nova Pessoa");
   await page.getByLabel("E-mail", { exact: true }).fill(over.email ?? "nova@teste.dev");
   await page.getByLabel("Celular").fill("11912345678");
   await password(page).fill(over.password ?? "Senha@123");
+  await page.getByLabel("Confirmar senha").fill(over.confirm ?? over.password ?? "Senha@123");
 }
 
 const terms = (page: Page) => page.getByRole("checkbox", { name: /Li e concordo/ });
@@ -93,12 +97,23 @@ test.describe("entrar", () => {
     await expect(page).toHaveURL(/\/entrar\?next=%2Fconta$/);
   });
 
-  test("o login volta para o next relativo", async ({ page }) => {
+  test("o login volta para o next relativo e o cabeçalho atualiza sem recarregar", async ({
+    page,
+    isMobile,
+  }) => {
     await gotoHydrated(page, "/entrar?next=%2Floja");
     await page.getByLabel("E-mail", { exact: true }).fill("ana@teste.dev");
     await password(page).fill("Senha@123");
     await submitLogin(page).click();
     await expect(page).toHaveURL(/\/loja$/);
+    await expectSignedInHeader(page, isMobile);
+  });
+
+  test("o login social também atualiza o cabeçalho sem recarregar", async ({ page, isMobile }) => {
+    await gotoHydrated(page, "/entrar?next=%2Floja");
+    await page.getByRole("button", { name: "Continuar com Google" }).click();
+    await expect(page).toHaveURL(/\/loja$/);
+    await expectSignedInHeader(page, isMobile);
   });
 
   for (const evil of ["//evil.com", "/\\evil.com", "https://evil.com", "/%2F%2Fevil.com"]) {
@@ -170,6 +185,32 @@ test.describe("entrar", () => {
     const parsed = JSON.parse(stored ?? "{}") as { state: { lines: { productId: string }[] } };
     const ids = parsed.state.lines.map((l) => l.productId);
     expect(ids.sort()).toEqual(["e13", "garota"]);
+  });
+
+  test("entrar de novo com o mesmo usuário não dobra o carrinho", async ({
+    page,
+    context,
+    isMobile,
+  }) => {
+    await page.addInitScript(
+      ([key, value]) => localStorage.getItem(key) ?? localStorage.setItem(key, value),
+      [
+        CART_KEY,
+        JSON.stringify({
+          state: { lines: [{ productId: "garota", ring: "mosquetao", qty: 1 }] },
+          version: 1,
+        }),
+      ] as [string, string],
+    );
+    await login(page);
+    await expect(page).toHaveURL(/\/conta$/);
+    await expect(cartLink(page, isMobile, 2)).toBeVisible();
+    await context.clearCookies({ name: "pp_session" });
+    await login(page);
+    await expect(page).toHaveURL(/\/conta$/);
+    await expect(cartLink(page, isMobile, 2)).toBeVisible();
+    const stored = await page.evaluate((key) => localStorage.getItem(key), CART_KEY);
+    expect(JSON.parse(stored ?? "{}")).toMatchObject({ state: { owner: "ana" } });
   });
 
   test("passa na acessibilidade e nos alvos de toque", async ({ page }) => {
@@ -260,6 +301,15 @@ test.describe("cadastro", () => {
     await expect(page).toHaveURL(/\/cadastro$/);
     await password(page).fill("Senha@123");
     await expect(unmet).toHaveCount(0);
+  });
+
+  test("confirmação diferente da senha mostra erro e bloqueia o envio", async ({ page }) => {
+    await gotoHydrated(page, "/cadastro");
+    await fillSignup(page, { confirm: "Outra@1234" });
+    await terms(page).click();
+    await submitSignup(page).click();
+    await expect(page.getByText("As senhas não conferem.")).toBeVisible();
+    await expect(page).toHaveURL(/\/cadastro$/);
   });
 
   test("e-mail da ana mostra E-mail já cadastrado", async ({ page }) => {

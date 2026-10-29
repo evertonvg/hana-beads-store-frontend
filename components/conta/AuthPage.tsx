@@ -29,6 +29,8 @@ async function Screen({
   const mode: AuthMode = first(params.modo) === "recuperar" ? "recuperar" : "entrar";
   return (
     <AuthScreen
+      // Same-route query changes (?aba=, ?modo=) must reset the tab and mode kept in state.
+      key={`${tab}:${mode}`}
       initialTab={tab}
       initialMode={mode}
       next={safeNext(first(params.next))}
