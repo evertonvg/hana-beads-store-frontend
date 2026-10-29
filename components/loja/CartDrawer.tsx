@@ -9,7 +9,9 @@ import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Drawer } from "@/components/ui/Drawer";
 import { Button, buttonVariants } from "@/components/ui/Button";
 import { useCartStore } from "@/lib/cart/store";
+import { unitCents } from "@/lib/cart/price";
 import { computeTotals, type PricedLine } from "@/lib/cart/totals";
+import { lineKey } from "@/lib/cart/types";
 import type { Product, RingOption } from "@/lib/data/types";
 import { formatTotal } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -20,16 +22,15 @@ export type LastAdded = { product: Product; ring: RingOption; qty: number };
 
 type Props = { open: boolean; onClose: () => void; lastAdded: LastAdded };
 
-function unitCents(product: Product, ring: RingOption): number | null {
-  if (product.priceCents === null) return null;
-  const delta = product.options.find((o) => o.value === ring)?.priceDeltaCents ?? 0;
-  return product.priceCents + delta;
-}
-
-function Thumb({ product }: { product: Product }) {
-  const photo = product.images[0];
+function Thumb({ product, highlight }: { product: Product | null; highlight: boolean }) {
+  const photo = product?.images[0];
   return (
-    <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden border-2 border-text bg-deep md:size-[72px]">
+    <div
+      className={cn(
+        "flex size-16 shrink-0 items-center justify-center overflow-hidden border-2 bg-deep md:size-[72px]",
+        highlight ? "border-text" : "border-border",
+      )}
+    >
       {photo ? (
         <Image
           src={photo.url}
@@ -38,7 +39,7 @@ function Thumb({ product }: { product: Product }) {
           height={72}
           className="size-full object-cover"
         />
-      ) : product.art ? (
+      ) : product?.art ? (
         <BeadArt
           rows={product.art.rows}
           palette={product.art.palette}
@@ -68,7 +69,7 @@ export function CartDrawer({ open, onClose, lastAdded }: Props) {
       setArmed(true);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") armedRef.current = true;
+      if (e.key === "Escape") arm();
     };
     const t = setTimeout(arm, ARM_DELAY_MS);
     window.addEventListener("keydown", onKey, true);
@@ -83,36 +84,50 @@ export function CartDrawer({ open, onClose, lastAdded }: Props) {
   const lines = useCartStore((s) => s.lines);
   const itemCount = useCartStore((s) => s.count());
   const { product, ring, qty } = lastAdded;
+  const addedKey = lineKey({ productId: product.id, ring });
 
-  // Only this page's product is loaded: with any other line the subtotal is unknown.
-  const onlyThisProduct = lines.every((l) => l.productId === product.id);
-  const priced: PricedLine[] = onlyThisProduct
-    ? lines.map((l) => {
-        const unit = unitCents(product, l.ring);
-        return {
-          ...l,
-          product,
-          unitCents: unit,
-          lineCents: unit === null ? null : unit * l.qty,
-        };
-      })
-    : [];
-  const subtotal = onlyThisProduct ? computeTotals(priced, 0, 0).subtotalCents : null;
+  // Only this page's product is loaded: any other line has an unknown price, so the subtotal is too.
+  const rows = lines.map((l) => {
+    const known = l.productId === product.id;
+    const unit = known ? unitCents(product, l.ring) : null;
+    return { line: l, known, lineCents: unit === null ? null : unit * l.qty, unit };
+  });
+  const allKnown = rows.every((r) => r.known);
+  const priced: PricedLine[] = rows.map((r) => ({
+    ...r.line,
+    product,
+    unitCents: r.unit,
+    lineCents: r.lineCents,
+  }));
+  const subtotal = allKnown ? computeTotals(priced, 0, 0).subtotalCents : null;
 
   const body = (
     <div className={cn("flex min-h-full flex-col gap-4", !armed && "pointer-events-none")}>
-      <p className="font-pixel text-[8px] text-yellow md:text-[9px]">+{qty} NO INVENTÁRIO</p>
-      <div className="flex items-center gap-3 border-[3px] border-accent bg-surface-2 p-2.5 md:gap-3.5 md:p-3">
-        <Thumb product={product} />
-        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-          <span className="font-pixel text-[9px] leading-normal md:text-[10px]">
-            {product.name}
-          </span>
-          <span className="text-xs text-text-muted">
-            Argola: {RING_NAME[ring]} · <span>×{qty}</span>
-          </span>
-        </div>
-      </div>
+      <ul aria-label="Itens no carrinho" className="m-0 flex list-none flex-col gap-3 p-0">
+        {rows.map(({ line, known, lineCents }) => {
+          const highlight = lineKey(line) === addedKey;
+          return (
+            <li
+              key={lineKey(line)}
+              className={cn(
+                "flex items-center gap-3 border-[3px] p-2.5 md:gap-3.5 md:p-3",
+                highlight ? "border-accent bg-surface-2" : "border-border",
+              )}
+            >
+              <Thumb product={known ? product : null} highlight={highlight} />
+              <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                <span className="font-pixel text-[9px] leading-normal break-words md:text-[10px]">
+                  {known ? product.name : `[${line.productId}]`}
+                </span>
+                <span className="text-xs text-text-muted">
+                  Argola: {RING_NAME[line.ring]} · <span>×{line.qty}</span>
+                </span>
+              </div>
+              <span className="font-pixel text-[9px] text-yellow">{formatTotal(lineCents)}</span>
+            </li>
+          );
+        })}
+      </ul>
       <FreeShippingBar subtotalCents={subtotal} />
       <div className="mt-auto flex flex-col gap-3 pt-2">
         <div className="flex items-center justify-between gap-3">
@@ -133,22 +148,35 @@ export function CartDrawer({ open, onClose, lastAdded }: Props) {
         >
           FINALIZAR COMPRA ›
         </Link>
-        <Button href="/carrinho" variant="secondary" className={actionClass}>
-          VER CARRINHO
-        </Button>
-        <Button variant="ghost" onClick={onClose} className={cn(actionClass, "no-underline")}>
-          ‹ CONTINUAR JOGANDO
-        </Button>
+        <div className="grid grid-cols-2 gap-2.5 md:grid-cols-1 md:gap-3">
+          <Button href="/carrinho" variant="secondary" className="px-1.5 text-[9px] md:text-[10px]">
+            VER CARRINHO
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={onClose}
+            className="px-1.5 text-[9px] max-md:border-border md:border-0 md:text-[10px] md:text-link md:underline md:underline-offset-4"
+          >
+            ‹ CONTINUAR JOGANDO
+          </Button>
+        </div>
       </div>
     </div>
   );
 
+  const title = (
+    <>
+      ITEM <span className="text-accent">COLETADO!</span>
+    </>
+  );
+  const eyebrow = `+${qty} NO INVENTÁRIO`;
+
   return desktop ? (
-    <Drawer open={open} onClose={dismiss} title="ITEM COLETADO!">
+    <Drawer open={open} onClose={dismiss} title={title} eyebrow={eyebrow}>
       {body}
     </Drawer>
   ) : (
-    <BottomSheet open={open} onClose={dismiss} title="ITEM COLETADO!">
+    <BottomSheet open={open} onClose={dismiss} title={title} eyebrow={eyebrow}>
       {body}
     </BottomSheet>
   );

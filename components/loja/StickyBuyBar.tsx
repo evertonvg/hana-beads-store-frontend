@@ -1,12 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import { unitCents } from "@/lib/cart/price";
 import { formatPrice } from "@/lib/format";
 import { usePurchase } from "./AddToCartForm";
 
 /** Mobile buy bar, sticky at the end of the page content (the tab bar is hidden here). */
 export function StickyBuyBar() {
-  const { product, qty, adding, add } = usePurchase();
+  const { product, ring, qty, adding, add } = usePurchase();
   // Sold out: the form already offers AVISE-ME, so the bar steps aside.
   if (product.stock === 0) return null;
 
@@ -19,7 +20,7 @@ export function StickyBuyBar() {
       <div className="flex flex-col gap-1.5">
         <span className="text-[11px] text-text-subtle">{qty} un.</span>
         <span className="font-pixel text-[11px] text-yellow">
-          {formatPrice(product.priceCents)}
+          {formatPrice(unitCents(product, ring))}
         </span>
       </div>
       <Button

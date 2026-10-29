@@ -29,3 +29,14 @@ export const Interactive: Story = {
     );
   },
 };
+
+export const TwoToneTitleWithEyebrow: Story = {
+  args: {
+    eyebrow: "+1 NO INVENTÁRIO",
+    title: (
+      <>
+        ITEM <span className="text-accent">COLETADO!</span>
+      </>
+    ),
+  },
+};

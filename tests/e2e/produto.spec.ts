@@ -1,5 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, expectA11y, snap, test } from "./support/fixtures";
+import { gotoHydrated } from "./support/hydration";
 
 const PRODUCT = "/produto/garota-pixel";
 
@@ -17,7 +18,7 @@ async function pickEstrelaTimes2(page: Page) {
 }
 
 test("mostra nome, raridade e preço placeholder", async ({ page }) => {
-  await page.goto(PRODUCT);
+  await gotoHydrated(page, PRODUCT);
   await expect(page.getByRole("heading", { level: 1, name: "GAROTA PIXEL" })).toBeVisible();
   await expect(page.getByText("★★★ ÉPICO").first()).toBeVisible();
   await expect(page.getByRole("main").getByText("[PREÇO]").first()).toBeVisible();
@@ -31,7 +32,7 @@ test("mostra nome, raridade e preço placeholder", async ({ page }) => {
 });
 
 test("passa na acessibilidade", async ({ page }) => {
-  await page.goto(PRODUCT);
+  await gotoHydrated(page, PRODUCT);
   await expectA11y(page);
 });
 
@@ -39,7 +40,7 @@ test("ESTRELA x2 abre ITEM COLETADO! com argola e quantidade, e atualiza o carri
   page,
   isMobile,
 }) => {
-  await page.goto(PRODUCT);
+  await gotoHydrated(page, PRODUCT);
   await expect(cartLink(page, isMobile, 0)).toBeVisible();
   await pickEstrelaTimes2(page);
   await addButton(page).click();
@@ -63,7 +64,7 @@ test("ESTRELA x2 abre ITEM COLETADO! com argola e quantidade, e atualiza o carri
 });
 
 test("duplo clique rápido adiciona a quantidade uma única vez", async ({ page, isMobile }) => {
-  await page.goto(PRODUCT);
+  await gotoHydrated(page, PRODUCT);
   await pickEstrelaTimes2(page);
   await addButton(page).dblclick();
 
@@ -77,7 +78,7 @@ test("duplo clique rápido adiciona a quantidade uma única vez", async ({ page,
 });
 
 test("Escape fecha a gaveta e devolve o foco ao botão", async ({ page }) => {
-  await page.goto(PRODUCT);
+  await gotoHydrated(page, PRODUCT);
   await addButton(page).click();
   const dialog = page.getByRole("dialog", { name: "ITEM COLETADO!" });
   await expect(dialog).toBeAttached();
@@ -88,7 +89,7 @@ test("Escape fecha a gaveta e devolve o foco ao botão", async ({ page }) => {
 });
 
 test("VER CARRINHO leva a /carrinho", async ({ page }) => {
-  await page.goto(PRODUCT);
+  await gotoHydrated(page, PRODUCT);
   await addButton(page).click();
   await page
     .getByRole("dialog", { name: "ITEM COLETADO!" })
@@ -97,9 +98,70 @@ test("VER CARRINHO leva a /carrinho", async ({ page }) => {
   await expect(page).toHaveURL(/\/carrinho$/);
 });
 
-test("slug inexistente mostra a página 404", async ({ page }) => {
+test("slug inexistente mostra a página 404 com noindex", async ({ page, request }) => {
+  // Under cacheComponents an unknown param is served from the fallback shell, so the 404 is
+  // streamed (HTTP 200); Next marks it noindex.
+  const r = await request.get("/produto/nao-existe");
+  expect(await r.text()).toContain('<meta name="robots" content="noindex"/>');
   await page.goto("/produto/nao-existe");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("FASE NÃO ENCONTRADA");
+  await expect(page.locator('meta[name="robots"][content="noindex"]').first()).toBeAttached();
+});
+
+test("a gaveta lista todas as linhas do carrinho com o subtotal", async ({ page }) => {
+  await gotoHydrated(page, PRODUCT);
+  const dialog = page.getByRole("dialog", { name: "ITEM COLETADO!" });
+  await addButton(page).click();
+  await expect(dialog.getByRole("heading", { name: "ITEM COLETADO!" })).toBeVisible();
+  await expect(dialog.getByText("+1 NO INVENTÁRIO")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toHaveCount(0);
+
+  await page.getByRole("radio", { name: "ESTRELA" }).click();
+  await addButton(page).click();
+  const items = dialog.getByRole("listitem");
+  await expect(items).toHaveCount(2);
+  await expect(items.nth(0)).toContainText("Argola: mosquetão");
+  await expect(items.nth(1)).toContainText("Argola: estrela");
+  await expect(items.nth(1)).toContainText("×1");
+  await expect(dialog.getByText("SUBTOTAL · 2 ITENS")).toBeVisible();
+  await expect(dialog.getByText("[VALOR]").last()).toBeVisible();
+});
+
+test("linha de outro produto aparece com placeholder e subtotal [VALOR]", async ({ page }) => {
+  await page.addInitScript(() =>
+    localStorage.setItem(
+      "pp_cart_v1",
+      JSON.stringify({
+        state: { lines: [{ productId: "e13", ring: "estrela", qty: 1 }] },
+        version: 1,
+      }),
+    ),
+  );
+  await gotoHydrated(page, PRODUCT);
+  await addButton(page).click();
+  const dialog = page.getByRole("dialog", { name: "ITEM COLETADO!" });
+  const items = dialog.getByRole("listitem");
+  await expect(items).toHaveCount(2);
+  await expect(items.nth(0)).toContainText("[e13]");
+  await expect(items.nth(0)).toContainText("[VALOR]");
+  await expect(dialog.getByText("SUBTOTAL · 2 ITENS")).toBeVisible();
+});
+
+test("clique no fundo logo após abrir não fecha; depois da janela de guarda fecha", async ({
+  page,
+}) => {
+  await gotoHydrated(page, PRODUCT);
+  await addButton(page).click();
+  const dialog = page.getByRole("dialog", { name: "ITEM COLETADO!" });
+  await expect(dialog.getByRole("heading", { name: "ITEM COLETADO!" })).toBeVisible();
+  // top-left corner: always the backdrop (the drawer is on the right, the sheet at the bottom)
+  await page.mouse.click(4, 4);
+  await expect(dialog.getByRole("heading", { name: "ITEM COLETADO!" })).toBeVisible();
+  // eslint-disable-next-line playwright/no-wait-for-timeout -- the guard window is a fixed 400 ms timer
+  await page.waitForTimeout(600);
+  await page.mouse.click(4, 4);
+  await expect(dialog).toHaveCount(0);
 });
 
 test("produto esgotado mostra ESGOTADO e AVISE-ME no lugar de + PEGAR ITEM", async ({ page }) => {
@@ -112,7 +174,7 @@ test("produto esgotado mostra ESGOTADO e AVISE-ME no lugar de + PEGAR ITEM", asy
 });
 
 test("acordeão CUIDADOS alterna aria-expanded", async ({ page }) => {
-  await page.goto(PRODUCT);
+  await gotoHydrated(page, PRODUCT);
   const trigger = page.getByRole("button", { name: "CUIDADOS" });
   await expect(trigger).toHaveAttribute("aria-expanded", "false");
   await trigger.click();

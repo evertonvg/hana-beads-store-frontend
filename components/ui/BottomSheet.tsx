@@ -1,20 +1,14 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { OverlayDialog } from "./OverlayDialog";
+import { OverlayDialog, type OverlayProps } from "./OverlayDialog";
 
-type Props = { open: boolean; onClose: () => void; title: string; children: ReactNode };
-
-/** Sheet that rises from the bottom (mobile pickers, filters). */
-export function BottomSheet({ open, onClose, title, children }: Props) {
+/** Sheet that rises from the bottom (mobile pickers, filters, item collected). */
+export function BottomSheet(props: OverlayProps) {
   return (
     <OverlayDialog
-      open={open}
-      onClose={onClose}
-      title={title}
-      panelClassName="inset-x-0 bottom-0 max-h-[85dvh] data-[closed]:translate-y-full"
-    >
-      {children}
-    </OverlayDialog>
+      {...props}
+      handle
+      panelClassName="inset-x-0 bottom-0 max-h-[85dvh] border-x-0 border-b-0 border-t-4 shadow-[0_-8px_0_var(--color-accent)] data-[closed]:translate-y-full"
+    />
   );
 }

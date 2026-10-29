@@ -1,4 +1,5 @@
 import type { Page } from "@playwright/test";
+import { gotoHydrated } from "./support/hydration";
 import { expect, test } from "./support/fixtures";
 
 const KEY = "pp_cart_v1";
@@ -41,7 +42,7 @@ test("corrupted storage falls back to an empty cart and the store stays alive", 
   await expect(page.locator("main")).toBeVisible();
 
   // Prove hydration finished and the store is alive: the real add-to-cart flow must update it.
-  await page.goto("/produto/garota-pixel");
+  await gotoHydrated(page, "/produto/garota-pixel");
   await page.getByRole("button", { name: "+ PEGAR ITEM" }).click();
   await page
     .getByRole("dialog", { name: "ITEM COLETADO!" })
