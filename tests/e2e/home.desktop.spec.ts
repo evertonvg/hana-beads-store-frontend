@@ -11,6 +11,8 @@ test("encomendar pelo canal configurado (desktop)", async ({ page }) => {
 test("vitrine em grade de 3 colunas", async ({ page }) => {
   await page.goto("/");
   const cards = page.locator("#loja").getByRole("article");
+  await expect(cards.first()).toBeVisible();
+  await expect(cards).toHaveCount(3);
   const tops = await cards.evaluateAll((els) => els.map((el) => el.getBoundingClientRect().top));
   expect(new Set(tops).size).toBe(1);
 });
