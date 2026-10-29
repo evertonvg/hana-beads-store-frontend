@@ -13,7 +13,7 @@ type Props = {
 /** On/off setting: 64x36 pixel switch with label and optional description. */
 export function Switch({ checked, onCheckedChange, label, description, disabled }: Props) {
   return (
-    <Field disabled={disabled} className="flex items-center justify-between gap-4 py-3.5">
+    <Field disabled={disabled} className="flex min-h-11 items-center justify-between gap-4 py-3.5">
       <span className="flex flex-col gap-1">
         <Label className="cursor-pointer text-[15px] text-text">{label}</Label>
         {description ? (

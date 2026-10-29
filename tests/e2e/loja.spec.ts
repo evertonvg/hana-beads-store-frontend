@@ -87,6 +87,7 @@ test.describe("AVISE-ME deslogado", () => {
     const card = planeta(page);
     await card.getByRole("button", { name: "AVISE-ME" }).click();
     await card.getByLabel("Seu e-mail").fill("aviso@teste.dev");
+    await expectA11y(page);
     const consent = card.getByRole("checkbox");
     await expect(consent).toHaveAttribute("aria-checked", "false");
     await card.getByRole("button", { name: "CONFIRMAR" }).click();

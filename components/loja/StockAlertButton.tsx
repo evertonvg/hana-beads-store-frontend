@@ -82,6 +82,22 @@ export function StockAlertButton({ productId, loggedIn, children }: Props) {
         </button>
       </div>
 
+      {loggedIn && !done ? (
+        // Notice wording is pending owner/legal review (the design has no consent text).
+        <p className="text-[11px] leading-normal text-text-subtle">
+          Vamos avisar no seu e-mail quando voltar.{" "}
+          <Link
+            href="/privacidade"
+            className={cn(
+              "inline-flex min-h-11 items-center text-link underline underline-offset-4 hover:text-yellow",
+              focusRing,
+            )}
+          >
+            Política de Privacidade
+          </Link>
+        </p>
+      ) : null}
+
       {!loggedIn && expanded && !done ? (
         <form
           id={panelId}

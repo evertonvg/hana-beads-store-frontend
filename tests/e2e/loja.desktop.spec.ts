@@ -37,9 +37,8 @@ test("ordenar por novidades poe os novos primeiro", async ({ page }) => {
 test("alvos de toque da loja tem pelo menos 44px", async ({ page }) => {
   await page.goto("/loja");
   await expect(cards(page)).toHaveCount(9);
-  // The 64x36 Switch is a design-spec size (its whole label row is the click target), so it is
-  // left out of the 44px check; everything else on the page is measured.
   await expectTouchTargets(page.getByRole("navigation", { name: "Você está em" }));
   await expectTouchTargets(page.getByRole("group", { name: "Categorias" }));
   await expectTouchTargets(page.getByRole("region", { name: "Itens" }));
+  await expectTouchTargets(page.getByRole("complementary", { name: "Filtros" }));
 });

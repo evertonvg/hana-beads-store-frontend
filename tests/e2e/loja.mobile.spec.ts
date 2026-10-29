@@ -18,6 +18,11 @@ test("FILTRAR abre a folha, aplicar cor mostra 1 item e fecha", async ({ page })
   const sheet = page.getByRole("dialog", { name: "FILTRAR" });
   await expect(sheet).toBeAttached();
   await expect(sheet.getByRole("heading", { name: "FILTRAR" })).toBeVisible();
+  // Focus moves into the sheet when it opens (the trap keeps it there).
+  await expect
+    .poll(() => page.evaluate(() => document.activeElement?.closest('[role="dialog"]') !== null))
+    .toBe(true);
+  await expectTouchTargets(sheet);
   await sheet.getByRole("button", { name: "Laranja" }).click();
   // nothing is applied until APLICAR
   await expect(page).toHaveURL(/\/loja$/);
@@ -37,6 +42,7 @@ test("fechar a folha descarta a escolha", async ({ page }) => {
   await sheet.getByRole("button", { name: "Rosa" }).click();
   await sheet.getByRole("button", { name: "Fechar" }).click();
   await expect(sheet).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "FILTRAR" })).toBeFocused();
   await expect(page).toHaveURL(/\/loja$/);
   await expect(cards(page)).toHaveCount(9);
 });
