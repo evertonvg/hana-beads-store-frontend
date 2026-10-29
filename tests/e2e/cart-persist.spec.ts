@@ -5,7 +5,7 @@ const KEY = "pp_cart_v1";
 
 /** Routes that later tasks build; their prefetches 404 until then and are unrelated to the cart. */
 const NOT_BUILT_YET =
-  /^\/(carrinho|entrar|encomendas|conta|cadastro|trocas|privacidade|termos)(\/|$)/;
+  /^\/(carrinho|checkout|entrar|encomendas|conta|cadastro|trocas|privacidade|termos)(\/|$)/;
 
 /** Header cart link: yellow button on desktop, icon with badge on mobile. */
 function cartLink(page: Page, isMobile: boolean, n: number) {
@@ -19,7 +19,6 @@ function persisted(lines: { productId: string; ring: string; qty: number }[]) {
 
 test("corrupted storage falls back to an empty cart and the store stays alive", async ({
   page,
-  context,
   isMobile,
 }) => {
   const errors: string[] = [];
@@ -41,13 +40,13 @@ test("corrupted storage falls back to an empty cart and the store stays alive", 
   await expect(cartLink(page, isMobile, 0)).toBeVisible();
   await expect(page.locator("main")).toBeVisible();
 
-  // Prove hydration finished and the store is alive: a write from a second tab must show up.
-  const other = await context.newPage();
-  await other.goto("/");
-  await other.evaluate(([key, v]) => localStorage.setItem(key, v), [
-    KEY,
-    persisted([{ productId: "garota", ring: "mosquetao", qty: 1 }]),
-  ] as [string, string]);
+  // Prove hydration finished and the store is alive: the real add-to-cart flow must update it.
+  await page.goto("/produto/garota-pixel");
+  await page.getByRole("button", { name: "+ PEGAR ITEM" }).click();
+  await page
+    .getByRole("dialog", { name: "ITEM COLETADO!" })
+    .getByRole("button", { name: /CONTINUAR JOGANDO/ })
+    .click();
   await expect(cartLink(page, isMobile, 1)).toBeVisible();
   expect(errors).toEqual([]);
 });
