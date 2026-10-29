@@ -17,12 +17,26 @@ export type CartStore = CartData & {
 
 export const CART_STORAGE_KEY = "pp_cart_v1";
 
+/**
+ * Set when localStorage throws (blocked, quota); cleared by the next successful read/write. While
+ * set, a rehydrate that reads nothing must not wipe the in-memory cart.
+ */
+let readFailed = false;
+let writeFailed = false;
+
 /** localStorage guarded against blocked storage and corrupted JSON (falls back to empty). */
 const safeStorage: StateStorage = {
   getItem: (name) => {
+    let raw: string | null;
     try {
-      const raw = localStorage.getItem(name);
-      if (raw === null) return null;
+      raw = localStorage.getItem(name);
+      readFailed = false;
+    } catch {
+      readFailed = true;
+      return null;
+    }
+    if (raw === null) return null;
+    try {
       JSON.parse(raw);
       return raw;
     } catch {
@@ -32,15 +46,17 @@ const safeStorage: StateStorage = {
   setItem: (name, value) => {
     try {
       localStorage.setItem(name, value);
+      writeFailed = false;
     } catch {
       // Storage full or blocked: the cart stays in memory only.
+      writeFailed = true;
     }
   },
   removeItem: (name) => {
     try {
       localStorage.removeItem(name);
     } catch {
-      // Ignore.
+      writeFailed = true;
     }
   },
 };
@@ -94,7 +110,10 @@ export const useCartStore = create<CartStore>()(
       storage: createJSONStorage(() => safeStorage),
       partialize: (s) => ({ lines: s.lines }),
       migrate: (old) => sanitizeCart(old),
-      merge: (persisted, current) => ({ ...current, ...sanitizeCart(persisted) }),
+      merge: (persisted, current) =>
+        persisted === undefined && (readFailed || writeFailed)
+          ? current
+          : { ...current, ...sanitizeCart(persisted) },
       skipHydration: true,
     },
   ),

@@ -3,6 +3,10 @@ import { expect, test } from "./support/fixtures";
 
 const KEY = "pp_cart_v1";
 
+/** Routes that later tasks build; their prefetches 404 until then and are unrelated to the cart. */
+const NOT_BUILT_YET =
+  /^\/(carrinho|entrar|encomendas|conta|cadastro|trocas|privacidade|termos)(\/|$)/;
+
 /** Header cart link: yellow button on desktop, icon with badge on mobile. */
 function cartLink(page: Page, isMobile: boolean, n: number) {
   const name = isMobile ? `Carrinho, ${n} ${n === 1 ? "item" : "itens"}` : `CARRINHO [${n}]`;
@@ -13,22 +17,38 @@ function persisted(lines: { productId: string; ring: string; qty: number }[]) {
   return JSON.stringify({ state: { lines }, version: 1 });
 }
 
-test("corrupted storage falls back to an empty cart without console errors", async ({
+test("corrupted storage falls back to an empty cart and the store stays alive", async ({
   page,
+  context,
   isMobile,
 }) => {
   const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(`pageerror: ${e.message}`));
   page.on("console", (m) => {
-    // Prefetches of routes that later tasks have not built yet return 404; unrelated to the cart.
+    // HTTP failures are reported through the response listener below, with their URL.
     if (m.type() === "error" && !m.text().startsWith("Failed to load resource")) {
-      errors.push(m.text());
+      errors.push(`console: ${m.text()}`);
     }
   });
-  page.on("pageerror", (e) => errors.push(e.message));
+  page.on("response", (r) => {
+    if (r.status() < 400) return;
+    const { pathname } = new URL(r.url());
+    if (r.status() === 404 && NOT_BUILT_YET.test(pathname)) return;
+    errors.push(`http ${r.status()}: ${r.url()}`);
+  });
   await page.addInitScript((key) => localStorage.setItem(key, "{lixo"), KEY);
   await page.goto("/");
   await expect(cartLink(page, isMobile, 0)).toBeVisible();
   await expect(page.locator("main")).toBeVisible();
+
+  // Prove hydration finished and the store is alive: a write from a second tab must show up.
+  const other = await context.newPage();
+  await other.goto("/");
+  await other.evaluate(([key, v]) => localStorage.setItem(key, v), [
+    KEY,
+    persisted([{ productId: "garota", ring: "mosquetao", qty: 1 }]),
+  ] as [string, string]);
+  await expect(cartLink(page, isMobile, 1)).toBeVisible();
   expect(errors).toEqual([]);
 });
 

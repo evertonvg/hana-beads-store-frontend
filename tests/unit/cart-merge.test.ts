@@ -53,3 +53,15 @@ describe("mergeCarts", () => {
     ]);
   });
 });
+
+describe("sanitizeCart numeric edge cases", () => {
+  it("clamps negative and NaN quantities to 1", () => {
+    const out = sanitizeCart({
+      lines: [
+        { productId: "a", ring: "mosquetao", qty: -5 },
+        { productId: "b", ring: "estrela", qty: Number.NaN },
+      ],
+    });
+    expect(out.lines.map((l) => l.qty)).toEqual([1, 1]);
+  });
+});
