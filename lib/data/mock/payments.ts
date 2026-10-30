@@ -75,6 +75,9 @@ export function createMockPayments(): PaymentsPort {
         if (order.status !== "aguardando_pagamento" || order.payment?.kind !== "pix") {
           throw new Error("order has no Pix to renew");
         }
+        if (Date.parse(order.payment.expiresAt) > Date.now()) {
+          throw new Error("Pix has not expired yet");
+        }
         const pix = newPix();
         order.payment = pix;
         return structuredClone(pix);

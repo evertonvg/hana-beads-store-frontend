@@ -72,3 +72,9 @@ export async function storedLines(page: Page): Promise<number> {
     return raw ? (JSON.parse(raw) as { state: { lines: unknown[] } }).state.lines.length : 0;
   }, CART_KEY);
 }
+
+/** Test-only: makes the Pix of the order expire on the server (it refuses to renew a live one). */
+export async function expireServerPix(page: Page, id: string) {
+  const res = await page.request.post(`/api/__mock__/pedidos/${id}`, { data: { expirePix: true } });
+  expect(res.status()).toBe(204);
+}

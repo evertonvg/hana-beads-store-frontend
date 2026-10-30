@@ -5,6 +5,7 @@ import { focusRing } from "@/components/ui/focus";
 import { cn } from "@/lib/cn";
 import type { BoletoPayment, Order } from "@/lib/data/types";
 import { formatDate, formatOrderNumber } from "@/lib/format";
+import { PaymentWaitNote } from "./PaymentWaitNote";
 import { moneyLabel } from "./payment-format";
 import { SwitchToPixButton } from "./SwitchToPixButton";
 import { useCopy } from "./useCopy";
@@ -28,7 +29,7 @@ const factValue = "font-pixel text-xs";
 
 /** Boleto screen, "JOGO PAUSADO" (Aguardando.dc.html). Polls until the boleto is paid. */
 export function BoletoPanel({ order, payment }: Props) {
-  usePaymentStatus(order.id, order.status);
+  const status = usePaymentStatus(order.id, order.status);
   const copy = useCopy(payment.line);
 
   return (
@@ -116,6 +117,11 @@ export function BoletoPanel({ order, payment }: Props) {
             [O PDF fica disponível quando o boleto for emitido pelo intermediador.]
           </p>
         )}
+
+        <PaymentWaitNote
+          wait={status.wait}
+          waiting="Aguardando pagamento… A confirmação é automática e esta página atualiza sozinha."
+        />
 
         <ul className="m-0 flex list-disc flex-col gap-2 pl-5 text-sm leading-normal text-text-muted">
           <li>O boleto também foi enviado para o seu e-mail.</li>

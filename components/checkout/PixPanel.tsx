@@ -11,6 +11,7 @@ import type { Order, PixPayment } from "@/lib/data/types";
 import { formatOrderNumber } from "@/lib/format";
 import { pixRemaining } from "@/lib/pix-countdown";
 import { OrderAside } from "./OrderAside";
+import { PaymentWaitNote } from "./PaymentWaitNote";
 import { moneyLabel } from "./payment-format";
 import { useCopy } from "./useCopy";
 import { usePaymentStatus } from "./usePaymentStatus";
@@ -231,18 +232,14 @@ export function PixPanel({ order, payment: initialPayment, serverNow }: Props) {
             </ol>
 
             <div className="flex flex-col gap-3.5 border-t-[3px] border-dashed border-border pt-4 md:pt-[18px]">
-              <div role="status" className="flex items-center gap-3 text-[13px] md:text-sm">
-                <span
-                  aria-hidden="true"
-                  className="size-3 flex-none animate-pisca bg-yellow motion-reduce:animate-none"
-                />
-                <span>
-                  Aguardando pagamento…{" "}
-                  {checked
+              <PaymentWaitNote
+                wait={status.wait}
+                waiting={`Aguardando pagamento… ${
+                  checked
                     ? "Ainda não recebemos a confirmação do banco. Esta página atualiza sozinha."
-                    : "A confirmação é automática e esta página atualiza sozinha."}
-                </span>
-              </div>
+                    : "A confirmação é automática e esta página atualiza sozinha."
+                }`}
+              />
               <div className="flex flex-col gap-3 md:flex-row md:flex-wrap">
                 <Button
                   variant="primary"

@@ -1,6 +1,12 @@
 import type { Page } from "@playwright/test";
 import { expect, expectA11y, snap, test } from "./support/fixtures";
-import { orderIdOf, placeOrder, setOrderStatus, storedLines } from "./support/order";
+import {
+  expireServerPix,
+  orderIdOf,
+  placeOrder,
+  setOrderStatus,
+  storedLines,
+} from "./support/order";
 
 const TIMER = /^(30:00|29:5\d)$/;
 
@@ -55,6 +61,8 @@ test.describe("Pix", () => {
     await expect(page.getByTestId("pix-timer")).toHaveText(TIMER);
     await page.clock.fastForward("31:00");
     await expect(page.getByTestId("pix-timer")).toHaveText("00:00");
+    // The server only renews a Pix that really expired there (the fake clock is only the browser's).
+    await expireServerPix(page, orderIdOf(page));
     await page.getByRole("button", { name: "GERAR NOVO PIX" }).click();
     await expect(page.getByTestId("pix-timer")).toHaveText(TIMER);
     await expect(page.getByRole("button", { name: "GERAR NOVO PIX" })).toHaveCount(0);
@@ -72,6 +80,55 @@ test.describe("Pix", () => {
     await freezePixTimer(page);
     await expect(page.getByTestId("pix-timer")).toHaveText("30:00");
     await snap(page, "pix");
+  });
+});
+
+test.describe("Pagamento que não segue", () => {
+  test("pedido cancelado: o Pix avisa em vez de dizer que aguarda", async ({ page }) => {
+    await toPix(page);
+    await setOrderStatus(page, orderIdOf(page), "cancelado");
+    const note = page.getByRole("status").filter({ hasText: "cancelado ou reembolsado" });
+    await expect(note).toBeVisible({ timeout: 6000 });
+    await expect(page.getByText("Aguardando pagamento…")).toHaveCount(0);
+    await expect(note.getByRole("link", { name: /FALAR NO/ })).toBeVisible();
+    await expect(note.getByRole("link", { name: "VOLTAR PARA A LOJA" })).toHaveAttribute(
+      "href",
+      "/loja",
+    );
+  });
+
+  test("pedido cancelado: o boleto avisa", async ({ page }) => {
+    await placeOrder(page, "boleto");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("PAUSADO");
+    await setOrderStatus(page, orderIdOf(page), "reembolsado");
+    await expect(
+      page.getByRole("status").filter({ hasText: "cancelado ou reembolsado" }),
+    ).toBeVisible({ timeout: 6000 });
+  });
+
+  test("status 404: avisa e para de consultar", async ({ page }) => {
+    let calls = 0;
+    await toPix(page);
+    await page.route("**/api/pedidos/*/status", (route) => {
+      calls++;
+      return route.fulfill({ status: 404 });
+    });
+    const note = page.getByRole("status").filter({ hasText: "Não encontramos mais este pedido" });
+    await expect(note).toBeVisible({ timeout: 6000 });
+    await expect(note.getByRole("link", { name: /FALAR NO/ })).toBeVisible();
+    const seen = calls;
+    await new Promise((resolve) => setTimeout(resolve, 7000)); // two missed polls
+    expect(calls).toBe(seen);
+  });
+
+  test("falha de rede: avisa e continua tentando", async ({ page }) => {
+    await toPix(page);
+    await page.route("**/api/pedidos/*/status", (route) => route.abort());
+    const note = page.getByRole("status").filter({ hasText: "Não conseguimos checar o pagamento" });
+    await expect(note).toBeVisible({ timeout: 6000 });
+    await page.unroute("**/api/pedidos/*/status");
+    await expect(note).toHaveCount(0, { timeout: 8000 });
+    await expect(page.getByText("Aguardando pagamento…")).toBeVisible();
   });
 });
 

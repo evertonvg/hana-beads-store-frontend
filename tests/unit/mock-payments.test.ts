@@ -60,6 +60,15 @@ describe("mock payments", () => {
     expect(Date.parse(renewed.expiresAt)).toBeGreaterThan(Date.now() + 29 * 60 * 1000);
   });
 
+  it("does not renew a Pix that is still valid", async () => {
+    const orders = createMockOrders();
+    const payments = createMockPayments();
+    const order = await orders.create(input(), "k1");
+    const pix = await payments.start(order.id, "pix");
+    await expect(payments.renewPix(order.id)).rejects.toThrow();
+    expect(getMockStore().orders[0]?.payment).toEqual(pix);
+  });
+
   it("starts a boleto with placeholders", async () => {
     const orders = createMockOrders();
     const order = await orders.create(input({ paymentMethod: "boleto" }), "k1");
