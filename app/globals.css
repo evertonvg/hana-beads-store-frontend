@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Fonts: next/font injects --font-pixel-face / --font-mono-face on <html> */
-  --font-pixel: var(--font-pixel-face), monospace;
+  /* Fonts: next/font injects --font-pixel-face / --font-pixel-accents-face / --font-mono-face on <html> (app/fonts.ts) */
+  --font-pixel: var(--font-pixel-accents-face), var(--font-pixel-face), monospace;
   --font-mono: var(--font-mono-face), monospace;
 }
 

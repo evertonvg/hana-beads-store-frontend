@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Press_Start_2P, Space_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { ConsentScripts } from "@/components/layout/ConsentScripts";
 import { CookieConsentBanner } from "@/components/layout/CookieConsent";
@@ -7,22 +6,9 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { MobileTabBar, MobileTabBarFallback } from "@/components/layout/MobileTabBar";
 import { getSession } from "@/lib/session";
+import { mono, pixel, pixelAccents } from "./fonts";
 import { Providers } from "./providers";
 import "./globals.css";
-
-const pixel = Press_Start_2P({
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-pixel-face",
-});
-
-const mono = Space_Mono({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-mono-face",
-});
 
 export const metadata: Metadata = {
   title: "Pixel Perfect Artesanato",
@@ -37,7 +23,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     .then((user) => (user ? { name: user.name } : null))
     .catch(() => null);
   return (
-    <html lang="pt-BR" className={`${pixel.variable} ${mono.variable}`}>
+    <html lang="pt-BR" className={`${pixel.variable} ${pixelAccents.variable} ${mono.variable}`}>
       <body className="flex min-h-screen flex-col">
         <a
           href="#conteudo"
