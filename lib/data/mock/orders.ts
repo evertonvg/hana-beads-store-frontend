@@ -32,7 +32,7 @@ export function createMockOrders(): OrdersPort {
         isCustom: false,
         createdAt: at,
         events: [{ status: "aguardando_pagamento", at }],
-        payment: { kind: input.paymentMethod },
+        payment: null,
       };
       store.orders.push(order);
       store.orderKeys[idempotencyKey] = order.id;

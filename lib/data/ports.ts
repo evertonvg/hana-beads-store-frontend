@@ -5,7 +5,9 @@ import type {
   Order,
   OrderItem,
   OrderStatus,
+  Payment,
   PaymentMethod,
+  PixPayment,
   Product,
 } from "@/lib/data/types";
 import type { ShopQuery } from "@/lib/shop-query";
@@ -136,6 +138,21 @@ export interface OrdersPort {
   setStatus(id: string, s: OrderStatus): Promise<void>;
 }
 
+/** Token the browser got from the gateway in place of the card data, plus the last 4 digits. */
+export type CardInput = { token: string; last4: string };
+
+export interface PaymentsPort {
+  /**
+   * Starts the payment of an order that is awaiting payment. Asking again for the same method
+   * gives back the same payment; another method replaces it (e.g. Pix after a declined card).
+   * A card needs its token and may come back `recusado` (the order stays awaiting payment).
+   */
+  start(orderId: string, method: PaymentMethod, card?: CardInput): Promise<Payment>;
+  /** New 30 minute window for an expired Pix. */
+  renewPix(orderId: string): Promise<PixPayment>;
+  status(orderId: string): Promise<OrderStatus>;
+}
+
 export type Ports = {
   catalog: CatalogPort;
   newsletter: NewsletterPort;
@@ -145,5 +162,6 @@ export type Ports = {
   auth: AuthPort;
   addressLookup: AddressLookupPort;
   orders: OrdersPort;
+  payments: PaymentsPort;
   // other ports are added by the tasks that use them
 };

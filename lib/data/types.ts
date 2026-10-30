@@ -67,10 +67,18 @@ export type Address = {
 
 export type Customer = { name: string; email: string; phone: string; cpf: string };
 
-// Refined by the payment task (Pix code, boleto line, card brand...).
-export type PixPayment = { kind: "pix" } & Record<string, unknown>;
-export type BoletoPayment = { kind: "boleto" } & Record<string, unknown>;
-export type CardPayment = { kind: "cartao" } & Record<string, unknown>;
+/** Pix code ("copia e cola") and when it stops working (ISO). */
+export type PixPayment = { kind: "pix"; copyPaste: string; expiresAt: string };
+/** Boleto: `pdfUrl` and `dueDate` stay null until the gateway provides them. */
+export type BoletoPayment = {
+  kind: "boleto";
+  line: string;
+  pdfUrl: string | null;
+  dueDate: string | null;
+};
+/** Card result as the gateway answered. The card number itself never reaches the server. */
+export type CardPayment = { kind: "cartao"; result: "aprovado" | "recusado"; last4: string };
+export type Payment = PixPayment | BoletoPayment | CardPayment;
 
 export type OrderItem = {
   productId: string | null;
@@ -100,5 +108,6 @@ export type Order = {
   isCustom: boolean;
   createdAt: string;
   events: { status: OrderStatus; at: string; note?: string }[];
-  payment: PixPayment | BoletoPayment | CardPayment;
+  /** null until the payment is started with the gateway. */
+  payment: Payment | null;
 };

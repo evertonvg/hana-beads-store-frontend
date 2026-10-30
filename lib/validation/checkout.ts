@@ -56,8 +56,11 @@ export const cardSchema = z.object({
   cvv: z.string().refine((v) => /^\d{3,4}$/.test(v), { error: "Informe o CVV." }),
 });
 
-/** Stand-in token of the mock gateway. */
-export const CARD_TOKEN = /^mock_tok_[A-Za-z0-9-]{8,64}$/;
+/**
+ * Stand-in token of the mock gateway. The test card 4000 0000 0000 0002 gets a token starting
+ * with `mock_tok_declined_`, which the mock gateway declines.
+ */
+export const CARD_TOKEN = /^mock_tok_[A-Za-z0-9_-]{8,64}$/;
 
 const checkoutBase = z.object({
   name: z

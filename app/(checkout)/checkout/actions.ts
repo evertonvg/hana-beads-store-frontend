@@ -97,7 +97,7 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
       state: v.state,
     };
 
-    const { auth, orders } = getData();
+    const { auth, orders, payments } = getData();
     const session = await getSession();
     let userId = session?.id ?? null;
     let accountCreated = false;
@@ -148,9 +148,20 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
     );
     // A retried token gets back the first order, with the guest token it was created with.
     if (order.guestToken) await rememberGuestToken(order.guestToken);
+
+    // The payment starts here, where the card token is at hand. A retried token gets back the
+    // order with its payment already started (possibly switched to Pix): do not start it again.
+    const payment =
+      order.payment ??
+      (await payments.start(
+        order.id,
+        v.payment,
+        v.payment === "cartao" ? { token: v.cardToken ?? "", last4: v.cardLast4 ?? "" } : undefined,
+      ));
+    const approved = payment.kind === "cartao" && payment.result === "aprovado";
     return {
       status: "ok",
-      redirectTo: `/pedido/${order.id}/pagamento`,
+      redirectTo: `/pedido/${order.id}/${approved ? "confirmado" : "pagamento"}`,
       accountCreated,
       ...(userId ? { userId } : {}),
     };

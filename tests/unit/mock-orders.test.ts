@@ -47,7 +47,7 @@ describe("mock orders", () => {
     expect(order.status).toBe("aguardando_pagamento");
     expect(order.events.map((e) => e.status)).toEqual(["aguardando_pagamento"]);
     expect(order.number).toMatch(/^\d{4}$/);
-    expect(order.payment.kind).toBe("pix");
+    expect(order.payment).toBeNull();
   });
 
   it("returns the same order for the same idempotency key", async () => {

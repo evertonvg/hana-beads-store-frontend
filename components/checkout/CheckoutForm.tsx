@@ -23,6 +23,7 @@ import type { CartLine } from "@/lib/cart/types";
 import { cn } from "@/lib/cn";
 import type { Address } from "@/lib/data/types";
 import { formatTotal, isValidCep, onlyDigits } from "@/lib/format";
+import { mockCardToken } from "@/lib/mock-card-token";
 import {
   checkoutFormSchema,
   UFS,
@@ -196,7 +197,7 @@ export function CheckoutForm({ initial, lines, priced }: Props) {
         result = await placeOrderAction({
           ...rest,
           ...(values.payment === "cartao"
-            ? { cardToken: `mock_tok_${crypto.randomUUID()}`, cardLast4: digits.slice(-4) }
+            ? { cardToken: mockCardToken(digits), cardLast4: digits.slice(-4) }
             : {}),
           ...(values.saveAccount ? { password: pass } : {}),
           lines: useCartStore.getState().lines,

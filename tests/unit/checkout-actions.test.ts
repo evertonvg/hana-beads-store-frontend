@@ -148,6 +148,49 @@ describe("card data", () => {
   });
 });
 
+describe("payment start", () => {
+  it("starts the Pix with the order and goes to the payment screen", async () => {
+    const r = await placeOrderAction(base);
+    expect(r.redirectTo).toMatch(/\/pagamento$/);
+    expect(getMockStore().orders[0]?.payment).toMatchObject({
+      kind: "pix",
+      copyPaste: "[codigo-pix]",
+    });
+  });
+
+  it("sends an approved card straight to the confirmation", async () => {
+    const r = await placeOrderAction({
+      ...base,
+      payment: "cartao",
+      cardToken: "mock_tok_3f6c1b1e-6d3b",
+      cardLast4: "1111",
+    });
+    expect(r.redirectTo).toMatch(/\/confirmado$/);
+    expect(getMockStore().orders[0]?.status).toBe("pago");
+  });
+
+  it("keeps a declined card awaiting payment on the payment screen", async () => {
+    const r = await placeOrderAction({
+      ...base,
+      payment: "cartao",
+      cardToken: "mock_tok_declined_3f6c1b1e-6d3b",
+      cardLast4: "0002",
+    });
+    expect(r.redirectTo).toMatch(/\/pagamento$/);
+    expect(getMockStore().orders[0]).toMatchObject({
+      status: "aguardando_pagamento",
+      payment: { kind: "cartao", result: "recusado", last4: "0002" },
+    });
+  });
+
+  it("does not start the payment again for a retried checkout token", async () => {
+    await placeOrderAction(base);
+    const first = getMockStore().orders[0]?.payment;
+    await placeOrderAction(base);
+    expect(getMockStore().orders[0]?.payment).toEqual(first);
+  });
+});
+
 describe("retry after a partial failure", () => {
   it("tells the client who owns the order so it can sync the cart owner", async () => {
     const create = vi.spyOn(getData().orders, "create").mockRejectedValueOnce(new Error("boom"));

@@ -60,6 +60,8 @@ test("caminho feliz com Pix leva a /pedido/<id>/pagamento", async ({ page }) => 
   await fillGuest(page);
   await save(page).click();
   await expect(page).toHaveURL(/\/pedido\/[^/]+\/pagamento$/);
+  await expect(page.getByRole("heading", { level: 1, name: /PAGUE COM PIX/ })).toBeVisible();
+  await expect(page.getByTestId("pix-timer")).toBeVisible();
 });
 
 test("duplo clique em SAVE GAME cria um único pedido", async ({ page, request }) => {
@@ -153,7 +155,8 @@ test("cartão: número e CVV nunca são enviados ao servidor", async ({ page }) 
   await field(page, "Validade").fill("1230");
   await field(page, "CVV").fill("7391");
   await save(page).click();
-  await expect(page).toHaveURL(/\/pedido\/[^/]+\/pagamento$/);
+  // The mock gateway approves this card: straight to the confirmation.
+  await expect(page).toHaveURL(/\/pedido\/[^/]+\/confirmado$/);
   const sent = bodies.join("\n");
   expect(sent).toContain("mock_tok_");
   expect(sent).not.toContain("4111");
