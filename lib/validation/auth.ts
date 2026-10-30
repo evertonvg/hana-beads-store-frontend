@@ -16,11 +16,26 @@ export const passwordRules: readonly PasswordRule[] = [
   { id: "symbol", label: "1 símbolo", test: (p) => /[^\p{L}\p{N}\s]/u.test(p) },
 ];
 
-const emailField = z
+export const emailField = z
   .string()
   .trim()
   .max(254, { error: "Informe um e-mail válido." })
   .pipe(z.email({ error: "Informe um e-mail válido." }));
+
+export const phoneField = z
+  .string()
+  .trim()
+  .refine((v) => [10, 11].includes(v.replace(/\D/g, "").length), {
+    error: "Informe o celular com DDD.",
+  });
+
+/** The rules above as one check, for forms that ask for a password only sometimes. */
+export const passwordField = z
+  .string()
+  .max(200)
+  .refine((p) => passwordRules.every((r) => r.test(p)), {
+    error: "A senha precisa cumprir todas as regras.",
+  });
 
 export const loginSchema = z.object({
   email: emailField,
@@ -38,18 +53,8 @@ export const signupSchema = z
       .min(2, { error: "Informe seu nome completo." })
       .max(100, { error: "Nome muito longo." }),
     email: emailField,
-    phone: z
-      .string()
-      .trim()
-      .refine((v) => [10, 11].includes(v.replace(/\D/g, "").length), {
-        error: "Informe o celular com DDD.",
-      }),
-    password: z
-      .string()
-      .max(200)
-      .refine((p) => passwordRules.every((r) => r.test(p)), {
-        error: "A senha precisa cumprir todas as regras.",
-      }),
+    phone: phoneField,
+    password: passwordField,
     confirmPassword: z.string().max(200),
     acceptTerms: z
       .boolean({ error: "Aceite os Termos e a Política para continuar." })

@@ -25,6 +25,8 @@ export function createMockAuth(): AuthPort {
         email,
         phone: input.phone,
         password: input.password,
+        ...(input.cpf ? { cpf: input.cpf } : {}),
+        ...(input.address ? { address: { ...input.address, isDefault: true } } : {}),
       };
       store.users.push(user);
       const at = new Date().toISOString();
@@ -55,6 +57,16 @@ export function createMockAuth(): AuthPort {
     userById(id) {
       const user = getMockStore().users.find((u) => u.id === id);
       return Promise.resolve(user ? toUser(user) : null);
+    },
+
+    profile(userId) {
+      const user = getMockStore().users.find((u) => u.id === userId);
+      if (!user) return Promise.resolve(null);
+      return Promise.resolve({
+        phone: user.phone,
+        cpf: user.cpf ?? null,
+        address: user.address ? structuredClone(user.address) : null,
+      });
     },
 
     savedCart(userId) {

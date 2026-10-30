@@ -1,5 +1,13 @@
 import type { CartData } from "@/lib/cart/types";
-import type { Product } from "@/lib/data/types";
+import type {
+  Address,
+  Customer,
+  Order,
+  OrderItem,
+  OrderStatus,
+  PaymentMethod,
+  Product,
+} from "@/lib/data/types";
 import type { ShopQuery } from "@/lib/shop-query";
 
 export interface CatalogPort {
@@ -73,7 +81,13 @@ export type SignUpInput = {
   marketingEmail: boolean;
   /** Version of the Terms/Privacy text the user accepted. */
   termsVersion: string;
+  /** Saved from the checkout ("save my data"). */
+  cpf?: string;
+  address?: Address;
 };
+
+/** What the checkout pre-fills for a signed-in user. */
+export type CustomerProfile = { phone: string; cpf: string | null; address: Address | null };
 
 export type AuthProvider = "google" | "facebook" | "apple";
 
@@ -86,8 +100,40 @@ export interface AuthPort {
   requestPasswordReset(email: string): Promise<void>;
   /** Turns a session cookie into a user; null if the account is gone. */
   userById(id: string): Promise<AuthUser | null>;
+  /** Phone, CPF and default address of the user (null = unknown user). */
+  profile(userId: string): Promise<CustomerProfile | null>;
   savedCart(userId: string): Promise<CartData | null>;
   saveCart(userId: string, cart: CartData): Promise<void>;
+}
+
+export interface AddressLookupPort {
+  /** Street data for a CEP; null = unknown CEP (the user types the address). */
+  byCep(cep: string): Promise<Omit<Address, "number" | "complement"> | null>;
+}
+
+export type CreateOrderInput = {
+  userId: string | null;
+  guestToken: string | null;
+  paymentMethod: PaymentMethod;
+  items: OrderItem[];
+  subtotalCents: number | null;
+  shippingCents: number | null;
+  discountCents: number;
+  totalCents: number | null;
+  shippingAddress: Address;
+  customer: Customer;
+  shippingService: string;
+};
+
+export type OrderViewer = { userId: string | null; guestTokens: string[] };
+
+export interface OrdersPort {
+  /** The same idempotency key always gives back the same order. */
+  create(i: CreateOrderInput, idempotencyKey: string): Promise<Order>;
+  /** null when the viewer does not own the order (simulates RLS). */
+  get(id: string, viewer: OrderViewer): Promise<Order | null>;
+  listForUser(userId: string): Promise<Order[]>;
+  setStatus(id: string, s: OrderStatus): Promise<void>;
 }
 
 export type Ports = {
@@ -97,5 +143,7 @@ export type Ports = {
   shipping: ShippingPort;
   coupons: CouponPort;
   auth: AuthPort;
+  addressLookup: AddressLookupPort;
+  orders: OrdersPort;
   // other ports are added by the tasks that use them
 };

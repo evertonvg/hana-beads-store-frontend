@@ -1,5 +1,5 @@
 import type { CartData } from "@/lib/cart/types";
-import type { Product } from "@/lib/data/types";
+import type { Order, Product } from "@/lib/data/types";
 
 import { productFixtures, savedCartFixtures, userFixtures, type MockUser } from "./fixtures";
 
@@ -22,6 +22,9 @@ export type MockStore = {
   savedCarts: Record<string, CartData>;
   /** E-mails a password-reset link would have been sent to (accounts that exist only). */
   passwordResets: string[];
+  orders: Order[];
+  /** idempotency key -> id of the order it created. */
+  orderKeys: Record<string, string>;
   reset(): void;
 };
 
@@ -39,6 +42,8 @@ function createStore(): MockStore {
     consents: [],
     savedCarts: structuredClone(savedCartFixtures),
     passwordResets: [],
+    orders: [],
+    orderKeys: {},
     reset() {
       store.products = structuredClone([...productFixtures]);
       store.newsletter = [];
@@ -48,6 +53,8 @@ function createStore(): MockStore {
       store.consents = [];
       store.savedCarts = structuredClone(savedCartFixtures);
       store.passwordResets = [];
+      store.orders = [];
+      store.orderKeys = {};
     },
   };
   return store;

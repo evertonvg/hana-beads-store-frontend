@@ -1,5 +1,5 @@
 import type { CartData } from "@/lib/cart/types";
-import type { BeadArtSpec, Product } from "@/lib/data/types";
+import type { Address, BeadArtSpec, Product } from "@/lib/data/types";
 
 /** Mock accounts. Plain-text passwords exist only because this is an in-memory mock. */
 export type MockUser = {
@@ -8,6 +8,8 @@ export type MockUser = {
   email: string;
   phone: string;
   password: string;
+  cpf?: string;
+  address?: Address;
 };
 
 export const userFixtures: readonly MockUser[] = [
@@ -17,6 +19,20 @@ export const userFixtures: readonly MockUser[] = [
     email: "ana@teste.dev",
     phone: "(11) 91234-5678",
     password: "Senha@123",
+    // Obvious test data: a well-known generator CPF (not a real person) and the Praça da Sé.
+    cpf: "529.982.247-25",
+    address: {
+      id: "ana-casa",
+      label: "Casa",
+      cep: "01001-000",
+      street: "Praça da Sé",
+      number: "100",
+      complement: "",
+      district: "Sé",
+      city: "São Paulo",
+      state: "SP",
+      isDefault: true,
+    },
   },
   {
     id: "bruno",

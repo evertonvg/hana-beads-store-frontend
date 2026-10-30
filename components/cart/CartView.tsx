@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { focusRing } from "@/components/ui/focus";
 import { cn } from "@/lib/cn";
@@ -9,6 +9,7 @@ import { computeTotals } from "@/lib/cart/totals";
 import { readDraft, writeDraft, type CheckoutDraft } from "@/lib/cart/draft";
 import { useCartStore } from "@/lib/cart/store";
 import { lineKey } from "@/lib/cart/types";
+import { useCartHydrated } from "@/lib/cart/use-cart-hydrated";
 import { CartEmpty } from "./CartEmpty";
 import { CartLine } from "./CartLine";
 import { CartSummary } from "./CartSummary";
@@ -18,19 +19,6 @@ import { ShippingQuoteBox } from "./ShippingQuote";
 import { useCartPrices } from "./use-cart-prices";
 
 const REMOVED_TOAST_ID = "cart-removed";
-
-function subscribeHydration(onChange: () => void) {
-  return useCartStore.persist.onFinishHydration(onChange);
-}
-
-/** The store skips hydration (SSR shows an empty cart), so the real cart is only known after it. */
-function useCartHydrated(): boolean {
-  return useSyncExternalStore(
-    subscribeHydration,
-    () => useCartStore.persist.hasHydrated(),
-    () => false,
-  );
-}
 
 function Heading({ count }: { count: number | null }) {
   return (

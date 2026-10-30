@@ -1,0 +1,151 @@
+"use server";
+
+import {
+  priceCartAction,
+  quoteShippingAction,
+  validateCouponAction,
+} from "@/app/(loja)/carrinho/actions";
+import { sanitizeCart } from "@/lib/cart/merge";
+import { computeTotals } from "@/lib/cart/totals";
+import { getData } from "@/lib/data";
+import type { Address } from "@/lib/data/types";
+import { isValidCep } from "@/lib/format";
+import { rememberGuestToken } from "@/lib/guest-orders";
+import { createSession, getSession } from "@/lib/session";
+import { CHECKOUT_CONSENT_VERSION, checkoutSchema } from "@/lib/validation/checkout";
+import { fieldErrorsFrom, type FormState } from "@/lib/validation/form-state";
+
+/** `redirectTo` is where the client goes next; `accountCreated` tells it to sync the cart owner. */
+export type PlaceOrderResult = FormState & { redirectTo?: string; accountCreated?: boolean };
+
+const GENERIC_ERROR = "Não foi possível agora. Tente de novo.";
+
+const fail = (message: string, fieldErrors?: Record<string, string>): PlaceOrderResult => ({
+  status: "error",
+  message,
+  ...(fieldErrors ? { fieldErrors } : {}),
+});
+
+/** `lines` travels next to the form values but is not part of the validated schema. */
+function linesOf(input: unknown): unknown {
+  return typeof input === "object" && input !== null ? (input as { lines?: unknown }).lines : null;
+}
+
+/** Street data for a CEP (null = unknown CEP: the user types it). */
+export async function lookupCepAction(
+  cep: string,
+): Promise<Omit<Address, "number" | "complement"> | null> {
+  if (typeof cep !== "string" || !isValidCep(cep)) return null;
+  return getData().addressLookup.byCep(cep);
+}
+
+/**
+ * Creates the order. Everything that costs money is recomputed here from product ids and
+ * quantities: prices, the shipping option for the CEP and the coupon. The same checkout token
+ * always gives back the same order (double click, retry). The cart is NOT cleared: that happens
+ * when the payment is confirmed.
+ */
+export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult> {
+  const parsed = checkoutSchema.safeParse(input);
+  if (!parsed.success) {
+    return fail("Confira os campos.", fieldErrorsFrom(parsed.error));
+  }
+  const v = parsed.data;
+  try {
+    const lines = sanitizeCart({ lines: linesOf(input) }).lines;
+    if (lines.length === 0) return fail("Seu carrinho está vazio.");
+    const { lines: priced, unknownIds } = await priceCartAction(lines);
+    if (unknownIds.length > 0 || priced.length === 0) {
+      return fail("Algum item do carrinho não está mais disponível. Revise o carrinho.");
+    }
+
+    const quotes = await quoteShippingAction({
+      cep: v.cep,
+      items: lines.map((l) => ({ productId: l.productId, qty: l.qty })),
+    });
+    if (!Array.isArray(quotes)) {
+      return fail("Confira os campos.", {
+        cep:
+          quotes.error === "cep_invalido"
+            ? "Informe um CEP válido (8 números)."
+            : "CEP não atendido.",
+      });
+    }
+    const shipping = quotes.find((q) => q.id === v.shippingId);
+    if (!shipping) return fail("Confira os campos.", { shippingId: "Escolha uma opção de frete." });
+
+    let discountCents = 0;
+    if (v.couponCode) {
+      const coupon = await validateCouponAction({ code: v.couponCode, lines });
+      if (!coupon.ok) return fail("O cupom não vale mais. Volte ao carrinho para revisar.");
+      discountCents = coupon.discountCents ?? 0;
+    }
+    const totals = computeTotals(priced, shipping.priceCents, discountCents);
+
+    const address: Address = {
+      cep: v.cep,
+      street: v.street,
+      number: v.number,
+      ...(v.complement ? { complement: v.complement } : {}),
+      district: v.district,
+      city: v.city,
+      state: v.state,
+    };
+
+    const { auth, orders } = getData();
+    const session = await getSession();
+    let userId = session?.id ?? null;
+    let accountCreated = false;
+    if (!userId && v.saveAccount) {
+      // Optional "save my data" path. Terms are accepted by the notice next to the button, not
+      // by a checkbox (flagged for legal review); marketing e-mail is never opted in here.
+      const created = await auth.signUp({
+        name: v.name,
+        email: v.email,
+        phone: v.phone,
+        password: v.password ?? "",
+        acceptTerms: true,
+        marketingEmail: false,
+        termsVersion: CHECKOUT_CONSENT_VERSION,
+        cpf: v.cpf,
+        address,
+      });
+      if ("error" in created) {
+        return fail("Confira os campos.", { email: "E-mail já cadastrado." });
+      }
+      await createSession(created.id, false);
+      userId = created.id;
+      accountCreated = true;
+    }
+
+    const order = await orders.create(
+      {
+        userId,
+        guestToken: userId ? null : crypto.randomUUID(),
+        paymentMethod: v.payment,
+        items: priced.map((l) => ({
+          productId: l.productId,
+          name: l.product.name,
+          ring: l.ring,
+          unitPriceCents: l.unitCents,
+          qty: l.qty,
+          image: l.product.images[0] ?? null,
+        })),
+        subtotalCents: totals.subtotalCents,
+        shippingCents: shipping.priceCents,
+        discountCents,
+        totalCents: totals.totalCents,
+        shippingAddress: address,
+        customer: { name: v.name, email: v.email, phone: v.phone, cpf: v.cpf },
+        shippingService: shipping.service,
+      },
+      v.checkoutToken,
+    );
+    // A retried token gets back the first order, with the guest token it was created with.
+    if (order.guestToken) await rememberGuestToken(order.guestToken);
+    return { status: "ok", redirectTo: `/pedido/${order.id}/pagamento`, accountCreated };
+  } catch (error) {
+    console.error("placeOrderAction failed", error);
+    return fail(GENERIC_ERROR);
+  }
+}
