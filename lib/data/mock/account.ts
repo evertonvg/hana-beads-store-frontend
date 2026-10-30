@@ -68,7 +68,11 @@ export function createMockAccount(): AccountPort {
         ...a,
         id: existing?.id ?? crypto.randomUUID(),
         // The first address is always the default; a later one only when asked for.
-        isDefault: list.length === 0 || Boolean(a.isDefault),
+        // Editing the only default with "principal" unchecked keeps it default: never zero defaults.
+        isDefault:
+          list.length === 0 ||
+          Boolean(a.isDefault) ||
+          (existing?.isDefault === true && !list.some((x) => x !== existing && x.isDefault)),
       };
       if (saved.isDefault) for (const x of list) x.isDefault = false;
       if (existing) list.splice(list.indexOf(existing), 1, saved);
@@ -97,7 +101,7 @@ export function createMockAccount(): AccountPort {
       return Promise.resolve(recordsOf(userId));
     },
 
-    setConsent(userId, type, granted) {
+    setConsent(userId, type, granted, version) {
       const store = getMockStore();
       const now = new Date().toISOString();
       const previous = store.consents.findLast((c) => c.userId === userId && c.type === type);
@@ -105,7 +109,7 @@ export function createMockAccount(): AccountPort {
         userId,
         type,
         granted,
-        version: previous?.version ?? "",
+        version,
         // A revocation keeps the date of the grant it withdraws.
         grantedAt: !granted && previous ? previous.grantedAt : now,
         revokedAt: granted ? null : now,

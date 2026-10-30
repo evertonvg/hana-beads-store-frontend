@@ -144,7 +144,13 @@ export interface AccountPort {
   /** The whole history, oldest first. */
   consents(userId: string): Promise<ConsentRecord[]>;
   /** Appends a record (a grant, or a revocation with `revokedAt`); old records are never touched. */
-  setConsent(userId: string, type: "email_marketing", granted: boolean): Promise<void>;
+  setConsent(
+    userId: string,
+    type: "email_marketing",
+    granted: boolean,
+    /** Version of the text shown to the user right now. */
+    version: string,
+  ): Promise<void>;
   connections(userId: string): Promise<Connection[]>;
   connect(userId: string, provider: AuthProvider): Promise<void>;
   /** `ok: false` when it is the last way to sign in (no password and only this provider). */

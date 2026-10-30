@@ -2,6 +2,9 @@ import { z } from "zod";
 import { isValidCpf } from "@/lib/format";
 import { passwordField, phoneField } from "./auth";
 
+/** Version of the marketing e-mail text shown in "Privacidade e dados". */
+export const MARKETING_CONSENT_VERSION = "2026-10-28";
+
 /** "Meus dados". The CPF is optional: an empty text means none. */
 export const profileSchema = z.object({
   name: z

@@ -55,8 +55,8 @@ async function Loader({ searchParams }: { searchParams: PageProps<"/conta">["sea
   const tab = parseTab(aba);
   // A valid cookie of a deleted user has no session here: treat it as signed out.
   const user = await getSession().catch(() => null);
+  const next = tab ? `/conta?aba=${tab}` : "/conta";
   if (!user) {
-    const next = tab ? `/conta?aba=${tab}` : "/conta";
     redirect(`/entrar?next=${encodeURIComponent(next)}`);
   }
   const current: AccountTab = tab ?? "dados";
@@ -64,7 +64,7 @@ async function Loader({ searchParams }: { searchParams: PageProps<"/conta">["sea
 
   // Only what the visible content needs; the phone menu (no `?aba`) also needs the last order.
   const profile = await account.profile(user.id);
-  if (!profile) redirect("/entrar?next=%2Fconta");
+  if (!profile) redirect(`/entrar?next=${encodeURIComponent(next)}`);
   const wants = (t: AccountTab) => current === t;
   const [connections, addresses, recent, consents] = await Promise.all([
     wants("dados") ? account.connections(user.id) : [],

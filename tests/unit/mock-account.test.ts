@@ -16,6 +16,8 @@ const home: Address = {
   state: "SP",
 };
 
+const V = "2026-10-28";
+
 describe("mock account", () => {
   beforeEach(() => getMockStore().reset());
 
@@ -70,13 +72,36 @@ describe("mock account", () => {
 
   it("appends consent records and never rewrites old ones", async () => {
     const port = createMockAccount();
-    await port.setConsent("ana", "email_marketing", true);
-    await port.setConsent("ana", "email_marketing", false);
+    await port.setConsent("ana", "email_marketing", true, V);
+    await port.setConsent("ana", "email_marketing", false, V);
     const records = await port.consents("ana");
     expect(records).toHaveLength(2);
     expect(records[0]).toMatchObject({ granted: true, revokedAt: null });
     expect(records[1]?.granted).toBe(false);
     expect(records[1]?.revokedAt).not.toBeNull();
+  });
+
+  it("stamps every consent record with the version passed, never a copied one", async () => {
+    const port = createMockAccount();
+    await port.setConsent("bruno", "email_marketing", true, "v1");
+    await port.setConsent("bruno", "email_marketing", false, "v2");
+    await port.setConsent("bruno", "email_marketing", true, "v3");
+    const records = await port.consents("bruno");
+    expect(records.map((r) => r.version)).toEqual(["v1", "v2", "v3"]);
+    expect(records.every((r) => r.version !== "")).toBe(true);
+  });
+
+  it("keeps one default when the default address is edited with principal unchecked", async () => {
+    const port = createMockAccount();
+    const [only] = await port.addresses("ana");
+    await port.upsertAddress("ana", { ...only, isDefault: false });
+    expect((await port.addresses("ana")).filter((a) => a.isDefault)).toHaveLength(1);
+
+    const second = await port.upsertAddress("ana", { ...home, label: "Outro", isDefault: true });
+    await port.upsertAddress("ana", { ...second, isDefault: false });
+    const list = await port.addresses("ana");
+    expect(list.filter((a) => a.isDefault)).toHaveLength(1);
+    expect(list.find((a) => a.id === second.id)?.isDefault).toBe(true);
   });
 
   it("refuses to disconnect the last way to sign in", async () => {
@@ -92,7 +117,7 @@ describe("mock account", () => {
 
   it("exports only the user's own data", async () => {
     const port = createMockAccount();
-    await port.setConsent("ana", "email_marketing", true);
+    await port.setConsent("ana", "email_marketing", true, V);
     const data = await port.exportData("ana");
     const text = JSON.stringify(data);
     expect(data.profile).toMatchObject({ email: "ana@teste.dev" });
@@ -126,7 +151,7 @@ describe("mock account", () => {
       "key-1",
     );
     const port = createMockAccount();
-    await port.setConsent("ana", "email_marketing", true);
+    await port.setConsent("ana", "email_marketing", true, V);
     expect(await port.deleteAccount("ana", "Senha@123")).toEqual({ ok: true });
     expect(await createMockAuth().userById("ana")).toBeNull();
     expect(await createMockAuth().signIn("ana@teste.dev", "Senha@123")).toBeNull();

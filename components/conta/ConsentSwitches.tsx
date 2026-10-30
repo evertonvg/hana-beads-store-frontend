@@ -10,7 +10,7 @@ const GENERIC_ERROR = "Não foi possível agora. Tente de novo.";
 /** "COMUNICAÇÕES": optional consents. Each change is saved right away and kept in the history. */
 export function ConsentSwitches({ emailMarketing }: { emailMarketing: boolean }) {
   const [on, setOn] = useState(emailMarketing);
-  const [, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
 
   const change = (value: boolean) => {
@@ -35,6 +35,7 @@ export function ConsentSwitches({ emailMarketing }: { emailMarketing: boolean })
       <div className="border-b-2 border-border-soft">
         <Switch
           checked={on}
+          disabled={pending}
           onCheckedChange={change}
           label="Novidades por e-mail"
           description="Lançamentos e promoções"

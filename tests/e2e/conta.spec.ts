@@ -241,19 +241,41 @@ test.describe("sessão", () => {
   test("um cookie válido de uma conta já excluída conta como deslogado", async ({
     page,
     browser,
+    baseURL,
   }) => {
-    await login(page);
-    await expect(page).toHaveURL(/\/conta$/);
+    // Context A: signed in, with the profile form already open.
+    await openTab(page, "dados");
+    await page.getByLabel("Nome completo").fill("Ana Maria Souza");
 
-    // A second session of the same user deletes the account; the first cookie is still sealed.
-    const other = await browser.newContext({ baseURL: "http://localhost:3100" });
-    const second = await other.newPage();
-    await login(second);
-    await expect(second).toHaveURL(/\/conta$/);
-    const del = await second.request.post("/api/__mock__/reset");
-    expect(del.ok()).toBe(true);
-    await other.close();
-    await page.request.post("/api/__mock__/reset");
+    // Context B (another browser): the same user deletes the account. A's cookie stays sealed.
+    const other = await browser.newContext({ baseURL: baseURL ?? "http://localhost:3100" });
+    try {
+      const second = await other.newPage();
+      await login(second);
+      await expect(second).toHaveURL(/\/conta$/);
+      await gotoHydrated(second, "/conta?aba=privacidade");
+      await second.getByRole("button", { name: "EXCLUIR CONTA" }).click();
+      await second.getByLabel("Digite sua senha para confirmar").fill("Senha@123");
+      await second.getByRole("button", { name: "SIM, EXCLUIR" }).click();
+      await expect(second).toHaveURL(/\/$/);
+    } finally {
+      await other.close();
+    }
+
+    // A server action of the stale session answers "session expired" and saves nothing.
+    await page.getByRole("button", { name: "SALVAR", exact: true }).click();
+    await expect(page.getByText("Sua sessão expirou. Entre de novo.")).toBeVisible();
+
+    // The export refuses it, uncached.
+    const exported = await page.request.get("/api/conta/exportar");
+    expect(exported.status()).toBe(401);
+    expect(exported.headers()["cache-control"]).toBe("no-store");
+
+    // The page treats it as signed out.
+    await page.goto("/conta");
+    await expect(page).toHaveURL(/\/entrar\?next=%2Fconta$/);
+    await page.goto("/conta?aba=privacidade");
+    await expect(page).toHaveURL(/\/entrar\?next=%2Fconta%3Faba%3Dprivacidade$/);
   });
 
   test("acessibilidade de cada aba", async ({ page }) => {

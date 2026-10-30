@@ -6,7 +6,12 @@ import type { AuthProvider } from "@/lib/data/ports";
 import { publicEnv } from "@/lib/env";
 import { getSession } from "@/lib/session";
 import { addressSchema } from "@/lib/validation/address";
-import { changePasswordSchema, deleteAccountSchema, profileSchema } from "@/lib/validation/account";
+import {
+  changePasswordSchema,
+  deleteAccountSchema,
+  MARKETING_CONSENT_VERSION,
+  profileSchema,
+} from "@/lib/validation/account";
 import { fieldErrorsFrom, type FormState } from "@/lib/validation/form-state";
 
 const GENERIC_ERROR = "Não foi possível agora. Tente de novo.";
@@ -104,7 +109,12 @@ export async function setDefaultAddressAction(id: unknown): Promise<FormState> {
 export async function setMarketingConsentAction(granted: unknown): Promise<FormState> {
   if (typeof granted !== "boolean") return failed();
   return asUser(async (userId) => {
-    await getData().account.setConsent(userId, "email_marketing", granted);
+    await getData().account.setConsent(
+      userId,
+      "email_marketing",
+      granted,
+      MARKETING_CONSENT_VERSION,
+    );
     return {
       status: "ok",
       message: granted ? "Você vai receber novidades." : "Novidades desligadas.",
