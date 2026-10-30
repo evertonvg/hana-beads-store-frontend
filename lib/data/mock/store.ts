@@ -1,13 +1,24 @@
 import type { CartData } from "@/lib/cart/types";
-import type { Order, Product } from "@/lib/data/types";
+import type { Connection } from "@/lib/data/ports";
+import type { Address, Order, Product } from "@/lib/data/types";
 
-import { productFixtures, savedCartFixtures, userFixtures, type MockUser } from "./fixtures";
+import {
+  addressFixtures,
+  connectionFixtures,
+  productFixtures,
+  savedCartFixtures,
+  userFixtures,
+  type MockUser,
+} from "./fixtures";
 
 export type MockConsent = {
   userId: string;
   type: "terms" | "privacy" | "email_marketing";
   version: string;
-  at: string;
+  grantedAt: string;
+  /** Set on the record that withdraws a consent; records are only ever appended. */
+  revokedAt: string | null;
+  granted: boolean;
 };
 
 export type MockStore = {
@@ -17,7 +28,12 @@ export type MockStore = {
   favorites: Record<string, string[]>;
   stockAlerts: { userId: string | null; email: string; productId: string; consentedAt: string }[];
   users: MockUser[];
+  /** Append-only consent history of every user. */
   consents: MockConsent[];
+  /** userId -> saved addresses. */
+  addresses: Record<string, Address[]>;
+  /** userId -> linked social accounts. */
+  connections: Record<string, Connection[]>;
   /** userId -> cart saved on the server (merged with the guest cart at sign-in). */
   savedCarts: Record<string, CartData>;
   /** E-mails a password-reset link would have been sent to (accounts that exist only). */
@@ -40,6 +56,8 @@ function createStore(): MockStore {
     stockAlerts: [],
     users: structuredClone([...userFixtures]),
     consents: [],
+    addresses: structuredClone(addressFixtures),
+    connections: structuredClone(connectionFixtures),
     savedCarts: structuredClone(savedCartFixtures),
     passwordResets: [],
     orders: [],
@@ -51,6 +69,8 @@ function createStore(): MockStore {
       store.stockAlerts = [];
       store.users = structuredClone([...userFixtures]);
       store.consents = [];
+      store.addresses = structuredClone(addressFixtures);
+      store.connections = structuredClone(connectionFixtures);
       store.savedCarts = structuredClone(savedCartFixtures);
       store.passwordResets = [];
       store.orders = [];

@@ -22,3 +22,17 @@ export const inlineLink = cn(
   "inline py-3.5 text-link underline underline-offset-4 hover:text-yellow",
   focusRing,
 );
+
+/** Text inputs of "Minha conta": darker than the panel, 48px tall. */
+export const accountInput = "min-h-12 bg-bg";
+
+/** Pixel-font titles inside the account panel. */
+export const panelTitle = "m-0 font-pixel text-sm leading-normal text-text";
+export const subTitle = "m-0 font-pixel text-[11px] leading-normal text-yellow";
+
+/** Dashed divider between the blocks of one tab. */
+export const dashedBlock =
+  "flex flex-col gap-4 border-t-[3px] border-dashed border-border pt-[22px]";
+
+/** Main save button of the account forms. */
+export const saveButtonClass = "min-h-[52px] self-start shadow-[5px_5px_0_var(--color-yellow)]";

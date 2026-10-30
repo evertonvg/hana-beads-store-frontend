@@ -14,12 +14,15 @@ export const metadata: Metadata = {
 /** Who is signed in decides the pre-filled fields; it reads cookies, so it sits inside Suspense. */
 async function Loader() {
   const user = await getSession().catch(() => null);
-  const profile = user ? await getData().auth.profile(user.id) : null;
+  const { account } = getData();
+  const [profile, addresses] = user
+    ? await Promise.all([account.profile(user.id), account.addresses(user.id)])
+    : [null, []];
   const initial: CheckoutInitial = {
     user: user ? { name: user.name, email: user.email } : null,
     phone: profile?.phone ?? "",
     cpf: profile?.cpf ?? "",
-    address: profile?.address ?? null,
+    address: addresses.find((a) => a.isDefault) ?? addresses[0] ?? null,
   };
   return <CheckoutView initial={initial} />;
 }

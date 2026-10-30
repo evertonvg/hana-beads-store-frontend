@@ -88,9 +88,6 @@ export type SignUpInput = {
   address?: Address;
 };
 
-/** What the checkout pre-fills for a signed-in user. */
-export type CustomerProfile = { phone: string; cpf: string | null; address: Address | null };
-
 export type AuthProvider = "google" | "facebook" | "apple";
 
 export interface AuthPort {
@@ -102,10 +99,59 @@ export interface AuthPort {
   requestPasswordReset(email: string): Promise<void>;
   /** Turns a session cookie into a user; null if the account is gone. */
   userById(id: string): Promise<AuthUser | null>;
-  /** Phone, CPF and default address of the user (null = unknown user). */
-  profile(userId: string): Promise<CustomerProfile | null>;
   savedCart(userId: string): Promise<CartData | null>;
   saveCart(userId: string, cart: CartData): Promise<void>;
+}
+
+export type Profile = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  cpf: string | null;
+  avatarUrl: string | null;
+};
+
+export type ConsentType = "email_marketing" | "terms" | "privacy";
+
+/** One entry of the append-only consent history: a grant or a revocation, never edited. */
+export type ConsentRecord = {
+  type: ConsentType;
+  granted: boolean;
+  /** Version of the text the user agreed to. */
+  version: string;
+  grantedAt: string;
+  revokedAt: string | null;
+};
+
+export type Connection = { provider: AuthProvider; email: string | null };
+
+/** Everything the signed-in user manages in "Minha conta". Every call is scoped to `userId`. */
+export interface AccountPort {
+  /** null = unknown user. */
+  profile(userId: string): Promise<Profile | null>;
+  updateProfile(
+    userId: string,
+    p: { name: string; phone: string; cpf?: string | null },
+  ): Promise<void>;
+  /** `ok: false` when the current password is wrong. */
+  changePassword(userId: string, current: string, next: string): Promise<{ ok: boolean }>;
+  addresses(userId: string): Promise<Address[]>;
+  /** With an `id` of the user it edits that address, otherwise it adds one. The first is the default. */
+  upsertAddress(userId: string, a: Address): Promise<Address>;
+  deleteAddress(userId: string, id: string): Promise<void>;
+  setDefaultAddress(userId: string, id: string): Promise<void>;
+  /** The whole history, oldest first. */
+  consents(userId: string): Promise<ConsentRecord[]>;
+  /** Appends a record (a grant, or a revocation with `revokedAt`); old records are never touched. */
+  setConsent(userId: string, type: "email_marketing", granted: boolean): Promise<void>;
+  connections(userId: string): Promise<Connection[]>;
+  connect(userId: string, provider: AuthProvider): Promise<void>;
+  /** `ok: false` when it is the last way to sign in (no password and only this provider). */
+  disconnect(userId: string, provider: AuthProvider): Promise<{ ok: boolean }>;
+  exportData(userId: string): Promise<Record<string, unknown>>;
+  /** `ok: false` (and nothing deleted) when the password is wrong. */
+  deleteAccount(userId: string, password: string): Promise<{ ok: boolean }>;
 }
 
 export interface AddressLookupPort {
@@ -160,6 +206,7 @@ export type Ports = {
   shipping: ShippingPort;
   coupons: CouponPort;
   auth: AuthPort;
+  account: AccountPort;
   addressLookup: AddressLookupPort;
   orders: OrdersPort;
   payments: PaymentsPort;

@@ -26,18 +26,25 @@ export function createMockAuth(): AuthPort {
         phone: input.phone,
         password: input.password,
         ...(input.cpf ? { cpf: input.cpf } : {}),
-        ...(input.address ? { address: { ...input.address, isDefault: true } } : {}),
       };
       store.users.push(user);
-      const at = new Date().toISOString();
-      const version = input.termsVersion;
-      store.consents.push(
-        { userId: user.id, type: "terms", version, at },
-        { userId: user.id, type: "privacy", version, at },
-      );
-      if (input.marketingEmail) {
-        store.consents.push({ userId: user.id, type: "email_marketing", version, at });
+      if (input.address) {
+        store.addresses[user.id] = [{ ...input.address, id: crypto.randomUUID(), isDefault: true }];
       }
+      const grantedAt = new Date().toISOString();
+      const version = input.termsVersion;
+      const grant = (type: "terms" | "privacy" | "email_marketing") =>
+        store.consents.push({
+          userId: user.id,
+          type,
+          version,
+          granted: true,
+          grantedAt,
+          revokedAt: null,
+        });
+      grant("terms");
+      grant("privacy");
+      if (input.marketingEmail) grant("email_marketing");
       return Promise.resolve(toUser(user));
     },
 
@@ -57,16 +64,6 @@ export function createMockAuth(): AuthPort {
     userById(id) {
       const user = getMockStore().users.find((u) => u.id === id);
       return Promise.resolve(user ? toUser(user) : null);
-    },
-
-    profile(userId) {
-      const user = getMockStore().users.find((u) => u.id === userId);
-      if (!user) return Promise.resolve(null);
-      return Promise.resolve({
-        phone: user.phone,
-        cpf: user.cpf ?? null,
-        address: user.address ? structuredClone(user.address) : null,
-      });
     },
 
     savedCart(userId) {

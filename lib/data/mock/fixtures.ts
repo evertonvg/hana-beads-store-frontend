@@ -1,4 +1,5 @@
 import type { CartData } from "@/lib/cart/types";
+import type { Connection } from "@/lib/data/ports";
 import type { Address, BeadArtSpec, Product } from "@/lib/data/types";
 
 /** Mock accounts. Plain-text passwords exist only because this is an in-memory mock. */
@@ -9,7 +10,6 @@ export type MockUser = {
   phone: string;
   password: string;
   cpf?: string;
-  address?: Address;
 };
 
 export const userFixtures: readonly MockUser[] = [
@@ -21,7 +21,20 @@ export const userFixtures: readonly MockUser[] = [
     password: "Senha@123",
     // Obvious test data: a well-known generator CPF (not a real person) and the Praça da Sé.
     cpf: "529.982.247-25",
-    address: {
+  },
+  {
+    id: "bruno",
+    name: "Bruno Lima",
+    email: "bruno@teste.dev",
+    phone: "(21) 98765-4321",
+    password: "Senha@123",
+  },
+];
+
+/** Saved addresses per user. Obvious test data: the Praça da Sé. */
+export const addressFixtures: Record<string, Address[]> = {
+  ana: [
+    {
       id: "ana-casa",
       label: "Casa",
       cep: "01001-000",
@@ -33,15 +46,13 @@ export const userFixtures: readonly MockUser[] = [
       state: "SP",
       isDefault: true,
     },
-  },
-  {
-    id: "bruno",
-    name: "Bruno Lima",
-    email: "bruno@teste.dev",
-    phone: "(21) 98765-4321",
-    password: "Senha@123",
-  },
-];
+  ],
+};
+
+/** Social accounts already linked (ana signs in with Google, and also has a password). */
+export const connectionFixtures: Record<string, Connection[]> = {
+  ana: [{ provider: "google", email: "ana@teste.dev" }],
+};
 
 /** Ana already has one item saved on the server (merge-at-login scenario). */
 export const savedCartFixtures: Record<string, CartData> = {

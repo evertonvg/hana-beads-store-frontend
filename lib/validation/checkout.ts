@@ -1,44 +1,12 @@
 import { z } from "zod";
-import { isValidCep, isValidCpf, onlyDigits } from "@/lib/format";
+import { isValidCpf, onlyDigits } from "@/lib/format";
+import { addressFields } from "./address";
 import { emailField, passwordField, phoneField } from "./auth";
-
-export const UFS = [
-  "AC",
-  "AL",
-  "AP",
-  "AM",
-  "BA",
-  "CE",
-  "DF",
-  "ES",
-  "GO",
-  "MA",
-  "MT",
-  "MS",
-  "MG",
-  "PA",
-  "PB",
-  "PR",
-  "PE",
-  "PI",
-  "RJ",
-  "RN",
-  "RS",
-  "RO",
-  "RR",
-  "SC",
-  "SP",
-  "SE",
-  "TO",
-] as const;
 
 export const PAYMENT_METHODS = ["pix", "cartao", "boleto"] as const;
 
 /** Version of the Terms/Privacy notice shown by the checkout when it also creates an account. */
 export const CHECKOUT_CONSENT_VERSION = "2026-10-28";
-
-const required = (message: string, max = 120) =>
-  z.string().trim().min(1, { error: message }).max(max);
 
 /**
  * Card fields are validated in the browser only. The server never receives the number, holder,
@@ -71,13 +39,7 @@ const checkoutBase = z.object({
   email: emailField,
   phone: phoneField,
   cpf: z.string().refine((v) => isValidCpf(v), { error: "Informe um CPF válido." }),
-  cep: z.string().refine((v) => isValidCep(v), { error: "Informe um CEP válido (8 números)." }),
-  street: required("Informe a rua."),
-  number: required("Informe o número.", 20),
-  complement: z.string().trim().max(80).optional(),
-  district: required("Informe o bairro."),
-  city: required("Informe a cidade."),
-  state: z.enum(UFS, { error: "Informe a UF." }),
+  ...addressFields,
   shippingId: z.string().min(1, { error: "Escolha uma opção de frete." }).max(40),
   couponCode: z.string().trim().max(40).optional(),
   payment: z.enum(PAYMENT_METHODS, { error: "Escolha a forma de pagamento." }),

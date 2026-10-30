@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Controller, useForm, useWatch, type FieldErrors, type FieldPath } from "react-hook-form";
 import { placeOrderAction, type PlaceOrderResult } from "@/app/(checkout)/checkout/actions";
+import { AddressFields } from "@/components/address/AddressFields";
 import { PasswordRules } from "@/components/conta/PasswordRules";
 import { inlineLink } from "@/components/conta/styles";
 import { useFinishAuth } from "@/components/conta/use-finish-auth";
@@ -14,7 +15,6 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import { Field } from "@/components/ui/Field";
 import { MaskedInput } from "@/components/ui/MaskedInput";
 import { PillRadioGroup } from "@/components/ui/PillRadioGroup";
-import { Select } from "@/components/ui/Select";
 import { TextInput } from "@/components/ui/TextInput";
 import { readDraft } from "@/lib/cart/draft";
 import { useCartStore } from "@/lib/cart/store";
@@ -26,7 +26,6 @@ import { formatTotal, isValidCep, onlyDigits } from "@/lib/format";
 import { mockCardToken } from "@/lib/mock-card-token";
 import {
   checkoutFormSchema,
-  UFS,
   type CheckoutFormInput,
   type CheckoutFormOutput,
 } from "@/lib/validation/checkout";
@@ -35,7 +34,7 @@ import { CheckoutBar } from "./CheckoutBar";
 import { SummaryAside, SummaryDetails } from "./CheckoutSummary";
 import { PaymentPicker } from "./PaymentPicker";
 import { checkoutInput, legend, section } from "./styles";
-import { useCepLookup, useCheckoutQuotes } from "./use-checkout-lookups";
+import { useCheckoutQuotes } from "./use-checkout-lookups";
 
 /** What the server knows about the signed-in user, used to pre-fill the form. */
 export type CheckoutInitial = {
@@ -147,17 +146,6 @@ export function CheckoutForm({ initial, lines, priced }: Props) {
   const shippingId = useWatch({ control, name: "shippingId" });
   const password = useWatch({ control, name: "password" }) ?? "";
   const saveAccount = useWatch({ control, name: "saveAccount" });
-
-  const lookup = useCepLookup(cep);
-  useEffect(() => {
-    const found = lookup.data;
-    if (!found) return;
-    const opts = { shouldValidate: true, shouldDirty: true } as const;
-    setValue("street", found.street, opts);
-    setValue("district", found.district, opts);
-    setValue("city", found.city, opts);
-    setValue("state", found.state as CheckoutFormInput["state"], opts);
-  }, [lookup.data, setValue]);
 
   const items = lines.map((l) => ({ productId: l.productId, qty: l.qty }));
   const { quotes, error: quoteError, loading: quoting } = useCheckoutQuotes(cep, items);
@@ -317,76 +305,21 @@ export function CheckoutForm({ initial, lines, priced }: Props) {
               <span className="md:hidden">ENTREGA</span>
               <span className="hidden md:inline">ENDEREÇO DE ENTREGA</span>
             </legend>
-            <div className="grid gap-3.5 md:grid-cols-[repeat(auto-fit,minmax(180px,1fr))] md:gap-4">
-              <Field label="CEP" plainLabel error={errors.cep?.message}>
-                <Controller
-                  control={control}
-                  name="cep"
-                  render={({ field }) => (
-                    <MaskedInput
-                      mask="cep"
-                      autoComplete="postal-code"
-                      placeholder="00000-000"
-                      className={checkoutInput}
-                      name={field.name}
-                      ref={field.ref}
-                      value={field.value}
-                      onAccept={field.onChange}
-                      onBlur={field.onBlur}
-                    />
-                  )}
-                />
-              </Field>
-              <Field label="Rua" plainLabel error={errors.street?.message}>
-                <TextInput
-                  autoComplete="address-line1"
-                  className={checkoutInput}
-                  {...register("street")}
-                />
-              </Field>
-              <div className="grid grid-cols-[1fr_1.6fr] gap-2.5 md:contents">
-                <Field label="Número" plainLabel error={errors.number?.message}>
-                  <TextInput
-                    inputMode="numeric"
-                    className={checkoutInput}
-                    {...register("number")}
-                  />
-                </Field>
-                <Field label="Complemento" plainLabel error={errors.complement?.message}>
-                  <TextInput
-                    autoComplete="address-line2"
-                    className={checkoutInput}
-                    {...register("complement")}
-                  />
-                </Field>
-              </div>
-              <Field label="Bairro" plainLabel error={errors.district?.message}>
-                <TextInput className={checkoutInput} {...register("district")} />
-              </Field>
-              <div className="grid grid-cols-[1.6fr_1fr] gap-2.5 md:contents">
-                <Field label="Cidade" plainLabel error={errors.city?.message}>
-                  <TextInput
-                    autoComplete="address-level2"
-                    className={checkoutInput}
-                    {...register("city")}
-                  />
-                </Field>
-                <Field label="UF" plainLabel error={errors.state?.message}>
-                  <Select
-                    autoComplete="address-level1"
-                    className={checkoutInput}
-                    {...register("state")}
-                  >
-                    <option value="">UF</option>
-                    {UFS.map((uf) => (
-                      <option key={uf} value={uf}>
-                        {uf}
-                      </option>
-                    ))}
-                  </Select>
-                </Field>
-              </div>
-            </div>
+            <AddressFields
+              control={control}
+              register={register}
+              setValue={setValue}
+              errors={{
+                cep: errors.cep?.message,
+                street: errors.street?.message,
+                number: errors.number?.message,
+                complement: errors.complement?.message,
+                district: errors.district?.message,
+                city: errors.city?.message,
+                state: errors.state?.message,
+              }}
+              inputClassName={checkoutInput}
+            />
 
             <div data-field="shippingId" tabIndex={-1} className="flex flex-col gap-2.5">
               <p className="m-0 text-sm">Frete</p>

@@ -1,0 +1,55 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import { setMarketingConsentAction } from "@/app/(conta)/conta/actions";
+import { Switch } from "@/components/ui/Switch";
+import type { FormState } from "@/lib/validation/form-state";
+
+const GENERIC_ERROR = "Não foi possível agora. Tente de novo.";
+
+/** "COMUNICAÇÕES": optional consents. Each change is saved right away and kept in the history. */
+export function ConsentSwitches({ emailMarketing }: { emailMarketing: boolean }) {
+  const [on, setOn] = useState(emailMarketing);
+  const [, startTransition] = useTransition();
+  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const change = (value: boolean) => {
+    setOn(value);
+    setMessage(null);
+    startTransition(async () => {
+      let result: FormState;
+      try {
+        result = await setMarketingConsentAction(value);
+      } catch {
+        result = { status: "error", message: GENERIC_ERROR };
+      }
+      // Not saved: show the switch as it really is on the server.
+      if (result.status !== "ok") setOn(!value);
+      setMessage({ ok: result.status === "ok", text: result.message ?? "" });
+    });
+  };
+
+  return (
+    <div className="flex flex-col gap-1">
+      <h3 className="m-0 mb-2.5 font-pixel text-[10px] text-yellow">COMUNICAÇÕES</h3>
+      <div className="border-b-2 border-border-soft">
+        <Switch
+          checked={on}
+          onCheckedChange={change}
+          label="Novidades por e-mail"
+          description="Lançamentos e promoções"
+        />
+      </div>
+      <p
+        role={message?.ok === false ? "alert" : "status"}
+        className={message?.ok === false ? "text-sm text-danger-text" : "text-sm text-green"}
+      >
+        {message?.text}
+      </p>
+      <p className="m-0 mt-2 text-xs text-text-subtle">
+        E-mails sobre seus pedidos (confirmação, envio) continuam chegando, pois fazem parte da
+        compra.
+      </p>
+    </div>
+  );
+}
