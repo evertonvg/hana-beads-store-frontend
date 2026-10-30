@@ -16,7 +16,12 @@ import { CHECKOUT_CONSENT_VERSION, checkoutSchema } from "@/lib/validation/check
 import { fieldErrorsFrom, type FormState } from "@/lib/validation/form-state";
 
 /** `redirectTo` is where the client goes next; `accountCreated` tells it to sync the cart owner. */
-export type PlaceOrderResult = FormState & { redirectTo?: string; accountCreated?: boolean };
+export type PlaceOrderResult = FormState & {
+  redirectTo?: string;
+  accountCreated?: boolean;
+  /** Owner of the order when signed in: the client syncs its cart owner when it differs. */
+  userId?: string;
+};
 
 const GENERIC_ERROR = "Não foi possível agora. Tente de novo.";
 
@@ -143,7 +148,12 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
     );
     // A retried token gets back the first order, with the guest token it was created with.
     if (order.guestToken) await rememberGuestToken(order.guestToken);
-    return { status: "ok", redirectTo: `/pedido/${order.id}/pagamento`, accountCreated };
+    return {
+      status: "ok",
+      redirectTo: `/pedido/${order.id}/pagamento`,
+      accountCreated,
+      ...(userId ? { userId } : {}),
+    };
   } catch (error) {
     console.error("placeOrderAction failed", error);
     return fail(GENERIC_ERROR);

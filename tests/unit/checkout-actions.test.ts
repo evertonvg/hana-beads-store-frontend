@@ -17,6 +17,7 @@ vi.mock("next/headers", () => ({
 }));
 
 import { lookupCepAction, placeOrderAction } from "@/app/(checkout)/checkout/actions";
+import { getData } from "@/lib/data";
 import { getMockStore } from "@/lib/data/mock/store";
 
 const base = {
@@ -121,6 +122,49 @@ describe("placeOrderAction", () => {
     expect(r.fieldErrors?.email).toBe("E-mail já cadastrado.");
     expect(getMockStore().orders).toHaveLength(0);
     expect(createSession).not.toHaveBeenCalled();
+  });
+});
+
+describe("card data", () => {
+  const card = { number: "4111111111111111", holder: "ANA SOUZA", expiry: "12/30", cvv: "7391" };
+
+  it("needs a card token for card payments and ignores raw card fields", async () => {
+    const noToken = await placeOrderAction({ ...base, payment: "cartao", card });
+    expect(noToken.status).toBe("error");
+    expect(noToken.fieldErrors?.cardToken).toBeDefined();
+    expect(getMockStore().orders).toHaveLength(0);
+
+    const ok = await placeOrderAction({
+      ...base,
+      payment: "cartao",
+      cardToken: "mock_tok_3f6c1b1e-6d3b",
+      cardLast4: "1111",
+      card,
+    });
+    expect(ok.status).toBe("ok");
+    const stored = JSON.stringify(getMockStore().orders);
+    expect(stored).not.toContain(card.number);
+    expect(stored).not.toContain(card.cvv);
+  });
+});
+
+describe("retry after a partial failure", () => {
+  it("tells the client who owns the order so it can sync the cart owner", async () => {
+    const create = vi.spyOn(getData().orders, "create").mockRejectedValueOnce(new Error("boom"));
+    const first = await placeOrderAction({ ...base, saveAccount: true, password: "Senha@123" });
+    expect(first.status).toBe("error");
+    const user = getMockStore().users.find((u) => u.email === "nova@teste.dev");
+    expect(user).toBeDefined();
+    // The account and the session exist now: the retry sees a signed-in user.
+    getSession.mockResolvedValue({ id: user?.id, name: "Nova Pessoa", email: "nova@teste.dev" });
+    const retry = await placeOrderAction({ ...base, saveAccount: true, password: "Senha@123" });
+    create.mockRestore();
+    expect(retry).toMatchObject({ status: "ok", accountCreated: false, userId: user?.id });
+    expect(getMockStore().orders[0]?.userId).toBe(user?.id);
+  });
+
+  it("returns no user id for a guest order", async () => {
+    expect((await placeOrderAction(base)).userId).toBeUndefined();
   });
 });
 

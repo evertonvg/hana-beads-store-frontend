@@ -6,11 +6,11 @@ import { MaskedInput } from "@/components/ui/MaskedInput";
 import { PillRadioGroup } from "@/components/ui/PillRadioGroup";
 import { TextInput } from "@/components/ui/TextInput";
 import type { PaymentMethod } from "@/lib/data/types";
-import type { CheckoutFormInput, CheckoutInput } from "@/lib/validation/checkout";
+import type { CheckoutFormInput, CheckoutFormOutput } from "@/lib/validation/checkout";
 import { checkoutInput } from "./styles";
 
 type Props = {
-  control: Control<CheckoutFormInput, unknown, CheckoutInput>;
+  control: Control<CheckoutFormInput, unknown, CheckoutFormOutput>;
   errors: FieldErrors<CheckoutFormInput>;
   register: UseFormRegister<CheckoutFormInput>;
 };

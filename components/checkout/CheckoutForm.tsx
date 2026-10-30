@@ -24,10 +24,10 @@ import { cn } from "@/lib/cn";
 import type { Address } from "@/lib/data/types";
 import { formatTotal, isValidCep, onlyDigits } from "@/lib/format";
 import {
-  checkoutSchema,
+  checkoutFormSchema,
   UFS,
   type CheckoutFormInput,
-  type CheckoutInput,
+  type CheckoutFormOutput,
 } from "@/lib/validation/checkout";
 import { AccountBox } from "./AccountBox";
 import { CheckoutBar } from "./CheckoutBar";
@@ -136,8 +136,8 @@ export function CheckoutForm({ initial, lines, priced }: Props) {
     setError,
     setValue,
     formState: { errors },
-  } = useForm<CheckoutFormInput, unknown, CheckoutInput>({
-    resolver: zodResolver(checkoutSchema),
+  } = useForm<CheckoutFormInput, unknown, CheckoutFormOutput>({
+    resolver: zodResolver(checkoutFormSchema),
     defaultValues: defaults,
     shouldFocusError: false,
   });
@@ -182,17 +182,22 @@ export function CheckoutForm({ initial, lines, priced }: Props) {
     coupon?.discountCents ?? 0,
   );
 
-  const send = (values: CheckoutInput) => {
+  const send = (values: CheckoutFormOutput) => {
     if (submitting.current) return;
     submitting.current = true;
     setFormError(null);
     startTransition(async () => {
       let result: PlaceOrderResult;
       try {
+        // The card never leaves the browser: the server gets a gateway token and the last 4
+        // digits. (Mock token; the real gateway tokenizes the card client-side.)
         const { card, password: pass, ...rest } = values;
+        const digits = onlyDigits(card?.number ?? "");
         result = await placeOrderAction({
           ...rest,
-          ...(values.payment === "cartao" ? { card } : {}),
+          ...(values.payment === "cartao"
+            ? { cardToken: `mock_tok_${crypto.randomUUID()}`, cardLast4: digits.slice(-4) }
+            : {}),
           ...(values.saveAccount ? { password: pass } : {}),
           lines: useCartStore.getState().lines,
         });
@@ -201,7 +206,11 @@ export function CheckoutForm({ initial, lines, priced }: Props) {
       }
       if (result.status === "ok" && result.redirectTo) {
         setDone(true);
-        if (result.accountCreated) await finishAuth(result.redirectTo);
+        // New account, or already signed in (retry after a partial failure) with a cart that is
+        // not marked as this user's yet: sync the owner and refresh the header first.
+        const ownerMismatch =
+          result.userId !== undefined && useCartStore.getState().owner !== result.userId;
+        if (result.accountCreated || ownerMismatch) await finishAuth(result.redirectTo);
         else router.push(result.redirectTo);
         return;
       }

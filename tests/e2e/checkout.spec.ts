@@ -139,3 +139,41 @@ test("visual", async ({ page }) => {
   );
   await snap(page, "checkout");
 });
+
+test("cartão: número e CVV nunca são enviados ao servidor", async ({ page }) => {
+  const bodies: string[] = [];
+  page.on("request", (r) => {
+    if (r.method() === "POST") bodies.push(r.postData() ?? "");
+  });
+  await openCheckout(page);
+  await fillGuest(page);
+  await page.getByRole("radio", { name: /CARTÃO/ }).click();
+  await field(page, "Número do cartão").fill("4111111111111111");
+  await field(page, "Nome impresso no cartão").fill("NOVA PESSOA");
+  await field(page, "Validade").fill("1230");
+  await field(page, "CVV").fill("7391");
+  await save(page).click();
+  await expect(page).toHaveURL(/\/pedido\/[^/]+\/pagamento$/);
+  const sent = bodies.join("\n");
+  expect(sent).toContain("mock_tok_");
+  expect(sent).not.toContain("4111");
+  expect(sent).not.toContain("7391");
+});
+
+test("o checkout tem cabeçalho mínimo, sem navegação nem rodapé", async ({ page }) => {
+  await openCheckout(page);
+  await expect(page.getByRole("navigation", { name: "Principal" })).toHaveCount(0);
+  await expect(page.getByRole("contentinfo")).toHaveCount(0);
+  await expect(
+    page.getByRole("banner").getByRole("link", { name: /PIXEL PERFECT/ }),
+  ).toHaveAttribute("href", "/");
+});
+
+test.describe("sem consentimento salvo", () => {
+  test.use({ consent: "unset" });
+
+  test("o aviso de cookies aparece no checkout", async ({ page }) => {
+    await openCheckout(page);
+    await expect(page.getByRole("button", { name: "REJEITAR OPCIONAIS" })).toBeVisible();
+  });
+});

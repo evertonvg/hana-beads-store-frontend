@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkoutSchema } from "@/lib/validation/checkout";
+import { checkoutFormSchema, checkoutSchema } from "@/lib/validation/checkout";
 
 const valid = {
   name: "Ana Souza",
@@ -50,23 +50,52 @@ describe("checkoutSchema", () => {
     expect(errorsOf({ state: "XX" }).state).toBeDefined();
   });
 
-  it("requires the card fields only for card payments", () => {
+  it("requires a card token (never card fields) for card payments on the server", () => {
     expect(errorsOf({ payment: "boleto" })).toEqual({});
+    expect(errorsOf({ payment: "cartao" }).cardToken).toBeDefined();
+    expect(errorsOf({ payment: "cartao", cardToken: "qualquer" }).cardToken).toBeDefined();
+    expect(errorsOf({ payment: "cartao", cardToken: "mock_tok_3f6c1b1e-6d3b" })).toEqual({});
+    expect(
+      errorsOf({ payment: "cartao", cardToken: "mock_tok_3f6c1b1e-6d3b", cardLast4: "12" }),
+    ).toHaveProperty("cardLast4");
+  });
+
+  it("drops raw card fields from the parsed server input", () => {
+    const r = checkoutSchema.safeParse({
+      ...valid,
+      payment: "cartao",
+      cardToken: "mock_tok_3f6c1b1e-6d3b",
+      card: { number: "4111111111111111", cvv: "7391" },
+    });
+    expect(r.success).toBe(true);
+    expect(JSON.stringify(r.data)).not.toContain("4111111111111111");
+    expect(r.data).not.toHaveProperty("card");
+  });
+
+  it("validates the card fields in the browser form schema, only for card payments", () => {
+    const formErrors = (over: object) => {
+      const r = checkoutFormSchema.safeParse({ ...valid, ...over });
+      return r.success
+        ? {}
+        : Object.fromEntries(r.error.issues.map((i) => [i.path.join("."), i.message]));
+    };
     // The form always carries the (empty) card inputs, even when paying with Pix.
     const empty = { number: "", holder: "", expiry: "", cvv: "" };
-    expect(errorsOf({ payment: "pix", card: empty })).toEqual({});
-    expect(errorsOf({ payment: "cartao" })["card.number"]).toBeDefined();
+    expect(formErrors({ payment: "pix", card: empty })).toEqual({});
+    expect(formErrors({ payment: "cartao" })["card.number"]).toBeDefined();
     const card = {
       number: "4111 1111 1111 1111",
       holder: "ANA SOUZA",
       expiry: "12/30",
       cvv: "123",
     };
-    expect(errorsOf({ payment: "cartao", card })).toEqual({});
+    expect(formErrors({ payment: "cartao", card })).toEqual({});
     expect(
-      errorsOf({ payment: "cartao", card: { ...card, expiry: "13/30" } })["card.expiry"],
+      formErrors({ payment: "cartao", card: { ...card, expiry: "13/30" } })["card.expiry"],
     ).toBeDefined();
-    expect(errorsOf({ payment: "cartao", card: { ...card, cvv: "1" } })["card.cvv"]).toBeDefined();
+    expect(
+      formErrors({ payment: "cartao", card: { ...card, cvv: "1" } })["card.cvv"],
+    ).toBeDefined();
   });
 
   it("requires a password that meets the rules only when saving the account", () => {

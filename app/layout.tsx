@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { ConsentScripts } from "@/components/layout/ConsentScripts";
 import { CookieConsentBanner } from "@/components/layout/CookieConsent";
-import { Footer } from "@/components/layout/Footer";
-import { Header } from "@/components/layout/Header";
-import { MobileTabBar, MobileTabBarFallback } from "@/components/layout/MobileTabBar";
-import { getSession } from "@/lib/session";
 import { mono, pixel, pixelAccents } from "./fonts";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -16,12 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  // Not awaited here: only the small account bits inside Suspense wait for it, so the header
-  // itself stays in the static shell and hydrates with the page.
-  // A failed lookup counts as signed out: a rejection would break every page that reads it.
-  const session = getSession()
-    .then((user) => (user ? { name: user.name } : null))
-    .catch(() => null);
   return (
     <html lang="pt-BR" className={`${pixel.variable} ${pixelAccents.variable} ${mono.variable}`}>
       <body className="flex min-h-screen flex-col">
@@ -31,16 +20,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Pular para o conteúdo
         </a>
-        <Providers>
-          <Header session={session} />
-          <main id="conteudo" className="flex-1">
-            {children}
-          </main>
-          <Footer />
-          <Suspense fallback={<MobileTabBarFallback />}>
-            <MobileTabBar />
-          </Suspense>
-        </Providers>
+        <Providers>{children}</Providers>
         <CookieConsentBanner />
         <ConsentScripts />
       </body>
